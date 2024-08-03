@@ -1,6 +1,5 @@
 import { DataSource, Repository } from "typeorm";
 import { UserAuth } from "./user-auth.entity";
-import { AppDataSource } from "../../../dependencies";
 
 export interface IUserAuthRepository {
   createOrUpdate(auth: UserAuth): Promise<UserAuth>;
@@ -9,10 +8,11 @@ export interface IUserAuthRepository {
 }
 
 export class UserAuthRepository implements IUserAuthRepository {
+  
   private userAuthRepository: Repository<UserAuth>;
 
-  constructor(private readonly ds: DataSource) {
-    this.userAuthRepository = this.ds.getRepository(UserAuth);
+  constructor(dataSource: DataSource) {
+    this.userAuthRepository = dataSource.getRepository(UserAuth);
   }
 
   async createOrUpdate(auth: UserAuth) {
