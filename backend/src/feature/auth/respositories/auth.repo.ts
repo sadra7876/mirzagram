@@ -3,7 +3,7 @@ import { UserAuth } from "./user-auth.entity";
 import { AppDataSource } from "../../../dependencies";
 
 export interface IUserAuthRepository {
-  create(auth: UserAuth): Promise<UserAuth>;
+  createOrUpdate(auth: UserAuth): Promise<UserAuth>;
   getByUsername(username: string): Promise<UserAuth | null>;
   getByEmail(email: string): Promise<UserAuth | null>;
 }
@@ -15,7 +15,7 @@ export class UserAuthRepository implements IUserAuthRepository {
     this.userAuthRepository = this.ds.getRepository(UserAuth);
   }
 
-  async create(auth: UserAuth) {
+  async createOrUpdate(auth: UserAuth) {
     return await this.userAuthRepository.save(auth);
   }
 
