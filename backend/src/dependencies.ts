@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { UserAuth } from "./feature/auth/respositories/user-auth.entity";
 import { AuthService } from "./feature/auth/services/auth.service";
+import { UserAuthRepository } from "./feature/auth/respositories/user-auth.repo";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -17,3 +18,5 @@ export const AppDataSource = new DataSource({
 });
 
 export const authService = new AuthService();
+
+export const userAuthRepository = new UserAuthRepository(AppDataSource);
