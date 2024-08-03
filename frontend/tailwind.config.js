@@ -2,7 +2,11 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "background-auth": "url('../src/assets/images/Background.jpg')",
+      },
+    },
   },
   plugins: [],
 };
