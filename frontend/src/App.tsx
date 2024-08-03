@@ -3,7 +3,7 @@ import React from "react";
 function App() {
   return (
     <div>
-      <p className="text-2xl text-red-600">Welcome to Mirzagram</p>
+      <p className="p-2 text-2xl text-red-600">Welcome to Mirzagram</p>
     </div>
   );
 }
