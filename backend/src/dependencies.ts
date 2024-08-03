@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import { UserAuth } from "./feature/auth/respositories/user-auth.entity";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -9,7 +10,7 @@ export const AppDataSource = new DataSource({
   database: "mirzaGram-db",
   synchronize: true,
   logging: true,
-  // entities: [Post, Category],
+  entities: [UserAuth],
   subscribers: [],
   migrations: [],
 });
