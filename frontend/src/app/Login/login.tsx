@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import rahnamaLogo from "../assets/images/rahnema-logo.png";
+import rahnamaLogo from "../../assets/images/rahnema-logo.png";
 import LoginComponent from "./components/LoginComponent";
 
 type LoginRegistState = "LOGIN" | "REGISTER";
 export default function LoginPage() {
   const [state, setState] = useState<LoginRegistState>("LOGIN");
   return (
-    <div className="md:bg-background-auth w-full h-screen md:bg-cover flex flex-col justify-center items-center">
-      <div className="w-full h-full flex flex-col rounded-3xl bg-neutral-100 md:w-1/3 md:h-[688px] items-center px-20 py-16">
-        <img src={rahnamaLogo} className="w-28 h-15" />
+    <div className="flex h-screen w-full flex-col items-center justify-center md:bg-background-auth md:bg-cover">
+      <div className="flex h-full w-full flex-col items-center rounded-3xl bg-neutral-100 px-20 py-16 md:h-[688px] md:w-1/3">
+        <img src={rahnamaLogo} className="h-15 w-28" />
 
         <div className="my-6 grid grid-cols-2 divide-x-2 divide-black">
           <button

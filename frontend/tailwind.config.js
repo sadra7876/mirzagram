@@ -15,6 +15,10 @@ export default {
       padding: {
         3.5: "14px",
       },
+      colors: {
+        "mirza-green": "#17494D",
+        "mirza-red": "#EA5A69",
+      },
     },
   },
   plugins: [],
