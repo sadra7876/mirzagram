@@ -11,8 +11,8 @@ import { UserAuth } from "../../auth/respositories/user-auth.entity";
   export class Profile {
     @PrimaryColumn()
     @OneToOne(() => UserAuth)
-    @JoinColumn()
-    id: string;
+    @JoinColumn() 
+    id: number;
 
     @Column({
       unique: true

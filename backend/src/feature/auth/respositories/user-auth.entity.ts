@@ -2,21 +2,20 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  OneToOne,
+  JoinColumn,
 } from "typeorm";
+import { Profile } from "../../profile/repository/profile.entity";
 
 @Entity()
 export class UserAuth {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
-  @Column({ unique: true })
-  username: string;
-
-  @Column({
-    unique: true,
-  })
-  email: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   password: string;
+
+  @OneToOne(() => Profile)
+  @JoinColumn()
+  profile: Profile
 }
