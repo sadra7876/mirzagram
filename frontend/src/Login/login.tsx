@@ -10,7 +10,7 @@ export default function LoginPage() {
       <div className="w-full h-full flex flex-col rounded-3xl bg-neutral-100 md:w-1/3 md:h-[688px] items-center px-20 py-16">
         <img src={rahnamaLogo} className="w-28 h-15" />
 
-        <div className="grid grid-cols-2 divide-x-2 divide-black my-6">
+        <div className="my-6 grid grid-cols-2 divide-x-2 divide-black">
           <button
             className={`px-3 ${state === "REGISTER" ? "" : "text-gray-400"}`}
             onClick={() => setState("REGISTER")}
