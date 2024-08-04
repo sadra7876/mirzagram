@@ -12,6 +12,9 @@ export default {
       backgroundImage: {
         "background-auth": "url('../src/assets/images/Background.jpg')",
       },
+      padding: {
+        3.5: "14px",
+      },
     },
   },
   plugins: [],
