@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import rahnamaLogo from "../../assets/images/rahnema-logo.png";
 import LoginComponent from "./components/LoginComponent";
+import RegisterComponent from "./components/RegisterComponent";
 
 type LoginRegistState = "LOGIN" | "REGISTER";
 export default function LoginPage() {
@@ -25,7 +26,7 @@ export default function LoginPage() {
           </button>
         </div>
 
-        {state === "LOGIN" ? <LoginComponent /> : <p>setayesh</p>}
+        {state === "LOGIN" ? <LoginComponent /> : <RegisterComponent />}
       </div>
     </div>
   );
