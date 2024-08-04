@@ -1,5 +1,8 @@
 import React from "react";
 import LoginPage from "./Login/login";
+import RegisterPage from "./Login/register";
+import LoginComponent from "./Login/components/LoginComponent";
+
 
 function App() {
   return (
