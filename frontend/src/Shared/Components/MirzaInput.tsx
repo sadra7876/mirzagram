@@ -1,6 +1,4 @@
 import React from "react";
-import KeyICon from "../../assets/images/Icons/key.jpg";
-import GmailIcon from "../../assets/images/Icons/gmail.jpg";
 
 function MirzaInput(props: { placeholder: string; inputIcon: string }) {
   return (
