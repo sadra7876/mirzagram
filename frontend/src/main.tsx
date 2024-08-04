@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivateRoutes from "./utils/PrivateRout.tsx";
 import LoginPage from "./Login/login.tsx";
 import MainPage from "./app/MainPage.tsx";
-import UserProfile from "./UserProfile/UserProfile.tsx";
+import UserProfile from "./app/UserProfile/UserProfile.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
