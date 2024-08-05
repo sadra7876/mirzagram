@@ -1,52 +1,31 @@
+// import { userAuthRepository } from "../../../dependencies";
+// import { validatePassword } from "../auth.utils";
+// // import { UserAuth } from "../respositories/user-auth.entity";
 // import { SigninDTO } from "../routes/dto/signin.dto";
 // import { signupDTO } from "../routes/dto/signup.dto";
-// import jwt from 'jsonwebtoken';
-// import { IProfileRepository } from "../../profile/repository/profile.repo";
 
 // export class AuthService {
+//   signin(signinDTO: SigninDTO) {}
 
-//   constructor(private readonly authRepo: IProfileRepository) {}
-
-//   async signin(signinDTO: SigninDTO): Promise<string> {
-//     let user;
-//     // if(signinDTO.username.match("^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")) {
-//     //   user = this.authRepo.getById(signinDTO.username);
-//     // }
-//     // user = await this.authRepo.getByUsername(signinDTO.username);
-
-//     // if(!user) {
-//     //   throw Error("User not found");
-//     // }
-
-//     // if(user.password !== signinDTO.password) {
-//     //   throw Error("Username or password is wrong!");
-//     // }
-
-//     const jwtPayload = {
-//       subjectId: 1,
-//       username: "user.id",
-//     }
-//     return jwt.sign(jwtPayload, "SECRET");
-//   }
-
-//   async signup(siginupDTO: signupDTO) {
-//     if (!validatePassword(siginupDTO.password, siginupDTO.passwordconfrim)) {
+//   async signup(signupDTO: signupDTO) {
+//     if (!validatePassword(signupDTO.password, signupDTO.passwordconfrim)) {
 //       throw new Error("Passwords do not match");
 //     }
 
-//     if (await userAuthRepository.getByUsername(siginupDTO.username)) {
+//     if (await userAuthRepository.getByUsername(signupDTO.username)) {
 //       throw new Error("username already exist");
 //     }
 
-//     if (await userAuthRepository.getByEmail(siginupDTO.email)) {
+//     if (await userAuthRepository.getByEmail(signupDTO.email)) {
 //       throw new Error("email already exist");
 //     }
 
-//     await userAuthRepository.createOrUpdate(newUserAuth(siginupDTO));
-//   }
+//     const newUserAuth = new UserAuth();
+//     newUserAuth.username = signupDTO.username;
+//     newUserAuth.email = signupDTO.email;
+//     newUserAuth.password = signupDTO.password;
 
-//   async verifyAccessToken() {
-//     return verifyJwt();
+//     await userAuthRepository.createOrUpdate(newUserAuth);
 //   }
 
 //   // add other functions here
