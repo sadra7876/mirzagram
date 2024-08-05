@@ -1,4 +1,6 @@
 import { DataSource } from "typeorm";
+import { AuthService } from "./feature/auth/services/auth.service";
+import { Profile } from "./feature/profile/repository/profile.entity";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -9,7 +11,9 @@ export const AppDataSource = new DataSource({
   database: "mirzaGram-db",
   synchronize: true,
   logging: true,
-  // entities: [Post, Category],
+  entities: [Profile],
   subscribers: [],
   migrations: [],
 });
+
+export const authService = new AuthService();
