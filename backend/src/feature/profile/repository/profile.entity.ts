@@ -1,11 +1,7 @@
 import {
   Entity,
   Column,
-  OneToOne,
-  JoinColumn,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
-  Unique,
 } from "typeorm";
 
 @Entity()

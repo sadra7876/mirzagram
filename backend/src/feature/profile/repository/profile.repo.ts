@@ -4,6 +4,8 @@ import { Profile } from "./profile.entity";
 export interface IProfileRepository {
   createOrUpdate(auth: Profile): Promise<Profile>;
   getById(id: number): Promise<Profile | null>;
+  getByUsername(username: string): Promise<Profile | null>;
+  getByEmail(email: string): Promise<Profile | null>;
 }
 
 export class ProfileRepository implements IProfileRepository {
@@ -19,5 +21,13 @@ export class ProfileRepository implements IProfileRepository {
 
   async createOrUpdate(profile: Profile) {
     return await this.repo.save(profile);
+  }
+
+  getByUsername(username: string): Promise<Profile | null> {
+    throw new Error("Method not implemented.");
+  }
+  
+  getByEmail(email: string): Promise<Profile | null> {
+    throw new Error("Method not implemented.");
   }
 }
