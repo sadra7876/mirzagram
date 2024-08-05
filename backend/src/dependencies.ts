@@ -1,7 +1,6 @@
 import { DataSource } from "typeorm";
-import { UserAuth } from "./feature/auth/respositories/user-auth.entity";
 import { AuthService } from "./feature/auth/services/auth.service";
-import { UserAuthRepository } from "./feature/auth/respositories/user-auth.repo";
+import { Profile } from "./feature/profile/repository/profile.entity";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -12,11 +11,9 @@ export const AppDataSource = new DataSource({
   database: "mirzaGram-db",
   synchronize: true,
   logging: true,
-  entities: [UserAuth],
+  entities: [Profile],
   subscribers: [],
   migrations: [],
 });
 
 export const authService = new AuthService();
-
-export const userAuthRepository = new UserAuthRepository(AppDataSource);

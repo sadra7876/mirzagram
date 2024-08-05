@@ -1,19 +1,14 @@
 import { Router, Response, Request } from "express";
-import { handleHttpRequest } from "../../../utils/utils";
-import { authService } from "../../../dependencies";
+import { handleRequest } from "../../../utils/handle-request";
 import { signinDTO } from "./dto/signin.dto";
 import { signupDTO } from "./dto/signup.dto";
 
 export const authRoutes = Router();
 
-authRoutes.post("/signin", (req, res) => {
-  handleHttpRequest(res, async () => {
-    authService.signin(signinDTO.parse(req.body));
-  });
+authRoutes.post("/sign-in", (req, res) => {
+  handleRequest(res, async () => {});
 });
 
-authRoutes.post("/signup", (req, res) => {
-  handleHttpRequest(res, async () => {
-    authService.signup(signupDTO.parse(req.body));
-  });
+authRoutes.post("/sign-up", (req, res) => {
+  handleRequest(res, async () => {});
 });
