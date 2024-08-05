@@ -3,19 +3,18 @@ import { Profile } from "./profile.entity";
 
 export interface IProfileRepository {
   createOrUpdate(auth: Profile): Promise<Profile>;
-  getById(id: string): Promise<Profile | null>;
+  getById(id: number): Promise<Profile | null>;
 }
 
 export class ProfileRepository implements IProfileRepository {
-
   private readonly repo: Repository<Profile>;
 
   constructor(dataSource: DataSource) {
     this.repo = dataSource.getRepository(Profile);
   }
 
-  async getById(id: string): Promise<Profile | null> {
-    return await this.repo.findOneBy({ id })
+  async getById(id: number): Promise<Profile | null> {
+    return await this.repo.findOneBy({ id });
   }
 
   async createOrUpdate(profile: Profile) {

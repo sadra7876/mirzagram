@@ -1,48 +1,61 @@
 import {
-    Entity,
-    Column,
-    OneToOne,
-    JoinColumn,
-    PrimaryColumn,
-  } from "typeorm";
-import { UserAuth } from "../../auth/respositories/user-auth.entity";
-  
-  @Entity()
-  export class Profile {
-    @PrimaryColumn()
-    @OneToOne(() => UserAuth)
-    @JoinColumn() 
-    id: number;
+  Entity,
+  Column,
+  OneToOne,
+  JoinColumn,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+  Unique,
+} from "typeorm";
 
-    @Column({
-      unique: true
-    })
-    username: string 
+@Entity()
+export class Profile {
+  @PrimaryGeneratedColumn("increment")
+  id: number;
 
-    @Column()
-    firstName: string;
-  
-    @Column()
-    lastName: string;
-  
-    @Column({
-      default: true
-    })
-    isActive: boolean;
-    
-    @Column({
-      default: false
-    })
-    isPrivate: boolean;
+  @Column({
+    unique: true,
+  })
+  username: string;
 
-    @Column({
-      nullable: true
-    })
-    bio: string;
-  
-    @Column()
-    createdAt: Date;
+  @Column({ unique: true })
+  email: string;
 
-    @Column()
-    profilePicture: string;
-  }
+  @Column()
+  password: string;
+
+  @Column({
+    nullable: true,
+  })
+  firstName?: string;
+
+  @Column({
+    nullable: true,
+  })
+  lastName?: string;
+
+  @Column({
+    default: false,
+  })
+  isActive: boolean;
+
+  @Column({
+    default: false,
+  })
+  isPrivate: boolean;
+
+  @Column({
+    type: "text",
+    nullable: true,
+  })
+  bio?: string;
+  @Column({
+    nullable: true,
+  })
+  profilePicture?: string;
+
+  @Column({
+    type: "timestamptz",
+  })
+  createdAt: Date;
+}
