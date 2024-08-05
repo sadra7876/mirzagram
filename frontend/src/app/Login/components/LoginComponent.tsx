@@ -2,6 +2,8 @@ import keyIcon from "../../../assets/images/Icons/key.jpg";
 import GmailIcon from "../../../assets/images/Icons/gmail.jpg";
 import MirzaInput from "../../../Shared/Components/MirzaInput";
 import MirzaButton from "../../../Shared/Components/MirzaButton";
+import MirzaAuthLinks from "../../../Shared/Components/MirzaAuthLinks";
+import arow from "../../../assets/images/Icons/arrow.svg";
 export default function LoginComponent() {
   return (
     <div className="mr-0 w-full content-center py-6">
@@ -20,7 +22,21 @@ export default function LoginComponent() {
         <input type="checkbox" className="h-3 w-3 rounded-[4px]" />
         مرا به خاطر بسپار
       </label>
-      <MirzaButton title="ورود" onClick={() => console.log("click me")} />
+      <div>
+        <MirzaButton title="ورود" onClick={() => console.log("click me")} />
+      </div>
+      <div className="h-12 w-full items-center gap-9 py-12">
+        <MirzaAuthLinks
+          title="بازیابی رمز عبور"
+          onClick={() => console.log("clickme")}
+          icon={arow}
+        />
+        <MirzaAuthLinks
+          title="ثبت نام در میرزاگرام"
+          onClick={() => console.log("clickme")}
+          icon={arow}
+        />
+      </div>
     </div>
   );
 }
