@@ -1,5 +1,4 @@
 import { Response } from "express";
-// import { HttpStatusCode } from "./http-codes";
 import { HttpError } from "./http-error";
 
 export const handleRequest = <F>(

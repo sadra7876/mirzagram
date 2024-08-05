@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
-import { AuthService } from "./feature/auth/services/auth.service";
 import { Profile } from "./feature/profile/repository/profile.entity";
+import { ProfileRepository } from "./feature/profile/repository/profile.repo";
+import { AuthService } from "./feature/auth/service/auth.service";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -16,4 +17,6 @@ export const AppDataSource = new DataSource({
   migrations: [],
 });
 
-export const authService = new AuthService();
+const userProfileRepository = new ProfileRepository(AppDataSource);
+
+export const authService = new AuthService(userProfileRepository);
