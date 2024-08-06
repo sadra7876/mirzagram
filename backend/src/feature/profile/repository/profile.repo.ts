@@ -23,11 +23,11 @@ export class ProfileRepository implements IProfileRepository {
     return await this.repo.save(profile);
   }
 
-  getByUsername(username: string): Promise<Profile | null> {
-    throw new Error("Method not implemented.");
+  async getByUsername(username: string): Promise<Profile | null> {
+    return await this.repo.findOneBy({ username });
   }
   
-  getByEmail(email: string): Promise<Profile | null> {
-    throw new Error("Method not implemented.");
+  async getByEmail(email: string): Promise<Profile | null> {
+    return await this.repo.findOneBy({ email });
   }
 }
