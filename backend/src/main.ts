@@ -1,6 +1,8 @@
 import "reflect-metadata";
-import { AppDataSource } from "./dependencies";
 import { api } from "./api";
+import { AppDataSource } from "./dependencies";
+import dotenv from "dotenv-flow";
+dotenv.config();
 
 AppDataSource.initialize()
   .then(() => {
@@ -10,6 +12,6 @@ AppDataSource.initialize()
     console.error("Error during Data Source initialization", err);
   });
 
-// api.listen(3000, () => {
-//   console.log("Listening on 3000")
-// });
+api.listen(process.env.APP_PORT, () => {
+  console.log(`Listening on ${process.env.APP_PORT}`);
+});
