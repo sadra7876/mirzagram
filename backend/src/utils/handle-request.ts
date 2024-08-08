@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { HttpError } from "./http-error";
+import { HttpError } from "@utils/http-error";
 import { ZodError } from "zod";
 
 export const handleRequest = async <F>(
@@ -13,14 +13,11 @@ export const handleRequest = async <F>(
   } catch (e) {
     if (e instanceof HttpError) {
       return res.status(e.statusCode).send({ messege: e.message });
-    }
-    else if(e instanceof ZodError) {
-      return res.status(400).send({ messege: e.message });
-    }
-    else if(e instanceof Error) {
+    } else if (e instanceof ZodError) {
+      return res.status(400).send({ messege: e.errors });
+    } else if (e instanceof Error) {
       return res.status(500).send(e.message);
-    }
-    else {
+    } else {
       return res.status(500).send("Internal server error");
     }
   }

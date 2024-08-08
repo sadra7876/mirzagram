@@ -1,11 +1,14 @@
 import { DataSource, Repository } from "typeorm";
 import { Profile } from "./profile.entity";
+import { Email, Username, ProfileId } from "../../../types/profile.type";
 
 export interface IProfileRepository {
   createOrUpdate(auth: Profile): Promise<Profile>;
-  getById(id: number): Promise<Profile | null>;
-  getByUsername(username: string): Promise<Profile | null>;
-  getByEmail(email: string): Promise<Profile | null>;
+  getById(id: ProfileId): Promise<Profile | null>;
+  getByUsername(username: Username): Promise<Profile | null>;
+  getByEmail(email: Email): Promise<Profile | null>;
+  // getByResetToken(token: string): Promise<Profile | null>;
+  // deleteResetToken(profile: Profile): Promise<Profile>;
 }
 
 export class ProfileRepository implements IProfileRepository {
@@ -15,7 +18,7 @@ export class ProfileRepository implements IProfileRepository {
     this.repo = dataSource.getRepository(Profile);
   }
 
-  async getById(id: number): Promise<Profile | null> {
+  async getById(id: ProfileId): Promise<Profile | null> {
     return await this.repo.findOneBy({ id });
   }
 
@@ -23,11 +26,20 @@ export class ProfileRepository implements IProfileRepository {
     return await this.repo.save(profile);
   }
 
-  async getByUsername(username: string): Promise<Profile | null> {
+  async getByUsername(username: Username): Promise<Profile | null> {
     return await this.repo.findOneBy({ username });
   }
-  
-  async getByEmail(email: string): Promise<Profile | null> {
+
+  async getByEmail(email: Email): Promise<Profile | null> {
     return await this.repo.findOneBy({ email });
   }
+
+  // async getByResetToken(token: string): Promise<Profile | null> {
+  //   return await this.repo.findOneBy({ resetToken: token });
+  // }
+
+  // async deleteResetToken(profile: Profile) {
+  //   profile.resetToken = undefined;
+  //   return await this.repo.save(profile);
+  // }
 }
