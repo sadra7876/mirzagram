@@ -1,35 +1,17 @@
 import { IProfileRepository } from "../repository/profile.repo";
-import { SigninDTO } from "../routes/dto/signin.dto";
-import jwt from 'jsonwebtoken';
-import { HttpError } from "../../../utils/http-error";
+// import { IProfileRepository } from "@repository/profile.repo";
+import { HttpError } from "@utils/http-error";
+import { SigninDTO } from "feature/auth/dto";
+import jwt from "jsonwebtoken";
+// import { HttpError } from "../../../utils/http-error";
 import dotenv from "dotenv-flow";
-import { comparePasswords } from "../../auth/auth.utils";
+import { verifyPassword } from "../../auth/utils/password.utils";
 dotenv.config();
 
+interface dependencies {
+  profileRepo: IProfileRepository;
+}
+
 export class ProfileService {
-
-  constructor(private readonly profileRepo: IProfileRepository) {}
-  
-  async signin(signinDTO: SigninDTO): Promise<string> {
-    let user;
-    if(signinDTO.username.indexOf("@")) {
-      user = this.profileRepo.getByEmail(signinDTO.username);
-    }
-    user = await this.profileRepo.getByUsername(signinDTO.username);
-
-    if(!user) {
-      throw new HttpError(400, "User not found");
-    }
-
-    if(!await comparePasswords(signinDTO.password, user.password)) {
-      throw new HttpError(400, "Username or password is wrong!");
-    }
-
-    const jwtPayload = {
-      subjectId: user.id,
-      username: user.username,
-    }
-
-    return jwt.sign(jwtPayload, process.env.JWT_SECRET!.toString());
-  }
+  constructor(private readonly deps: dependencies) {}
 }

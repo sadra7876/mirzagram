@@ -1,24 +1,32 @@
 import {
   Entity,
   Column,
+  OneToOne,
+  JoinColumn,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
+  Unique,
 } from "typeorm";
+import {
+  Password,
+  Username,
+  Email,
+  ProfileId,
+} from "../../../types/profile.type";
 
 @Entity()
 export class Profile {
   @PrimaryGeneratedColumn("increment")
-  id: number;
-
-  @Column({
-    unique: true,
-  })
-  username: string;
+  id: ProfileId;
 
   @Column({ unique: true })
-  email: string;
+  username: Username;
+
+  @Column({ unique: true })
+  email: Email;
 
   @Column()
-  password: string;
+  password: Password;
 
   @Column({
     nullable: true,
@@ -45,6 +53,7 @@ export class Profile {
     nullable: true,
   })
   bio?: string;
+
   @Column({
     nullable: true,
   })
@@ -54,4 +63,9 @@ export class Profile {
     type: "timestamptz",
   })
   createdAt: Date;
+
+  // @Column({
+  //   nullable: true,
+  // })
+  // resetToken?: string;
 }

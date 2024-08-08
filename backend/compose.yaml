@@ -6,4 +6,4 @@ services:
       POSTGRES_PASSWORD: pass
       POSTGRES_USER: mirza
     ports:
-      - 4000:5432
+      - 5432:5432
