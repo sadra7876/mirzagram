@@ -3,7 +3,7 @@ import React, { ButtonHTMLAttributes } from "react";
 interface MirzaButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   // You can add additional custom props here if needed
   title: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
 export default function MirzaButton(props: MirzaButtonProps) {

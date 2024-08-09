@@ -6,6 +6,9 @@ import Vector from "../../../assets/images/Icons/Vector.jpg";
 import MirzaInput from "../../../Shared/Components/MirzaInput";
 import MirzaButton from "../../../Shared/Components/MirzaButton";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "../../../Shared/Components/ToastComponent";
+const BASE_URL = import.meta.env.REACT_APP_BASE_URL;
 interface FormValues {
   username: string;
   email: string;
@@ -19,9 +22,35 @@ export default function RegisterComponent() {
     watch,
     formState: { errors },
   } = useForm<FormValues>();
+  const navigate = useNavigate();
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    try {
+      const response = await fetch(`${BASE_URL}auth/sign-up`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+      const result = await response.json();
+      console.log(result);
+
+      if (result.isSuccess) {
+        toast.success("حساب کاربری شما با موفقیت ایجاد شد");
+        setTimeout(() => {
+          localStorage.setItem("token", result.result.accessToken);
+          navigate("/dashboard");
+        }, 2000);
+      } else {
+        result.messages.map((message: string) => {
+          toast.error(message);
+        });
+      }
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      toast.error("There was a problem with the registration");
+    }
   };
 
   const password = watch("password");
