@@ -1,4 +1,3 @@
-import exp from "constants";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 export type jwtPayload = {
@@ -12,7 +11,7 @@ export function signJwt(
   jwtPayload: jwtPayload,
   options?: jwt.SignOptions
 ): string {
-  const signingKey = process.env.PRIVATE_KEY!; //FIXME should be a change later on
+  const signingKey = process.env.JWT_SECRET!; //FIXME should be a change later on
 
   return jwt.sign(jwtPayload, signingKey, {
     ...options,

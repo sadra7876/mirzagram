@@ -1,37 +1,42 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import { authService } from "../../../dependencies";
 import {
-  signupDTO,
-  signinDTO,
+  signupRequestDTO,
+  signinRequestDTO,
   forgotPasswordDTO,
   resetPasswordDTO,
 } from "../dto";
 import { handleRequest } from "@utils/handle-request";
+import { ApiSuccess } from "@utils/http-response";
 
 export const authRoutes = Router();
 
 authRoutes.post("/sign-up", (req, res) => {
   handleRequest(res, async () => {
-    return await authService.signup(signupDTO.parse(req.body));
+    const result = await authService.signup(signupRequestDTO.parse(req.body));
+    return new ApiSuccess(result, [ "User created successfully" ]);
   });
 });
 
 authRoutes.post("/sign-in", (req, res) => {
   handleRequest(res, async () => {
-    return await authService.signin(signinDTO.parse(req.body));
+    const result = await authService.signin(signinRequestDTO.parse(req.body));
+    return new ApiSuccess(result, [ "Signed in successfully" ]);
   });
 });
 
 authRoutes.post("/forgot-password", (req, res) => {
   handleRequest(res, async () => {
-    return await authService.sendPasswordResetEmail(
+    const result = await authService.sendPasswordResetEmail(
       forgotPasswordDTO.parse(req.body)
     );
+    return new ApiSuccess(result, [ "Reset password link sent successfully" ]);
   });
 });
 
 authRoutes.post("/reset-password", (req, res) => {
   handleRequest(res, async () => {
-    return await authService.resetPassword(resetPasswordDTO.parse(req.body));
+    const result = await authService.resetPassword(resetPasswordDTO.parse(req.body));
+    return new ApiSuccess(result, [ "Password reset successfully" ]);
   });
 });

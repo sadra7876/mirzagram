@@ -1,11 +1,7 @@
 import {
   Entity,
   Column,
-  OneToOne,
-  JoinColumn,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
-  Unique,
 } from "typeorm";
 import {
   Password,
@@ -63,9 +59,4 @@ export class Profile {
     type: "timestamptz",
   })
   createdAt: Date;
-
-  // @Column({
-  //   nullable: true,
-  // })
-  // resetToken?: string;
 }
