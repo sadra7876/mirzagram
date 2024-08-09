@@ -8,6 +8,7 @@ import MirzaButton from "../../../Shared/Components/MirzaButton";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../../../Shared/Components/ToastComponent";
+const BASE_URL = import.meta.env.REACT_APP_BASE_URL;
 interface FormValues {
   username: string;
   email: string;
@@ -24,7 +25,7 @@ export default function RegisterComponent() {
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      const response = await fetch("http://localhost:3000/auth/sign-up", {
+      const response = await fetch(`${BASE_URL}auth/sign-up`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

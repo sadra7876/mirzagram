@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../../../Shared/Components/ToastComponent";
 
+const BASE_URL = import.meta.env.REACT_APP_BASE_URL;
+
 interface FormValues {
   identifier: string;
   password: string;
@@ -17,7 +19,7 @@ export default function LoginComponent() {
   const navigate = useNavigate();
   const onSubmit = async (data: FormValues) => {
     try {
-      const response = await fetch("http://localhost:3000/auth/sign-in", {
+      const response = await fetch(`${BASE_URL}auth/sign-in`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
