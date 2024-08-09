@@ -1,14 +1,30 @@
 import React from "react";
+import { UseFormRegister } from "react-hook-form";
 
-function MirzaInput(props: { placeholder: string; inputIcon: string }) {
+interface MirzaInputProps {
+  name: string;
+  register: any; // UseFormRegister<any>;
+  type?: string;
+  placeholder?: string;
+  inputIcon: string;
+}
+const MirzaInput: React.FC<MirzaInputProps> = ({
+  name,
+  register,
+  type = "text",
+  placeholder,
+  inputIcon,
+}) => {
   return (
     <div className="flex h-9 flex-row-reverse items-center gap-x-1 rounded-2xl bg-white px-3.5 text-right text-xs">
-      <img src={props.inputIcon} className="h-4 w-4 object-cover"></img>
+      <img src={inputIcon} className="h-4 w-4 object-cover"></img>
       <input
-        placeholder={props.placeholder}
+        type={type}
+        placeholder={placeholder}
+        {...register(name)}
         className="w-full text-right focus:outline-none"
       />
     </div>
   );
-}
+};
 export default MirzaInput;
