@@ -1,5 +1,5 @@
 FROM node:18.18.0
-WORKDIR /mirzasaz-frontend
+WORKDIR /mirzagram-frontend
 COPY package*.json .
 COPY .pnp* .
 RUN npm install

@@ -1,0 +1,40 @@
+services:
+  db:
+    container_name: mirzagram-db
+    image: postgres
+    environment:
+      POSTGRES_DB: mirzagram-db
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: mirza
+    ports:
+      - 4000:5432
+    networks:
+      - mirza-net
+  api:
+    container_name: mirzagram-api
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+    ports:
+      - 3000:2000
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    networks:
+      - mirza-net
+    depends_on:
+      - db
+  front:
+    container_name: mirzagram-front
+    ports:
+      - 8000:8000
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - mirza-net
+    depends_on:
+      - api
+networks:
+  mirza-net:
+    driver: bridge  

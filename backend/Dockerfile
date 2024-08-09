@@ -1,7 +1,6 @@
 FROM node:18.18.0
-WORKDIR /mirzasaz-backend
+WORKDIR /mirzagram-backend
 COPY package*.json .
-COPY yarn.lock .
 COPY .yarnrc* .
 COPY .pnp* .
 RUN yarn install
