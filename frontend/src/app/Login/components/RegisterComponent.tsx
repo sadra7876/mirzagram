@@ -28,25 +28,23 @@ export default function RegisterComponent() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify(data),
       });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
 
       const result = await response.json();
       console.log(result);
 
       if (result.isSuccess) {
-        toast.success("User created successfully");
+        toast.success("حساب کاربری شما با موفقیت ایجاد شد");
         setTimeout(() => {
-          navigate("/login");
-        }, 2000); // Redirect after 2 seconds
+          localStorage.setItem("token", result.result.accessToken);
+          navigate("/dashboard");
+        }, 2000);
       } else {
-        toast.error("Registration failed");
+        result.messages.map((message: string) => {
+          toast.error(message);
+        });
       }
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);

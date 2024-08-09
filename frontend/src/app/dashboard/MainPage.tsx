@@ -1,12 +1,12 @@
-import MirzaButton from "../Shared/Components/MirzaButton";
-import MirzaMenuButton from "../Shared/Components/MirzaMenuButton";
-import PlusIcon from "../assets/images/Icons/plus.svg";
+import MirzaButton from "../../Shared/Components/MirzaButton";
+import MirzaMenuButton from "../../Shared/Components/MirzaMenuButton";
+import PlusIcon from "../../assets/images/Icons/plus.svg";
 
-import PinIcon from "../assets/images/Icons/pin.svg";
-import SavedIcon from "../assets/images/Icons/saved.svg";
-import SpeachIcon from "../assets/images/Icons/speech.svg";
-import BellIcon from "../assets/images/Icons/bell.svg";
-import TagIcon from "../assets/images/Icons/Tag.svg";
+import PinIcon from "../../assets/images/Icons/pin.svg";
+import SavedIcon from "../../assets/images/Icons/saved.svg";
+import SpeachIcon from "../../assets/images/Icons/speech.svg";
+import BellIcon from "../../assets/images/Icons/bell.svg";
+import TagIcon from "../../assets/images/Icons/Tag.svg";
 
 export default function MainPage() {
   return (

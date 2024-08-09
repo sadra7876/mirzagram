@@ -5,6 +5,8 @@ import MirzaButton from "../../../Shared/Components/MirzaButton";
 import MirzaAuthLinks from "../../../Shared/Components/MirzaAuthLinks";
 import arow from "../../../assets/images/Icons/arrow.svg";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "../../../Shared/Components/ToastComponent";
 
 interface FormValues {
   identifier: string;
@@ -12,9 +14,34 @@ interface FormValues {
 }
 export default function LoginComponent() {
   const { register, handleSubmit } = useForm<FormValues>();
+  const navigate = useNavigate();
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const response = await fetch("http://localhost:3000/auth/sign-in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+      const result = await response.json();
+      console.log(result);
+
+      if (result.isSuccess) {
+        setTimeout(() => {
+          localStorage.setItem("token", result.result.accessToken);
+          navigate("/dashboard");
+        }, 2000);
+      } else {
+        result.messages.map((message: string) => {
+          toast.error(message);
+        });
+      }
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      toast.error("There was a problem with the registration");
+    }
   };
 
   return (
@@ -32,7 +59,7 @@ export default function LoginComponent() {
       <div className="flex flex-col justify-center gap-y-6 py-8">
         <MirzaInput
           name="identifier"
-          type="email"
+          type="text"
           register={register}
           placeholder="نام کاربری/ایمیل"
           inputIcon={GmailIcon}
