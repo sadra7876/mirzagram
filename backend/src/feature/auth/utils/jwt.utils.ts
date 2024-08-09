@@ -1,48 +1,29 @@
+import { ProfileId } from "@CommonTypes/profile.type";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-export type jwtPayload = {
-  subjectId: number;
-  username: string;
-};
-
-type keyType = "access" | "refresh";
-
-export function signJwt(
-  jwtPayload: jwtPayload,
-  options?: jwt.SignOptions
-): string {
-  const signingKey = process.env.JWT_SECRET!; //FIXME should be a change later on
-
-  return jwt.sign(jwtPayload, signingKey, {
-    ...options,
-  });
+export function generateAccessToken(subject: ProfileId): string {
+  const payload: JwtPayload = {
+    sub: subject.toString()
+  };
+  const options = {
+    expiresIn: process.env.JWT_ACCESS_TOKEN_TTL!,
+  };
+  return jwt.sign(payload, process.env.JWT_SECRET!, options);
 }
 
-export function verifyJwt(
-  token: string,
-  keyType: keyType,
-  options?: jwt.SignOptions
-): {
-  valid: boolean;
-  expired?: boolean;
-  decoded: JwtPayload | string | null;
+export function verifyAccessToken(token: string): {
+  valid: boolean,
+  payload?: JwtPayload
 } {
-  const publicKey = process.env.PUBLIC_KEY!; //FIXME should be a change later on
   try {
-    const decoded = jwt.verify(token, publicKey, {
-      ...(options && options),
-    });
+    const payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
     return {
       valid: true,
-      expired: false,
-      decoded,
+      payload: payload
     };
   } catch (e: any) {
-    console.error(e);
     return {
       valid: false,
-      expired: e.message === "jwt expired",
-      decoded: null,
     };
   }
 }
