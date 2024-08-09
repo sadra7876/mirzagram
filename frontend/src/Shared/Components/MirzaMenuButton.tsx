@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function MirzaButton(props: {
+export default function MirzaMenuButton(props: {
   title: string;
   onClick: () => void;
   icon?: React.ReactNode; // Optional icon prop
@@ -8,10 +8,10 @@ export default function MirzaButton(props: {
   return (
     <div
       onClick={() => props.onClick()}
-      className="flex h-9 max-w-full flex-row-reverse items-center justify-center gap-x-1 text-nowrap rounded-2xl bg-mirza-red px-4"
+      className="flex h-14 w-full flex-row items-center gap-x-4 text-nowrap rounded-3xl px-4 hover:bg-gray-400"
     >
       {props.icon && <div className="icon-container">{props.icon}</div>}
-      <p className="text-sm text-white">{props.title}</p>
+      <p className="text-base text-neutral-800">{props.title}</p>
     </div>
   );
 }
