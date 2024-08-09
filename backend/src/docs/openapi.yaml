@@ -1,0 +1,160 @@
+openapi: 3.0.0
+info:
+  title: Mirzagram API
+  version: 1.0.0
+  description: APIs for Mirzagram.
+
+tags:
+  - name: Auth
+    description: Operations related to user authentication.
+
+paths:
+  /auth/sign-up:
+    post:
+      summary: Signup new user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result: 
+                        type: object
+                        properties:
+                          accessToken: 
+                            type: string
+  /auth/sign-in:
+    post:
+      summary: Signin user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SigninDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result: 
+                        type: object
+                        properties:
+                          accessToken: 
+                            type: string
+  /auth/forgot-password:
+    post:
+      summary: Request forget password email for user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgotPasswordDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+  /auth/reset-password:
+    post:
+      summary: Reset user password using forget token
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                          
+
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        isSuccess:
+          type: boolean
+        statusCode:
+          type: number
+        result:
+          type: object
+        messages:
+          type: array
+    SignupDTO:
+      type: object
+      required:
+        - username
+        - email
+        - password
+        - confirmPassword
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        confirmPassword:
+          type: string
+    SigninDTO:
+      type: object
+      required:
+        - identifier
+        - password
+      properties:
+        identifier:
+          type: string
+        password:
+          type: string
+    ResetPasswordDTO:
+      type: object
+      required:
+        - token
+        - password
+        - confirmPassword
+      properties:
+        token:
+          type: string
+        password:
+          type: string
+        confirmPassword:
+          type: string
+    ForgotPasswordDTO:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string

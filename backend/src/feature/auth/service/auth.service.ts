@@ -3,7 +3,7 @@ import { isValidEmail } from "@utils/type-checking";
 import { HttpError } from "@utils/http-error";
 import { Profile } from "../../profile/repository/profile.entity";
 import { IProfileRepository } from "../../profile/repository/profile.repo";
-import { ForgotPassword, ResetPassword, SigninDTO, signupDTO } from "../dto";
+import { ForgotPassword, ResetPassword, SigninRequestDTO, SigninResponseDTO, SignupRequestDTO, SignupResponseDTO, signupRequestDTO } from "../dto";
 import {
   verifyPassword,
   hashPassword,
@@ -24,46 +24,12 @@ interface dependencies {
   tokenRepo: ITokenRepository;
   profileRepo: IProfileRepository;
 }
+
 export class AuthService {
+
   constructor(private readonly deps: dependencies) {}
 
-  private async handleUserCheck(email: Email, username: Username) {
-    const emailExists = await this.deps.profileRepo.getByEmail(email);
-    if (emailExists) {
-      throw new HttpError(400, "Email already exists");
-    }
-
-    const usernameExists = await this.deps.profileRepo.getByUsername(username);
-    if (usernameExists) {
-      throw new HttpError(400, "Username already exists");
-    }
-  }
-
-  async createUser(signupDTO: signupDTO): Promise<Profile> {
-    const newUserAuth = new Profile();
-    newUserAuth.username = signupDTO.username;
-    newUserAuth.email = signupDTO.email;
-    newUserAuth.password = await hashPassword(signupDTO.password);
-    newUserAuth.createdAt = new Date(); // check this in entity
-    return await this.deps.profileRepo.createOrUpdate(newUserAuth);
-  }
-
-  private async handleTokenCreation(user: Profile) {
-    //FIXME - change this later, add timer and more checks i guess
-    const userToken = await this.deps.tokenRepo.getByProfileEmail(user.email);
-    // if (userToken) {
-    //   await this.deps.tokenRepo.deleteTokenByProfile(user);
-    // }
-    const resetToken = crypto.randomBytes(20).toString("hex");
-    const newAccessToken = new ForgetPasswordToken();
-
-    newAccessToken.resetPasswordToken = resetToken;
-    newAccessToken.expirationDate = new Date(Date.now() + 3600000);
-    newAccessToken.profileEmail = user.email;
-    return await this.deps.tokenRepo.createOrUpdate(newAccessToken);
-  }
-
-  async signup(signupDTO: signupDTO): Promise<{ msg: string; jwt: string }> {
+  async signup(signupDTO: SignupRequestDTO): Promise<SignupResponseDTO> {
     if (!passwordMatch(signupDTO.password, signupDTO.confirmPassword)) {
       throw new HttpError(400, "Passwords do not match");
     }
@@ -72,23 +38,20 @@ export class AuthService {
 
     try {
       const user = await this.createUser(signupDTO);
-      // const WelcomeEmail = new MailerService(transporter);
-      // WelcomeEmail.sendWelcomeEmail(user.email, user.username);
-
       const jwtPayload = {
         subjectId: user.id,
         username: user.username,
       };
       const jwt = JwtService.createAccessToken(jwtPayload);
       console.log(jwt);
-      return { msg: "User created successfully", jwt: jwt };
+      return { accessToken: jwt };
     } catch (e) {
       console.log(e);
       throw new HttpError(500, "Internal server error");
     }
   }
 
-  async signin(signinDTO: SigninDTO): Promise<{ msg: string; jwt: string }> {
+  async signin(signinDTO: SigninRequestDTO): Promise<SigninResponseDTO> {
     let user;
     if (isEmail(signinDTO.identifier)) {
       user = await this.deps.profileRepo.getByEmail(
@@ -109,12 +72,12 @@ export class AuthService {
       username: user.username,
     };
     const jwt = JwtService.createAccessToken(jwtPayload);
-    return { msg: "Signed in successfully", jwt: jwt };
+    return { accessToken: jwt };
   }
 
   async sendPasswordResetEmail(
     forgotPasswordDTO: ForgotPassword
-  ): Promise<{ msg: string }> {
+  ): Promise<void> {
     if (!isValidEmail(forgotPasswordDTO.email)) {
       throw new HttpError(400, "Invalid email address");
     }
@@ -129,13 +92,12 @@ export class AuthService {
       const newAccessToken = await this.handleTokenCreation(user);
       const mailer = new MailerService(transporter);
 
-      // this.deps.tokenRepo.createOrUpdate(newAccessToken);
       mailer.sendResetPasswordEmail(
         user.email,
         user.username,
         `yousef/${newAccessToken.resetPasswordToken}`
       );
-      return { msg: "Reset password link sent successfully" };
+      return;
     } catch (e) {
       console.log(e);
       throw new HttpError(500, "Internal server error");
@@ -144,7 +106,7 @@ export class AuthService {
 
   async resetPassword(
     resetPasswordDTO: ResetPassword
-  ): Promise<{ msg: string }> {
+  ): Promise<void> {
     const tokenData = await this.deps.tokenRepo.getByToken(
       resetPasswordDTO.token
     );
@@ -169,9 +131,8 @@ export class AuthService {
     ) {
       throw new HttpError(400, "Passwords do not match");
     }
-    // console.log(tokenData.profile.username, "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+
     try {
-      // console.error(tokenData.profile);
       const hashedPassword = await hashPassword(resetPasswordDTO.password);
       const userToUpdate = await this.deps.profileRepo.getByEmail(
         tokenData.profileEmail
@@ -182,9 +143,42 @@ export class AuthService {
         password: hashedPassword,
       });
       await this.deps.tokenRepo.expireToken(tokenData);
-      return { msg: "Password reset successfully" };
+      return;
     } catch (error) {
       throw new HttpError(500, "Internal server error");
     }
+  }
+
+  private async handleUserCheck(email: Email, username: Username) {
+    const emailExists = await this.deps.profileRepo.getByEmail(email);
+    if (emailExists) {
+      throw new HttpError(400, "Email already exists");
+    }
+
+    const usernameExists = await this.deps.profileRepo.getByUsername(username);
+    if (usernameExists) {
+      throw new HttpError(400, "Username already exists");
+    }
+  }
+
+  private async createUser(signupDTO: SignupRequestDTO): Promise<Profile> {
+    const newUserAuth = new Profile();
+    newUserAuth.username = signupDTO.username;
+    newUserAuth.email = signupDTO.email;
+    newUserAuth.password = await hashPassword(signupDTO.password);
+    newUserAuth.createdAt = new Date(); // check this in entity
+    return await this.deps.profileRepo.createOrUpdate(newUserAuth);
+  }
+
+  private async handleTokenCreation(user: Profile) {
+    //FIXME - change this later, add timer and more checks i guess
+    const userToken = await this.deps.tokenRepo.getByProfileEmail(user.email);
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    const newAccessToken = new ForgetPasswordToken();
+
+    newAccessToken.resetPasswordToken = resetToken;
+    newAccessToken.expirationDate = new Date(Date.now() + 3600000);
+    newAccessToken.profileEmail = user.email;
+    return await this.deps.tokenRepo.createOrUpdate(newAccessToken);
   }
 }
