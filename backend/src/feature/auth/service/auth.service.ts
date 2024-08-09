@@ -9,14 +9,13 @@ import {
   hashPassword,
   passwordMatch,
 } from "../utils/password.utils";
-import { JwtService } from "./jwt.service";
-
 import crypto from "crypto";
 import dotenv from "dotenv-flow";
 import { transporter } from "../../../dependencies";
 import { MailerService } from "feature/mailer/service/mailer.service";
 import { ForgetPasswordToken } from "../repository/token.entity";
 import { ITokenRepository } from "../repository/token.repo";
+import { generateAccessToken } from "../utils/jwt.utils";
 import { strings } from "resources/strings";
 
 dotenv.config();
@@ -39,15 +38,9 @@ export class AuthService {
 
     try {
       const user = await this.createUser(signupDTO);
-      const jwtPayload = {
-        subjectId: user.id,
-        username: user.username,
-      };
-      const jwt = JwtService.createAccessToken(jwtPayload);
-      console.log(jwt);
+      const jwt = generateAccessToken(user.id);
       return { accessToken: jwt };
     } catch (e) {
-      console.log(e);
       throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
@@ -68,11 +61,7 @@ export class AuthService {
       throw new HttpError(400, strings.INVALID_USERNAME_OR_PASSWORD_ERROR);
     }
 
-    const jwtPayload = {
-      subjectId: user.id,
-      username: user.username,
-    };
-    const jwt = JwtService.createAccessToken(jwtPayload);
+    const jwt = generateAccessToken(user.id);
     return { accessToken: jwt };
   }
 
@@ -100,7 +89,6 @@ export class AuthService {
       );
       return;
     } catch (e) {
-      console.log(e);
       throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
