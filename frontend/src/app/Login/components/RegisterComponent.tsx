@@ -6,6 +6,8 @@ import Vector from "../../../assets/images/Icons/Vector.jpg";
 import MirzaInput from "../../../Shared/Components/MirzaInput";
 import MirzaButton from "../../../Shared/Components/MirzaButton";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "../../../Shared/Components/ToastComponent";
 interface FormValues {
   username: string;
   email: string;
@@ -19,9 +21,37 @@ export default function RegisterComponent() {
     watch,
     formState: { errors },
   } = useForm<FormValues>();
+  const navigate = useNavigate();
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    try {
+      const response = await fetch("http://localhost:3000/auth/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(data),
+      });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      console.log(result);
+
+      if (result.isSuccess) {
+        toast.success("User created successfully");
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000); // Redirect after 2 seconds
+      } else {
+        toast.error("Registration failed");
+      }
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      toast.error("There was a problem with the registration");
+    }
   };
 
   const password = watch("password");

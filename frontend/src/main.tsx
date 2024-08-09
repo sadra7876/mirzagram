@@ -11,9 +11,11 @@ import NotFoundPage from "./app/404/404.tsx";
 import PasswordRecovery from "./app/PasswordRecovery/passwordRecovery.tsx";
 import SetNewPassword from "./app/PasswordRecovery/SetNewPassword.tsx";
 import ResetLinkPassword from "./app/PasswordRecovery/ResetPasswordLink.tsx";
+import { ToastComponent } from "./Shared/Components/ToastComponent.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
+      <ToastComponent />
       <Routes>
         {/* <PrivateRoutes /> */}
         <Route element={<PrivateRoutes />}>
