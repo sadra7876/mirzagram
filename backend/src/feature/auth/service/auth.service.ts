@@ -17,6 +17,7 @@ import { transporter } from "../../../dependencies";
 import { MailerService } from "feature/mailer/service/mailer.service";
 import { ForgetPasswordToken } from "../repository/token.entity";
 import { ITokenRepository } from "../repository/token.repo";
+import { strings } from "resources/strings";
 
 dotenv.config();
 
@@ -31,7 +32,7 @@ export class AuthService {
 
   async signup(signupDTO: SignupRequestDTO): Promise<SignupResponseDTO> {
     if (!passwordMatch(signupDTO.password, signupDTO.confirmPassword)) {
-      throw new HttpError(400, "Passwords do not match");
+      throw new HttpError(400, strings.PASSWORDS_DO_NOT_MATCH_ERROR);
     }
 
     await this.handleUserCheck(signupDTO.email, signupDTO.username);
@@ -47,7 +48,7 @@ export class AuthService {
       return { accessToken: jwt };
     } catch (e) {
       console.log(e);
-      throw new HttpError(500, "Internal server error");
+      throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -64,7 +65,7 @@ export class AuthService {
     }
 
     if (!user || !(await verifyPassword(signinDTO.password, user.password))) {
-      throw new HttpError(400, "Username or password is wrong!");
+      throw new HttpError(400, strings.INVALID_USERNAME_OR_PASSWORD_ERROR);
     }
 
     const jwtPayload = {
@@ -79,14 +80,14 @@ export class AuthService {
     forgotPasswordDTO: ForgotPassword
   ): Promise<void> {
     if (!isValidEmail(forgotPasswordDTO.email)) {
-      throw new HttpError(400, "Invalid email address");
+      throw new HttpError(400, strings.INVALID_EMAIL_ERROR);
     }
 
     const user = await this.deps.profileRepo.getByEmail(
       forgotPasswordDTO.email
     );
     if (!user) {
-      throw new HttpError(404, "User not found");
+      throw new HttpError(404, strings.INVALID_USERNAME_ERROR);
     }
     try {
       const newAccessToken = await this.handleTokenCreation(user);
@@ -100,7 +101,7 @@ export class AuthService {
       return;
     } catch (e) {
       console.log(e);
-      throw new HttpError(500, "Internal server error");
+      throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -110,17 +111,16 @@ export class AuthService {
     const tokenData = await this.deps.tokenRepo.getByToken(
       resetPasswordDTO.token
     );
-    console.log(tokenData, "tokenData");
     if (!tokenData) {
-      throw new HttpError(404, "User not found");
+      throw new HttpError(404, strings.INVALID_USERNAME_ERROR);
     }
     if (tokenData.expired) {
-      throw new HttpError(400, "Token expired");
+      throw new HttpError(400, strings.RESET_PASSWORD_TOKEN_EXPIRED_ERROR);
     }
 
     if (tokenData.expirationDate < new Date()) {
       await this.deps.tokenRepo.expireToken(tokenData);
-      throw new HttpError(400, "Token expired");
+      throw new HttpError(400, strings.RESET_PASSWORD_TOKEN_EXPIRED_ERROR);
     }
 
     if (
@@ -129,7 +129,7 @@ export class AuthService {
         resetPasswordDTO.confirmPassword
       )
     ) {
-      throw new HttpError(400, "Passwords do not match");
+      throw new HttpError(400, strings.PASSWORDS_DO_NOT_MATCH_ERROR);
     }
 
     try {
@@ -137,7 +137,7 @@ export class AuthService {
       const userToUpdate = await this.deps.profileRepo.getByEmail(
         tokenData.profileEmail
       );
-      if (!userToUpdate) throw new HttpError(404, "User not found");
+      if (!userToUpdate) throw new HttpError(404, strings.INVALID_USERNAME_ERROR);
       await this.deps.profileRepo.createOrUpdate({
         ...userToUpdate,
         password: hashedPassword,
@@ -145,19 +145,19 @@ export class AuthService {
       await this.deps.tokenRepo.expireToken(tokenData);
       return;
     } catch (error) {
-      throw new HttpError(500, "Internal server error");
+      throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
 
   private async handleUserCheck(email: Email, username: Username) {
     const emailExists = await this.deps.profileRepo.getByEmail(email);
     if (emailExists) {
-      throw new HttpError(400, "Email already exists");
+      throw new HttpError(400, strings.EMAIL_ALREADY_EXISTS_ERROR);
     }
 
     const usernameExists = await this.deps.profileRepo.getByUsername(username);
     if (usernameExists) {
-      throw new HttpError(400, "Username already exists");
+      throw new HttpError(400, strings.USERNAME_ALREADY_EXISTS_ERROR);
     }
   }
 
