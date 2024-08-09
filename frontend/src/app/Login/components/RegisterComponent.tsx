@@ -5,13 +5,26 @@ import GmailIcon from "../../../assets/images/Icons/gmail.jpg";
 import Vector from "../../../assets/images/Icons/Vector.jpg";
 import MirzaInput from "../../../Shared/Components/MirzaInput";
 import MirzaButton from "../../../Shared/Components/MirzaButton";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
+interface FormValues {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 export default function RegisterComponent() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>();
 
-  const onSubmit = (data: any) => {
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
+
+  const password = watch("password");
 
   return (
     <form
@@ -44,6 +57,7 @@ export default function RegisterComponent() {
           placeholder="رمز عبور"
           inputIcon={keyIcon}
         />
+        {errors.password && <span>رمز عبور الزامی است</span>}
         <MirzaInput
           type="password"
           name="confirmPassword"
@@ -51,6 +65,9 @@ export default function RegisterComponent() {
           placeholder="تکرار رمز عبور"
           inputIcon={keyIcon}
         />
+        {errors.confirmPassword && (
+          <span>{errors.confirmPassword.message}</span>
+        )}
       </div>
       <MirzaButton title="ثبت نام " type="submit" />
     </form>

@@ -3,7 +3,7 @@ import { UseFormRegister } from "react-hook-form";
 
 interface MirzaInputProps {
   name: string;
-  register: UseFormRegister<any>;
+  register: any; // UseFormRegister<any>;
   type?: string;
   placeholder?: string;
   inputIcon: string;

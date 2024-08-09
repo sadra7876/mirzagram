@@ -7,7 +7,7 @@ import arow from "../../../assets/images/Icons/arrow.svg";
 import { useForm } from "react-hook-form";
 
 interface FormValues {
-  usernameOrEmail: string;
+  identifier: string;
   password: string;
 }
 export default function LoginComponent() {
