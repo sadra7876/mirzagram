@@ -11,13 +11,14 @@ export default function LoginPage() {
       <div className="flex h-full w-full flex-col items-center rounded-3xl bg-neutral-100 px-20 py-16 md:h-[688px] md:w-1/3">
         <img src={rahnamaLogo} className="h-15 w-28" />
 
-        <div className="my-6 grid grid-cols-2 divide-x-2 divide-black">
+        <div className="my-6 flex flex-row divide-black">
           <button
             className={`px-3 ${state === "REGISTER" ? "" : "text-gray-400"}`}
             onClick={() => setState("REGISTER")}
           >
             ثبت نام
           </button>
+          <hr className="h-full border border-gray-500" />
           <button
             className={`px-3 ${state === "LOGIN" ? "" : "text-gray-400"}`}
             onClick={() => setState("LOGIN")}
