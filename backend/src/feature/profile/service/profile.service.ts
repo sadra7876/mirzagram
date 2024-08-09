@@ -8,6 +8,7 @@ import {
 import { ProfileId } from "types/profile.type";
 import { profileDTO } from "../routes/dto/profile.dto";
 import { HttpError } from "@utils/http-error";
+import { strings } from "resources/strings";
 dotenv.config();
 
 interface dependencies {
@@ -24,11 +25,11 @@ export class ProfileService {
   async updateUserProfile(profileDTO: profileDTO, id: ProfileId) {
     const user = await this.deps.profileRepo.getById(id);
     if (!passwordMatch(profileDTO.password, profileDTO.confirmPassword)) {
-      throw new HttpError(400, "Passwords do not match");
+      throw new HttpError(400, strings.PASSWORDS_DO_NOT_MATCH_ERROR);
     }
 
     if (!user) {
-      throw new HttpError(404, "User not found");
+      throw new HttpError(404, strings.RESET_PASSWORD_TOKEN_EXPIRED_ERROR);
     }
     try {
       user.firstName = profileDTO.firstName || user.firstName;
@@ -40,10 +41,9 @@ export class ProfileService {
       user.bio = profileDTO.bio || user.bio;
 
       await this.deps.profileRepo.createOrUpdate(user);
-      return { msg: "profile updated successfully" };
     } catch (e) {
       console.log(e);
-      throw new HttpError(500, "Internal server error");
+      throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
 }
