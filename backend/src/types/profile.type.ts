@@ -18,5 +18,5 @@ export function isEmail(value: string): value is Email {
 
 export type Password = Branded<string, "password">;
 export function isPassword(value: string): value is Password {
-  return /^[A-Za-z][A-Za-z0-9]*$/.test(value) && value.length > 4;
+  return value.length > 4;
 }

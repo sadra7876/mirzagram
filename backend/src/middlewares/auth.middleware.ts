@@ -8,7 +8,7 @@ export const parseJwt = (req: Request, res: Response, next: NextFunction) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const { valid, decoded } = verifyJwt(accessToken);
+  const { valid, decoded } = verifyJwt(accessToken, "access");
   if (decoded && valid) {
     res.locals.jwt = decoded;
     next();

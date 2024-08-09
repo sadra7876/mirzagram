@@ -24,6 +24,7 @@ export const AppDataSource = new DataSource({
   migrations: [],
 });
 
+// Mailer service
 export const transporter = nodemailer.createTransport({
   host: "sandbox.smtp.mailtrap.io",
   port: 2525,
@@ -37,6 +38,7 @@ export const transporter = nodemailer.createTransport({
 // Repositories
 const profileRepository = new ProfileRepository(AppDataSource);
 const tokenRepository = new TokenRepository(AppDataSource);
+
 // Services
 export const authService = new AuthService({
   profileRepo: profileRepository,
