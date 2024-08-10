@@ -14,6 +14,7 @@ WORKDIR /mirzagram-frontend
 COPY package*.json .
 COPY .pnp* .
 RUN npm install --verbose
+RUN npm run build
 COPY . .
 EXPOSE 8000
-CMD [ "npm" ,"run", "dev" ]
+CMD [ "npm" ,"run", "preview" ]
