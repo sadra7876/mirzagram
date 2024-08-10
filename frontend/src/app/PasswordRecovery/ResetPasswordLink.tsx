@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+// import { useState } from "react";
 import rahnamaLogo from "../../assets/images/rahnema-logo.png";
-import MirzaInput from "./../../Shared/Components/MirzaInput";
-import key from "../../assets/images/Icons/key.jpg";
-import MirzaButton from "../../Shared/Components/MirzaButton";
+// import MirzaInput from "./../../Shared/Components/MirzaInput";
+// import key from "../../assets/images/Icons/key.jpg";
+// import MirzaButton from "../../Shared/Components/MirzaButton";
 export default function ResetLinkPassword() {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center md:bg-background-auth md:bg-cover">
-      <div className="h-300 flex w-485 flex-col items-center gap-8 rounded-3xl bg-neutral-100 px-20 py-16 md:h-[300] md:w-485">
+      <div className="h-300 w-485 md:w-485 flex flex-col items-center gap-8 rounded-3xl bg-neutral-100 px-20 py-16 md:h-[300]">
         <img src={rahnamaLogo} className="h-15 w-28" />
         <div
           dir="rtl"

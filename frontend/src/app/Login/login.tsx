@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import rahnamaLogo from "../../assets/images/rahnema-logo.png";
 import LoginComponent from "./components/LoginComponent";
 import RegisterComponent from "./components/RegisterComponent";
@@ -13,17 +13,19 @@ export default function LoginPage() {
 
         <div className="my-6 flex flex-row divide-black">
           <button
-            className={`px-3 ${state === "REGISTER" ? "" : "text-gray-400"}`}
-            onClick={() => setState("REGISTER")}
-          >
-            ثبت نام
-          </button>
-          <hr className="h-full border border-gray-500" />
-          <button
             className={`px-3 ${state === "LOGIN" ? "" : "text-gray-400"}`}
             onClick={() => setState("LOGIN")}
           >
             ورود
+          </button>
+
+          <hr className="h-full border border-gray-500" />
+
+          <button
+            className={`px-3 ${state === "REGISTER" ? "" : "text-gray-400"}`}
+            onClick={() => setState("REGISTER")}
+          >
+            ثبت نام
           </button>
         </div>
 
