@@ -4,10 +4,10 @@ import {
   hashPassword,
   passwordMatch,
   verifyPassword,
-} from "../../auth/utils/password.utils";
+} from "feature/auth/utils/password.utils";
 import { ProfileId } from "types/profile.type";
-import { profileDTO } from "../routes/dto/profile.dto";
-import { HttpError } from "@utils/http-error";
+import { profileDTO } from "../dto/profile.dto";
+import { HttpError } from "utils/http-error";
 import { strings } from "resources/strings";
 dotenv.config();
 
@@ -29,7 +29,7 @@ export class ProfileService {
     }
 
     if (!user) {
-      throw new HttpError(404, strings.RESET_PASSWORD_TOKEN_EXPIRED_ERROR);
+      throw new HttpError(404, strings.USER_NOT_FOUND);
     }
     try {
       user.firstName = profileDTO.firstName || user.firstName;

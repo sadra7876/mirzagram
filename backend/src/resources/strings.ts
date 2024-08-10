@@ -14,4 +14,5 @@ export const strings = {
   RESET_PASSWORD_TOKEN_EXPIRED_ERROR: "توکن منقضی شده است",
   EMAIL_ALREADY_EXISTS_ERROR: "نام کاربری نامعتبر است",
   USERNAME_ALREADY_EXISTS_ERROR: "نام کاربری نامعتبر است",
+  USER_NOT_FOUND: "کاربر یافت نشد",
 };

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { profileService } from "../../../dependencies";
 import { handleRequest } from "../../../utils/handle-request";
 import { ProfileId } from "@CommonTypes/profile.type";
-import { profileDTO } from "./dto/profile.dto";
+import { profileDTO } from "../dto/profile.dto";
 import { parse } from "path";
 import { parseJwt } from "middlewares/auth.middleware";
 import { ApiSuccess } from "@utils/http-response";
@@ -14,7 +14,7 @@ profileRoutes.use(parseJwt);
 
 profileRoutes.get("/", (req, res) => {
   handleRequest(res, async () => {
-    const profileId: ProfileId = res.locals.jwt.id;
+    const profileId: ProfileId = Number(req.subject) as ProfileId;
     const result = await profileService.getUserProfile(profileId);
     return new ApiSuccess(result);
   });
@@ -22,7 +22,7 @@ profileRoutes.get("/", (req, res) => {
 
 profileRoutes.put("/", (req, res) => {
   handleRequest(res, async () => {
-    const profileId: ProfileId = res.locals.jwt.id;
+    const profileId: ProfileId = Number(req.subject) as ProfileId;
     await profileService.updateUserProfile(
       profileDTO.parse(req.body),
       profileId
