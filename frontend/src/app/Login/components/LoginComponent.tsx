@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../../../Shared/Components/ToastComponent";
 
-const BASE_URL = import.meta.env.REACT_APP_BASE_URL;
+const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 interface FormValues {
   identifier: string;
