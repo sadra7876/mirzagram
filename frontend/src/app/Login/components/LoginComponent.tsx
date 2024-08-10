@@ -50,7 +50,7 @@ export default function LoginComponent() {
         مرا به خاطر بسپار
       </label>
       <div>
-        <MirzaButton title="ورود" type="submit" />
+        <MirzaButton title="ورود" icon="" />
       </div>
       <div className="h-12 w-full items-center gap-9 py-12">
         <MirzaAuthLinks

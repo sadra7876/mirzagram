@@ -23,11 +23,24 @@ export default function SetNewPassword() {
               لطفا رمز جدیدی برای حساب خود انتخاب کنید:
             </div>
             <div className="flex flex-col justify-center gap-y-6 py-8">
-              <MirzaInput placeholder="رمز عبور جدید" inputIcon={key} />
-              <MirzaInput placeholder="تکرار رمز عبور جدید" inputIcon={key} />
+              <MirzaInput
+                name="password"
+                type="password"
+                register={""}
+                placeholder="رمز عبور جدید"
+                inputIcon={key}
+              />
+              <MirzaInput
+                name="password"
+                type="password"
+                register={""}
+                placeholder="تکرار رمز عبور جدید"
+                inputIcon={key}
+              />
               <MirzaButton
                 title="ثبت رمز عبور جدید"
                 onClick={() => console.log("click me")}
+                icon=""
               />
             </div>
           </div>
