@@ -13,6 +13,9 @@ FROM node:18.18.0
 WORKDIR /mirzagram-frontend
 COPY package*.json .
 COPY .pnp* .
+COPY tsconfig.json ./
+COPY tsconfig.app.json ./
+COPY tsconfig.node.json ./
 RUN npm install --verbose
 RUN npm run build
 COPY . .
