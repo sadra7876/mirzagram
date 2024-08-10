@@ -1,5 +1,3 @@
-import React from "react";
-
 import keyIcon from "../../../assets/images/Icons/key.jpg";
 import GmailIcon from "../../../assets/images/Icons/gmail.jpg";
 import Vector from "../../../assets/images/Icons/Vector.jpg";
@@ -8,7 +6,7 @@ import MirzaButton from "../../../Shared/Components/MirzaButton";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../../../Shared/Components/ToastComponent";
-const BASE_URL = import.meta.env.REACT_APP_BASE_URL;
+const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 interface FormValues {
   username: string;
   email: string;
@@ -19,7 +17,6 @@ export default function RegisterComponent() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FormValues>();
   const navigate = useNavigate();
@@ -52,8 +49,6 @@ export default function RegisterComponent() {
       toast.error("There was a problem with the registration");
     }
   };
-
-  const password = watch("password");
 
   return (
     <form

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import rahnamaLogo from "../../assets/images/rahnema-logo.png";
 import LoginComponent from "./components/LoginComponent";
 import RegisterComponent from "./components/RegisterComponent";

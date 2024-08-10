@@ -1,12 +1,11 @@
 import React from "react";
-import { UseFormRegister } from "react-hook-form";
 
 interface MirzaInputProps {
   name: string;
   register: any; // UseFormRegister<any>;
   type?: string;
   placeholder?: string;
-  inputIcon: string;
+  inputIcon?: string;
 }
 const MirzaInput: React.FC<MirzaInputProps> = ({
   name,
