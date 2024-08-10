@@ -39,6 +39,7 @@ export class ProfileService {
         (await hashPassword(profileDTO.password)) || user.password;
       user.isPrivate = profileDTO.isPrivate || user.isPrivate;
       user.bio = profileDTO.bio || user.bio;
+      user.profilePicture = profileDTO.profilePicture || user.bio;
 
       await this.deps.profileRepo.createOrUpdate(user);
     } catch (e) {

@@ -3,6 +3,7 @@ export const strings = {
   INVALID_EMAIL_ERROR: "ایمیل نامعتبر است",
   INVALID_PASSWORD_ERROR: "پسورد نامعتبر است",
   INVALID_USERNAME_ERROR: "نام کاربری نامعتبر است",
+  INVALID_URL_ERROR: "آدرس منبع نامعتبر است",
   CREATE_USER_SUCCESSFUL: "حساب کاربری با موفقیت ساخته شد",
   SIGNIN_USER_SUCCESSFUL: "ورود به حساب با موفقیت انجام شد",
   SEND_RESET_PASSWORD_LINK_SUCCESSFUL:

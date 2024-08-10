@@ -15,6 +15,7 @@ profileRoutes.use(parseJwt);
 profileRoutes.get("/", (req, res) => {
   handleRequest(res, async () => {
     const profileId: ProfileId = Number(req.subject) as ProfileId;
+
     const result = await profileService.getUserProfile(profileId);
     return new ApiSuccess(result);
   });
