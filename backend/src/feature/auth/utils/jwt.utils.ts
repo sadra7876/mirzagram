@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 export function generateAccessToken(subject: ProfileId): string {
   const payload: JwtPayload = {
-    sub: subject.toString()
+    sub: subject.toString(),
   };
   const options = {
     expiresIn: process.env.JWT_ACCESS_TOKEN_TTL!,
@@ -12,14 +12,14 @@ export function generateAccessToken(subject: ProfileId): string {
 }
 
 export function verifyAccessToken(token: string): {
-  valid: boolean,
-  payload?: JwtPayload
+  valid: boolean;
+  payload?: JwtPayload;
 } {
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
     return {
       valid: true,
-      payload: payload
+      payload: payload,
     };
   } catch (e: any) {
     return {

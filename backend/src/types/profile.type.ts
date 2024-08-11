@@ -1,5 +1,5 @@
 import { Branded } from "@utils/type-branding";
-import { isValidEmail } from "@utils/type-checking";
+import { isValidEmail, isValidUrl } from "@utils/type-checking";
 
 export type ProfileId = Branded<number, "profileId">;
 export function isProfileId(value: number): value is ProfileId {
@@ -19,4 +19,9 @@ export function isEmail(value: string): value is Email {
 export type Password = Branded<string, "password">;
 export function isPassword(value: string): value is Password {
   return value.length > 4;
+}
+
+export type Url = Branded<string, "url">;
+export function isUrl(value: string): value is Url {
+  return isValidUrl(value);
 }
