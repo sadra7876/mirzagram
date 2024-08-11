@@ -12,7 +12,7 @@ export const parseJwt = (req: Request, res: Response, next: NextFunction) => {
   const { valid, payload } = verifyAccessToken(accessToken);
 
   if (valid && payload && payload.sub) {
-    req.subject = payload.sub
+    req.subject = payload.sub;
     next();
   } else {
     return res.status(401).send(new ApiError(401, "Unauthorized"));

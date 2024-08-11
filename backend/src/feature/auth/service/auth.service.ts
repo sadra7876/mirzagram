@@ -3,7 +3,15 @@ import { isValidEmail } from "@utils/type-checking";
 import { HttpError } from "@utils/http-error";
 import { Profile } from "../../profile/repository/profile.entity";
 import { IProfileRepository } from "../../profile/repository/profile.repo";
-import { ForgotPassword, ResetPassword, SigninRequestDTO, SigninResponseDTO, SignupRequestDTO, SignupResponseDTO, signupRequestDTO } from "../dto";
+import {
+  ForgotPassword,
+  ResetPassword,
+  SigninRequestDTO,
+  SigninResponseDTO,
+  SignupRequestDTO,
+  SignupResponseDTO,
+  signupRequestDTO,
+} from "../dto";
 import {
   verifyPassword,
   hashPassword,
@@ -26,15 +34,14 @@ interface dependencies {
 }
 
 export class AuthService {
-
   constructor(private readonly deps: dependencies) {}
 
   async signup(signupDTO: SignupRequestDTO): Promise<SignupResponseDTO> {
+    await this.handleUserCheck(signupDTO.email, signupDTO.username);
+
     if (!passwordMatch(signupDTO.password, signupDTO.confirmPassword)) {
       throw new HttpError(400, strings.PASSWORDS_DO_NOT_MATCH_ERROR);
     }
-
-    await this.handleUserCheck(signupDTO.email, signupDTO.username);
 
     try {
       const user = await this.createUser(signupDTO);
@@ -93,9 +100,7 @@ export class AuthService {
     }
   }
 
-  async resetPassword(
-    resetPasswordDTO: ResetPassword
-  ): Promise<void> {
+  async resetPassword(resetPasswordDTO: ResetPassword): Promise<void> {
     const tokenData = await this.deps.tokenRepo.getByToken(
       resetPasswordDTO.token
     );
@@ -125,7 +130,8 @@ export class AuthService {
       const userToUpdate = await this.deps.profileRepo.getByEmail(
         tokenData.profileEmail
       );
-      if (!userToUpdate) throw new HttpError(404, strings.INVALID_USERNAME_ERROR);
+      if (!userToUpdate)
+        throw new HttpError(404, strings.INVALID_USERNAME_ERROR);
       await this.deps.profileRepo.createOrUpdate({
         ...userToUpdate,
         password: hashedPassword,
