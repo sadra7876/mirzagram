@@ -3,9 +3,39 @@ import MirzaInput from "./../../Shared/Components/MirzaInput";
 import Vector from "../../assets/images/Icons/Vector.jpg";
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast } from "../../Shared/Components/ToastComponent";
+const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 export default function PasswordRecovery() {
   const { register, handleSubmit } = useForm();
-  const onSubmit = (data: any) => console.log(data);
+  const navigate = useNavigate();
+  const onSubmit = async (data: any) => {
+    try {
+      const response = await fetch(`${BASE_URL}auth/forget-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (result.isSuccess) {
+        setTimeout(() => {
+          localStorage.setItem("token", result.result.accessToken);
+          navigate("/dashboard");
+        }, 2000);
+      } else {
+        result.messages.map((message: string) => {
+          toast.error(message);
+        });
+      }
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      toast.error("There was a problem with the registration");
+    }
+  };
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

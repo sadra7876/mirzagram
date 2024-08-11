@@ -4,7 +4,10 @@ export default function MirzaAuthLinks(props: {
   icon: string;
 }) {
   return (
-    <div dir="rtl" className="flex items-center gap-1 pb-5 text-xs leading-5">
+    <div
+      dir="rtl"
+      className="flex cursor-pointer items-center gap-1 pb-5 text-xs leading-5"
+    >
       <img src={props.icon} className="object-covers bg-transparent"></img>
       <p onClick={() => props.onClick()} className="text-sm text-mirza-red">
         {props.title}
