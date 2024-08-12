@@ -93,7 +93,7 @@ export default function RegisterComponent() {
           <span>{errors.confirmPassword.message}</span>
         )}
       </div>
-      <MirzaButton title="ثبت نام " icon="" />
+      <MirzaButton type="submit" title="ثبت نام " icon="" />
     </form>
   );
 }
