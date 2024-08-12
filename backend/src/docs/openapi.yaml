@@ -1,4 +1,5 @@
 openapi: 3.0.0
+
 info:
   title: Mirzagram API
   version: 1.0.0
@@ -7,6 +8,8 @@ info:
 tags:
   - name: Auth
     description: Operations related to user authentication.
+  - name: Upload File
+    description: Operations related to file uploads
 
 security:
   - BearerAuth:
@@ -127,6 +130,25 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ProfileRequestDTO"
+
+  # add jwt auth for this please
+  /upload:
+    post:
+      summary: Upload file
+      tags: [Upload File]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [post, profile]
+                file:
+                  type: string
+                  format: binary
       responses:
         200:
           description: "OK"
@@ -134,7 +156,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#components/schemas/ApiResponse"
+                  - $ref: "#components/schemas/UploadResponce"
                   - type: object
 
 components:
@@ -143,6 +165,30 @@ components:
       type: http
       scheme: bearer
   schemas:
+    UploadResponce:
+      type: object
+      properties:
+        isSuccess:
+          type: boolean
+        statusCode:
+          type: number
+        result:
+          type: object
+          properties:
+            fileName:
+              type: string
+            paths:
+              type: string
+            timeCreated:
+              type: string
+            uploadType:
+              type: string
+              enum:
+                - post
+                - profile
+                - other
+        messages:
+          type: array
     ApiResponse:
       type: object
       properties:
@@ -242,3 +288,11 @@ components:
           nullable: true
         createdAt:
           type: string
+    UploadDTO:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum: [post, profile]
