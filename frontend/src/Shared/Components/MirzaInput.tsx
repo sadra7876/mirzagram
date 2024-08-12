@@ -16,7 +16,7 @@ const MirzaInput: React.FC<MirzaInputProps> = ({
   inputIcon,
 }) => {
   return (
-    <div className="mb-2 flex h-9 flex-row items-center gap-x-1 rounded-2xl bg-white px-3.5 text-right text-xs">
+    <div className="mb-2 flex h-9 w-full flex-row items-center gap-x-1 rounded-2xl bg-white px-3.5 text-right text-xs">
       <img src={inputIcon} className="h-4 w-4 object-cover"></img>
       <input
         type={type}

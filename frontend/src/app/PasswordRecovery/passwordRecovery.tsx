@@ -7,11 +7,15 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "../../Shared/Components/ToastComponent";
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 export default function PasswordRecovery() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
   const onSubmit = async (data: any) => {
     try {
-      const response = await fetch(`${BASE_URL}auth/forget-password`, {
+      const response = await fetch(`${BASE_URL}auth/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,8 +27,7 @@ export default function PasswordRecovery() {
 
       if (result.isSuccess) {
         setTimeout(() => {
-          localStorage.setItem("token", result.result.accessToken);
-          navigate("/dashboard");
+          navigate("/resetPasswordLink");
         }, 2000);
       } else {
         result.messages.map((message: string) => {
@@ -59,15 +62,23 @@ export default function PasswordRecovery() {
 
           <MirzaInput
             name="email"
-            register={register}
+            register={register("email", { required: true })}
             placeholder="نام کاربری یا ایمیل"
             inputIcon={Vector}
           />
-          <div className="flex flex-row items-center gap-2 py-8">
-            <MirzaButton title="ارسال لینک بازیابی رمز عبور" type="submit" />
-            <button className="flex-row bg-transparent text-black">
+          {errors.email && (
+            <span className="text-xs text-red-500">
+              ایمیل یا نام کاربری الزامی است
+            </span>
+          )}
+          <div className="flex flex-row items-center justify-end gap-x-2 py-8">
+            <button
+              onClick={() => navigate("/login")}
+              className="flex-row bg-transparent text-black"
+            >
               انصراف
             </button>
+            <MirzaButton title="ارسال لینک بازیابی رمز عبور" type="submit" />
           </div>
         </div>
       </div>
