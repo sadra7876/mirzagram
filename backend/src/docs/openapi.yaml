@@ -10,6 +10,8 @@ tags:
     description: Operations related to user authentication.
   - name: Upload File
     description: Operations related to file uploads
+  - name: CDN
+    description: Operations related to retrieving `files` / `images` / `videos` from server
 
 security:
   - BearerAuth:
@@ -158,6 +160,43 @@ paths:
                 allOf:
                   - $ref: "#components/schemas/UploadResponce"
                   - type: object
+  /cdn/{type}/{filename}:
+    get:
+      tags: [CDN]
+      summary: Retrieve a file by type and filename
+      description: Get a file from the specified type directory by its filename.
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            type: string
+            enum: [profiles, post, others]
+          description: The type of the file (e.g., profiles, post, others)
+        - in: path
+          name: filename
+          required: true
+          schema:
+            type: string
+          description: The name of the file to retrieve
+      responses:
+        "200":
+          description: Successfully retrieved the file
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: File not found
 
 components:
   securitySchemes:
