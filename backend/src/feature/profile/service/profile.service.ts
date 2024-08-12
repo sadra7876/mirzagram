@@ -9,7 +9,6 @@ import { ProfileId } from "types/profile.type";
 import { profileRequestDTO, ProfileResponseDTO } from "../dto/profile.dto";
 import { HttpError } from "utils/http-error";
 import { strings } from "resources/strings";
-import omit from "lodash/omit";
 import { Profile } from "../repository/profile.entity";
 dotenv.config();
 
