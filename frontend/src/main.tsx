@@ -21,8 +21,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route element={<PublicRoute />}>
           <Route element={<LoginPage />} path="/login" />
           <Route element={<PasswordRecovery />} path="/passwordRecovery" />
-          <Route element={<SetNewPassword />} path="/SetNewPassword" />
-          <Route element={<ResetLinkPassword />} path="/ResetPasswordLink" />
+          <Route element={<SetNewPassword />} path="/setNewPassword" />
+          <Route element={<ResetLinkPassword />} path="/resetPasswordLink" />
         </Route>
 
         <Route element={<PrivateRoute />}>
