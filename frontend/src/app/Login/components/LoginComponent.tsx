@@ -62,14 +62,14 @@ export default function LoginComponent() {
         <MirzaInput
           name="identifier"
           type="text"
-          register={register}
+          register={register("identifier", { required: true })}
           placeholder="نام کاربری/ایمیل"
           inputIcon={GmailIcon}
         />
         <MirzaInput
           name="password"
           type="password"
-          register={register}
+          register={register("password", { required: true })}
           placeholder="رمز عبور"
           inputIcon={keyIcon}
         />
@@ -79,12 +79,12 @@ export default function LoginComponent() {
         مرا به خاطر بسپار
       </label>
       <div>
-        <MirzaButton title="ورود" icon="" />
+        <MirzaButton type="submit" title="ورود" icon="" />
       </div>
       <div className="h-12 w-full items-center gap-9 py-12">
         <MirzaAuthLinks
           title="بازیابی رمز عبور"
-          onClick={() => console.log("clickme")}
+          onClick={() => navigate("/passwordRecovery")}
           icon={arow}
         />
         <MirzaAuthLinks

@@ -18,6 +18,7 @@ export default function RegisterComponent() {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<FormValues>();
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -31,7 +32,6 @@ export default function RegisterComponent() {
       });
 
       const result = await response.json();
-      console.log(result);
 
       if (result.isSuccess) {
         toast.success("حساب کاربری شما با موفقیت ایجاد شد");
@@ -61,39 +61,53 @@ export default function RegisterComponent() {
       >
         برای ثبت‌نام کافیه نام کاربری، ایمیل و یک رمز عبور وارد کنید:
       </p>
-      <div className="flex flex-col justify-center gap-y-6 py-8">
+      <div className="flex flex-col justify-center py-8">
         <MirzaInput
-          name="username"
-          register={register}
+          register={register("username", { required: true })}
           placeholder="نام کاربری"
           inputIcon={Vector}
         />
+        {errors.username && (
+          <span className="text-xs text-red-500">نام کاربری الزامی است</span>
+        )}
         <MirzaInput
           name="email"
-          register={register}
+          type="email"
+          register={register("email", { required: true })}
           placeholder="ایمیل"
           inputIcon={GmailIcon}
         />
+        {errors.email && (
+          <span className="text-xs text-red-500">ایمیل الزامی است</span>
+        )}
         <MirzaInput
           type="password"
           name="password"
-          register={register}
+          register={register("password", { required: true })}
           placeholder="رمز عبور"
           inputIcon={keyIcon}
         />
-        {errors.password && <span>رمز عبور الزامی است</span>}
+        {errors.password && (
+          <span className="text-xs text-red-500">رمز عبور الزامی است</span>
+        )}
         <MirzaInput
           type="password"
           name="confirmPassword"
-          register={register}
+          register={register("confirmPassword", {
+            required: true,
+            validate: (value) =>
+              value === watch("password") || "رمز عبور مطابقت ندارد",
+          })}
           placeholder="تکرار رمز عبور"
           inputIcon={keyIcon}
         />
         {errors.confirmPassword && (
-          <span>{errors.confirmPassword.message}</span>
+          <span className="text-xs text-red-500">
+            {errors.confirmPassword.message}
+          </span>
         )}
       </div>
-      <MirzaButton type="submit" title="ثبت نام " icon="" />
+      <MirzaButton title="ثبت نام " icon="" />
     </form>
   );
 }
