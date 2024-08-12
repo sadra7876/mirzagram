@@ -8,6 +8,10 @@ tags:
   - name: Auth
     description: Operations related to user authentication.
 
+security:
+  - BearerAuth:
+      - read
+      - write
 paths:
   /auth/sign-up:
     post:
@@ -29,10 +33,10 @@ paths:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
                     properties:
-                      result: 
+                      result:
                         type: object
                         properties:
-                          accessToken: 
+                          accessToken:
                             type: string
   /auth/sign-in:
     post:
@@ -54,10 +58,10 @@ paths:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
                     properties:
-                      result: 
+                      result:
                         type: object
                         properties:
-                          accessToken: 
+                          accessToken:
                             type: string
   /auth/forgot-password:
     post:
@@ -97,9 +101,47 @@ paths:
                 allOf:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
-                          
+  /profile:
+    get:
+      summary: get profile content
+      tags: [profile]
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#components/schemas/ProfileResponseDTO"
+
+    put:
+      summary: update profile
+      tags: [profile]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
   schemas:
     ApiResponse:
       type: object
@@ -157,4 +199,46 @@ components:
         - email
       properties:
         email:
+          type: string
+    ProfileRequestDTO:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        confirmPassword:
+          type: string
+        isPrivate:
+          type: boolean
+        bio:
+          type: string
+        profilePicture:
+          type: string
+    ProfileResponseDTO:
+      type: object
+      properties:
+        username:
+          type: string
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        email:
+          type: string
+        isPrivate:
+          type: boolean
+        bio:
+          type: string
+          nullable: true
+        profilePicture:
+          type: string
+          nullable: true
+        createdAt:
           type: string
