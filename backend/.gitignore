@@ -8,3 +8,5 @@ api.http
 .yarn-integrity
 .DS_Store
 docker-compose.override.yaml
+
+uploads/
