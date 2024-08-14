@@ -2,6 +2,8 @@ import MirzaButton from "../../Shared/Components/MirzaButton";
 import MirzaMenuButton from "../../Shared/Components/MirzaMenuButton";
 import PlusIcon from "../../assets/images/Icons/plus.svg";
 import vector from "../../assets/images/Icons/Vector.jpg";
+import { useNavigate, Outlet } from "react-router-dom";
+
 import PinIcon from "../../assets/images/Icons/pin.svg";
 import SavedIcon from "../../assets/images/Icons/saved.svg";
 import SpeachIcon from "../../assets/images/Icons/speech.svg";
@@ -9,7 +11,8 @@ import BellIcon from "../../assets/images/Icons/bell.svg";
 import TagIcon from "../../assets/images/Icons/Tag.svg";
 import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
 
-export default function MainPage() {
+const DashboardLayout = () => {
+  const navigate = useNavigate();
   return (
     <div className="grid h-screen grid-cols-[310px_1fr] bg-neutral-100 pr-14 pt-10">
       {/* right sidebar */}
@@ -28,12 +31,12 @@ export default function MainPage() {
           <MirzaMenuButton
             title="صفحه من"
             icon={<img src={PinIcon} alt="pin icon" />}
-            onClick={() => console.log("aaa")}
+            onClick={() => navigate("/profile")}
           />
           <MirzaMenuButton
             title="ذخیره‌‌ها"
             icon={<img src={SavedIcon} alt="pin icon" />}
-            onClick={() => console.log("aaa")}
+            onClick={() => navigate("/messages")}
           />
 
           <MirzaMenuButton
@@ -74,33 +77,12 @@ export default function MainPage() {
         </div>
       </div>
       {/* left sidebar */}
-      <div className="px-78 flex flex-col gap-6">
-        <div className="flex justify-end py-5">
-          <img src={rahnemaLogo} />
-        </div>
-        <div>
-          <div className="flex">صفحه من</div>
-          <div className="grid grid-cols-3 items-center md:grid-cols-[1fr_2fr_1fr]">
-            <div>
-              <img
-                src={vector}
-                className="h-[8.33rem] w-[8.33rem] rounded-full"
-              ></img>
-            </div>
-            <div className="items-end">
-              <p>Id</p>
-              <p>Name</p>
-              <p>followers and following and posts</p>
-              <p>bio</p>
-            </div>
-            <MirzaButton title="ویرایش پروفایل" />
-          </div>
-
-          <div className="h-full w-full flex-col gap-8 rounded-3xl border-2">
-            هنوز هیچ پستی نذاشتی
-          </div>
-        </div>
+      {/*  */}
+      <div className="flex flex-col items-start pt-28">
+        <Outlet />
+        {/* <DashboardPages /> */}
       </div>
     </div>
   );
-}
+};
+export default DashboardLayout;

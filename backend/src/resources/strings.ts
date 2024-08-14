@@ -1,3 +1,5 @@
+import { FILE } from "dns";
+
 export const strings = {
   INTERNAL_SERVER_ERROR: "خطای داخلی سرور",
   INVALID_EMAIL_ERROR: "ایمیل نامعتبر است",
@@ -16,4 +18,6 @@ export const strings = {
   EMAIL_ALREADY_EXISTS_ERROR: "نام کاربری نامعتبر است",
   USERNAME_ALREADY_EXISTS_ERROR: "نام کاربری نامعتبر است",
   USER_NOT_FOUND: "کاربر یافت نشد",
+  FILE_NOT_FOUND: "فایل یافت نشد",
+  FILE_UPLOAD_SUCCESSFUL: "فایل با موفقیت آپلود شد",
 };

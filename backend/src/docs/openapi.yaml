@@ -1,4 +1,5 @@
 openapi: 3.0.0
+
 info:
   title: Mirzagram API
   version: 1.0.0
@@ -7,6 +8,10 @@ info:
 tags:
   - name: Auth
     description: Operations related to user authentication.
+  - name: Upload File
+    description: Operations related to file uploads
+  - name: CDN
+    description: Operations related to retrieving `files` / `images` / `videos` from server
 
 security:
   - BearerAuth:
@@ -127,6 +132,25 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ProfileRequestDTO"
+
+  # add jwt auth for this please
+  /upload:
+    post:
+      summary: Upload file
+      tags: [Upload File]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [post, profile]
+                file:
+                  type: string
+                  format: binary
       responses:
         200:
           description: "OK"
@@ -134,8 +158,45 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#components/schemas/ApiResponse"
+                  - $ref: "#components/schemas/UploadResponce"
                   - type: object
+  /cdn/{type}/{filename}:
+    get:
+      tags: [CDN]
+      summary: Retrieve a file by type and filename
+      description: Get a file from the specified type directory by its filename.
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            type: string
+            enum: [profiles, post, others]
+          description: The type of the file (e.g., profiles, post, others)
+        - in: path
+          name: filename
+          required: true
+          schema:
+            type: string
+          description: The name of the file to retrieve
+      responses:
+        "200":
+          description: Successfully retrieved the file
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: File not found
 
 components:
   securitySchemes:
@@ -143,6 +204,30 @@ components:
       type: http
       scheme: bearer
   schemas:
+    UploadResponce:
+      type: object
+      properties:
+        isSuccess:
+          type: boolean
+        statusCode:
+          type: number
+        result:
+          type: object
+          properties:
+            fileName:
+              type: string
+            paths:
+              type: string
+            timeCreated:
+              type: string
+            uploadType:
+              type: string
+              enum:
+                - post
+                - profile
+                - other
+        messages:
+          type: array
     ApiResponse:
       type: object
       properties:
@@ -242,3 +327,11 @@ components:
           nullable: true
         createdAt:
           type: string
+    UploadDTO:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum: [post, profile]
