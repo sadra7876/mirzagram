@@ -1,12 +1,13 @@
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import MirzaMenuButton from "../../Shared/Components/MirzaMenuButton";
 import PlusIcon from "../../assets/images/Icons/plus.svg";
-
+import vector from "../../assets/images/Icons/Vector.jpg";
 import PinIcon from "../../assets/images/Icons/pin.svg";
 import SavedIcon from "../../assets/images/Icons/saved.svg";
 import SpeachIcon from "../../assets/images/Icons/speech.svg";
 import BellIcon from "../../assets/images/Icons/bell.svg";
 import TagIcon from "../../assets/images/Icons/Tag.svg";
+import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
 
 export default function MainPage() {
   return (
@@ -18,6 +19,7 @@ export default function MainPage() {
           onClick={() => console.log("new post")}
           icon={<img src={PlusIcon} alt="Plus Icon" />}
         />
+
         <div className="mt-8 flex h-full w-full flex-col items-center rounded-t-2xl border bg-white py-10">
           <div className="flex flex-row">
             <div className="rounded-full bg-neutral-400 shadow-md">aa</div>
@@ -72,7 +74,33 @@ export default function MainPage() {
         </div>
       </div>
       {/* left sidebar */}
-      <div className="flex flex-col items-start"></div>
+      <div className="px-78 flex flex-col gap-6">
+        <div className="flex justify-end py-5">
+          <img src={rahnemaLogo} />
+        </div>
+        <div>
+          <div className="flex">صفحه من</div>
+          <div className="grid grid-cols-3 items-center md:grid-cols-[1fr_2fr_1fr]">
+            <div>
+              <img
+                src={vector}
+                className="h-[8.33rem] w-[8.33rem] rounded-full"
+              ></img>
+            </div>
+            <div className="items-end">
+              <p>Id</p>
+              <p>Name</p>
+              <p>followers and following and posts</p>
+              <p>bio</p>
+            </div>
+            <MirzaButton title="ویرایش پروفایل" />
+          </div>
+
+          <div className="h-full w-full flex-col gap-8 rounded-3xl border-2">
+            هنوز هیچ پستی نذاشتی
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
