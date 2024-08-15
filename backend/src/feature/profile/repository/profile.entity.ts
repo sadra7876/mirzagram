@@ -35,7 +35,7 @@ export class Profile {
   lastName?: string;
 
   @Column({
-    default: false,
+    default: true,
   })
   isActive: boolean;
 

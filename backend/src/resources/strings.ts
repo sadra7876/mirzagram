@@ -20,4 +20,11 @@ export const strings = {
   USER_NOT_FOUND: "کاربر یافت نشد",
   FILE_NOT_FOUND: "فایل یافت نشد",
   FILE_UPLOAD_SUCCESSFUL: "فایل با موفقیت آپلود شد",
+  POST_ADDED_SUCCESSFULLY: "پست با موفقیت اضافه شد",
+  POST_EDITED_SUCCESSFULLY: "پست با موفقیت ویرایش شد",
+  POST_NOT_FOUND_ERROR: "پست پیدا نشد",
+  FILE_NAME_EMPTY_ERROR: "نام فایل نمیتواند خالی باشد",
+  CANNOT_ADD_POST_FOR_PROFILE_ERROR: "این پروفایل امکان افزودن عکس را ندارد",
+  POST_FORBIDDEN_ERROR: "شما به این پست دسترسی ندارید",
+  MENTION_USERNAME_NOT_EXIST_ERROR: "نام کاربری منشن شده وجود ندارد"
 };

@@ -4,13 +4,13 @@ import { handleRequest } from "../../../utils/handle-request";
 import { ProfileId } from "@CommonTypes/profile.type";
 import { profileRequestDTO, ProfileResponseDTO } from "../dto/profile.dto";
 import { parse } from "path";
-import { parseJwt } from "middlewares/auth.middleware";
+import { authMiddleware } from "middlewares/auth.middleware";
 import { ApiSuccess } from "@utils/http-response";
 import { string } from "zod";
 import { strings } from "resources/strings";
 
 export const profileRoutes = Router();
-profileRoutes.use(parseJwt);
+profileRoutes.use(authMiddleware);
 
 profileRoutes.get("/", (req, res) => {
   handleRequest(res, async () => {

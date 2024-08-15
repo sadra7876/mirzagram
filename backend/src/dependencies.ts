@@ -10,6 +10,12 @@ import { ForgetPasswordToken } from "feature/auth/repository/token.entity";
 import { StorageRepository } from "@feature/storage/repository/storage.repo";
 import { StorageService } from "@feature/storage/service/storage.service";
 import { Storage } from "@feature/storage/repository/storage.entity";
+import { PostService } from "@feature/post/service/post.service";
+import { PostRepository } from "@feature/post/repository/post.repo";
+import { Content } from "@feature/post/repository/entities/content.entity";
+import { Hashtag } from "@feature/post/repository/entities/hashtag.entity";
+import { Mention } from "@feature/post/repository/entities/mention.entity";
+import { Post } from "@feature/post/repository/entities/post.entity";
 dotenv.config();
 
 // DataSource
@@ -22,7 +28,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true,
   logging: true,
-  entities: [Profile, ForgetPasswordToken, Storage],
+  entities: [Profile, ForgetPasswordToken, Storage, Post, Hashtag, Content, Mention],
   subscribers: [],
   migrations: [],
 });
@@ -42,6 +48,8 @@ export const transporter = nodemailer.createTransport({
 const profileRepository = new ProfileRepository(AppDataSource);
 const tokenRepository = new TokenRepository(AppDataSource);
 const storageRepository = new StorageRepository(AppDataSource);
+const postRepository = new PostRepository(AppDataSource);
+
 // Services
 export const authService = new AuthService({
   profileRepo: profileRepository,
@@ -54,3 +62,4 @@ export const profileService = new ProfileService({
 export const storageService = new StorageService({
   storageRepo: storageRepository,
 });
+export const postService = new PostService(postRepository, profileRepository);
