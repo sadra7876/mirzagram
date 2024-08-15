@@ -24,6 +24,9 @@ export default {
       colors: {
         "mirza-green": "#17494D",
         "mirza-red": "#EA5A69",
+        "mirza-black": "#191919",
+        "mirza-gold": "#C19008",
+        "mirza-orange": "#F7901E",
       },
     },
   },

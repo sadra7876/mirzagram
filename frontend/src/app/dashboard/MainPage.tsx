@@ -78,7 +78,10 @@ const DashboardLayout = () => {
       </div>
       {/* left sidebar */}
       {/*  */}
-      <div className="flex flex-col items-start pt-28">
+      <div className="flex flex-col items-start">
+        <div className="flex w-full flex-row justify-end py-5 pb-20 pt-3">
+          <img src={rahnemaLogo} />
+        </div>
         <Outlet />
         {/* <DashboardPages /> */}
       </div>
