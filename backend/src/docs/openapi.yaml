@@ -132,6 +132,15 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ProfileRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
 
   # add jwt auth for this please
   /upload:
@@ -197,6 +206,82 @@ paths:
                 format: binary
         "404":
           description: File not found
+  
+  # Post
+  /post:
+    get: 
+      summary: Get all posts for user
+      tags: [Post]
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#components/schemas/PostSummaryDTO"
+    post: 
+      summary: Create new post
+      tags: [Post]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePostRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        type: string
+  /post/{id}:
+    get: 
+      summary: Get post details
+      tags: [Post]
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#components/schemas/PostDTO"
+    patch: 
+      summary: Edit existing post
+      tags: [Post]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePostRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        type: string
 
 components:
   securitySchemes:
@@ -335,3 +420,72 @@ components:
         type:
           type: string
           enum: [post, profile]
+    PostSummaryDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+        thumbnail:
+          type: object
+          $ref: "#components/schemas/ContentDTO"
+    ContentDTO:
+      type: object
+      properties:
+        url:
+          type: string
+    CreatePostRequestDTO:
+      type: object
+      required:
+        - fileNames
+        - caption
+        - mentions
+      properties:
+        fileNames:
+          type: array
+          items: 
+            type: string
+        caption:
+          type: string
+        mentions:
+          type: array
+          items:
+            type: string
+    PostDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        ownerProfileId:
+          type: string
+        createdAt:
+          type: string
+        caption:
+          type: string
+        hashtags:
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/HashtagDTO"
+        mentions:
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/MentionDTO"
+        contents:
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/ContentDTO"
+    HashtagDTO:
+      type: object
+      properties:
+        tag: 
+          type: string
+    MentionDTO:
+      type: object
+      properties:
+        username:
+          type: string
+
