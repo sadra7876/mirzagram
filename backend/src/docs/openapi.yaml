@@ -249,6 +249,13 @@ paths:
     get: 
       summary: Get post details
       tags: [Post]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The id of the post to retrieve
       responses:
         200:
           description: "OK"
@@ -261,7 +268,7 @@ paths:
                     properties:
                       result:
                         $ref: "#components/schemas/PostDTO"
-    patch: 
+    post: 
       summary: Edit existing post
       tags: [Post]
       requestBody:
@@ -270,6 +277,13 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CreatePostRequestDTO"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The id of the post to edit
       responses:
         200:
           description: "OK"
