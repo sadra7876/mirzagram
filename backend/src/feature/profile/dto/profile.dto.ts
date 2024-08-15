@@ -1,4 +1,9 @@
-import { isEmail, isPassword, isUrl } from "@CommonTypes/profile.type";
+import {
+  isEmail,
+  isPassword,
+  isUrl,
+  isUsername,
+} from "@CommonTypes/profile.type";
 import { url } from "inspector";
 import { strings } from "resources/strings";
 import { date, isValid, string, z } from "zod";
@@ -32,4 +37,11 @@ export type ProfileResponseDTO = {
   createdAt: Date;
 };
 
+export const exploreRequestDTO = z.object({
+  username: z
+    .string()
+    .refine(isUsername, { message: strings.INVALID_USERNAME_ERROR }),
+});
+
+export type ExploreRequestDTO = z.infer<typeof exploreRequestDTO>;
 export type profileRequestDTO = z.infer<typeof profileRequestDTO>;
