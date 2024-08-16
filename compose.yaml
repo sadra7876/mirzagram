@@ -24,6 +24,8 @@ services:
       - mirza-net
     depends_on:
       - db
+    stdin_open: true
+    tty: true
   front:
     container_name: mirzagram-front
     ports:
@@ -37,4 +39,4 @@ services:
       - api
 networks:
   mirza-net:
-    driver: bridge  
+    driver: bridge

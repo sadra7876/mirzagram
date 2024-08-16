@@ -1,6 +1,7 @@
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import MirzaMenuButton from "../../Shared/Components/MirzaMenuButton";
 import PlusIcon from "../../assets/images/Icons/plus.svg";
+import vector from "../../assets/images/Icons/Vector.jpg";
 import { useNavigate, Outlet } from "react-router-dom";
 
 import PinIcon from "../../assets/images/Icons/pin.svg";
@@ -8,6 +9,7 @@ import SavedIcon from "../../assets/images/Icons/saved.svg";
 import SpeachIcon from "../../assets/images/Icons/speech.svg";
 import BellIcon from "../../assets/images/Icons/bell.svg";
 import TagIcon from "../../assets/images/Icons/Tag.svg";
+import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ const DashboardLayout = () => {
           onClick={() => console.log("new post")}
           icon={<img src={PlusIcon} alt="Plus Icon" />}
         />
+
         <div className="mt-8 flex h-full w-full flex-col items-center rounded-t-2xl border bg-white py-10">
           <div className="flex flex-row">
             <div className="rounded-full bg-neutral-400 shadow-md">aa</div>
@@ -74,7 +77,11 @@ const DashboardLayout = () => {
         </div>
       </div>
       {/* left sidebar */}
-      <div className="flex flex-col items-start pt-28">
+      {/*  */}
+      <div className="flex flex-col items-start">
+        <div className="flex w-full flex-row justify-end py-5 pb-20 pt-3">
+          <img src={rahnemaLogo} />
+        </div>
         <Outlet />
         {/* <DashboardPages /> */}
       </div>
