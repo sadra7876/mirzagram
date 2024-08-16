@@ -35,7 +35,7 @@ export class PostService {
         let post = await this.postRepo.getPost(id);
 
         if(!post) {
-            throw new HttpError(400, strings.POST_NOT_FOUND_ERROR);
+            throw new HttpError(404, strings.POST_NOT_FOUND_ERROR);
         }
 
         if(post.owner.id != profileId) {
@@ -72,7 +72,7 @@ export class PostService {
             throw new HttpError(400, strings.POST_NOT_FOUND_ERROR);
         }
 
-        if(orgPost.owner.id !== profileId) {
+        if(orgPost.owner.id != profileId) {
             throw new HttpError(403, strings.POST_FORBIDDEN_ERROR);
         }
 
