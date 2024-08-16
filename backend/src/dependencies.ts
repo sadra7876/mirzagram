@@ -16,6 +16,9 @@ import { Content } from "@feature/post/repository/entities/content.entity";
 import { Hashtag } from "@feature/post/repository/entities/hashtag.entity";
 import { Mention } from "@feature/post/repository/entities/mention.entity";
 import { Post } from "@feature/post/repository/entities/post.entity";
+import { FollowRepository } from "@feature/follow/repository/follow.repo";
+import { Follow } from "@feature/follow/repository/follow.entity";
+import { FollowService } from "@feature/follow/service/follow.service";
 dotenv.config();
 
 // DataSource
@@ -36,6 +39,7 @@ export const AppDataSource = new DataSource({
     Hashtag,
     Content,
     Mention,
+    Follow,
   ],
   subscribers: [],
   migrations: [],
@@ -57,6 +61,7 @@ const profileRepository = new ProfileRepository(AppDataSource);
 const tokenRepository = new TokenRepository(AppDataSource);
 const storageRepository = new StorageRepository(AppDataSource);
 const postRepository = new PostRepository(AppDataSource);
+const followRepository = new FollowRepository(AppDataSource);
 
 // Services
 export const authService = new AuthService({
@@ -72,3 +77,8 @@ export const storageService = new StorageService({
   storageRepo: storageRepository,
 });
 export const postService = new PostService(postRepository, profileRepository);
+
+export const followService = new FollowService({
+  followRepo: followRepository,
+  profileRepo: profileRepository,
+});
