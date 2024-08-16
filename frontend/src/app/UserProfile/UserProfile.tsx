@@ -43,9 +43,9 @@ export default function UserProfile() {
             dir="rtl"
             className="flex h-full w-full flex-col items-start gap-y-4"
           >
-            <div className="font-normal text-mirza-gold">mahmz@</div>
-            <div className="text-xl font-bold">مهشید منزه</div>
-            <div className="flex flex-row">
+            <p className="font-normal text-mirza-gold">mahmz@</p>
+            <p className="text-xl font-bold">مهشید منزه</p>
+            <div className="flex flex-row gap-x-3">
               <p className="text-sm font-normal text-mirza-orange">
                 12 دنبال کننده
               </p>
@@ -55,7 +55,6 @@ export default function UserProfile() {
               <p>19 پست</p>
             </div>
             <div dir="ltr">
-              {" "}
               Lover, not a fighter, spreading ✌️all over the 🌎
             </div>
           </div>
