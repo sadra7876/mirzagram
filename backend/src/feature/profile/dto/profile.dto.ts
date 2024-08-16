@@ -52,6 +52,8 @@ export type ProfileResponseDTO = {
   profilePicture?: string;
   createdAt: Date;
   postCount: number;
+  followerCount: number;
+  followingCount: number;
 };
 
 export const exploreRequestDTO = z.object({

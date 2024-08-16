@@ -15,11 +15,13 @@ import { HttpError } from "utils/http-error";
 import { strings } from "resources/strings";
 import { Profile } from "../repository/profile.entity";
 import { IPostRepository } from "@feature/post/repository/post.repo";
+import { IFollowRepository } from "@feature/follow/repository/follow.repo";
 dotenv.config();
 
 interface dependencies {
   profileRepo: IProfileRepository;
   postRepo: IPostRepository;
+  followRepo: IFollowRepository;
 }
 
 export class ProfileService {
@@ -31,6 +33,10 @@ export class ProfileService {
       throw new HttpError(404, strings.USER_NOT_FOUND);
     }
     const postCount = await this.deps.postRepo.getPostCountByProfile(id);
+    const followerCount =
+      await this.deps.followRepo.getFollowerCountByPorofileId(id);
+    const followingCount =
+      await this.deps.followRepo.getFollowingCountByPorofileId(id);
 
     const result: ProfileResponseDTO = {
       username: user.username,
@@ -42,6 +48,8 @@ export class ProfileService {
       profilePicture: user.profilePicture,
       createdAt: user.createdAt,
       postCount: postCount,
+      followerCount: followerCount,
+      followingCount: followingCount,
     };
     return result;
   }
@@ -82,6 +90,10 @@ export class ProfileService {
       throw new HttpError(404, strings.USER_NOT_FOUND);
     }
     const postCount = await this.deps.postRepo.getPostCountByProfile(user.id);
+    const followerCount =
+      await this.deps.followRepo.getFollowerCountByPorofileId(user.id);
+    const followingCount =
+      await this.deps.followRepo.getFollowingCountByPorofileId(user.id);
 
     const result: ProfileResponseDTO = {
       username: user.username,
@@ -93,6 +105,8 @@ export class ProfileService {
       profilePicture: user.profilePicture,
       createdAt: user.createdAt,
       postCount: postCount,
+      followerCount: followerCount,
+      followingCount: followingCount,
     };
     return result;
   }

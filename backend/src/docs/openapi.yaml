@@ -163,7 +163,44 @@ paths:
                     properties:
                       result:
                         $ref: "#components/schemas/ProfileResponseDTO"
-
+  /follow/follow:
+    post:
+      summary: follow user
+      tags: [Follow]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+  /follow/unfollow:
+    post:
+      summary: unfollow user
+      tags: [Follow]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
   # add jwt auth for this please
   /upload:
     post:
@@ -436,7 +473,16 @@ components:
           type: string
         postCount:
           type: number
+        followerCount:
+          type: number
+        followingCount:
+          type: number
     ExploreRequestDTO:
+      type: object
+      properties:
+        username:
+          type: string
+    FollowRequestDTO:
       type: object
       properties:
         username:

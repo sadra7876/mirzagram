@@ -71,6 +71,7 @@ export const authService = new AuthService({
 export const profileService = new ProfileService({
   profileRepo: profileRepository,
   postRepo: postRepository,
+  followRepo: followRepository,
 });
 
 export const storageService = new StorageService({
