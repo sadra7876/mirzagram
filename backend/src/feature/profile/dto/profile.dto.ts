@@ -51,6 +51,7 @@ export type ProfileResponseDTO = {
   bio?: string;
   profilePicture?: string;
   createdAt: Date;
+  postCount: number;
 };
 
 export const exploreRequestDTO = z.object({

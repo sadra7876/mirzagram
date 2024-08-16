@@ -14,10 +14,12 @@ import {
 import { HttpError } from "utils/http-error";
 import { strings } from "resources/strings";
 import { Profile } from "../repository/profile.entity";
+import { IPostRepository } from "@feature/post/repository/post.repo";
 dotenv.config();
 
 interface dependencies {
   profileRepo: IProfileRepository;
+  postRepo: IPostRepository;
 }
 
 export class ProfileService {
@@ -28,6 +30,8 @@ export class ProfileService {
     if (!user) {
       throw new HttpError(404, strings.USER_NOT_FOUND);
     }
+    const postCount = await this.deps.postRepo.getPostCountByProfile(id);
+
     const result: ProfileResponseDTO = {
       username: user.username,
       firstName: user.firstName,
@@ -37,6 +41,7 @@ export class ProfileService {
       bio: user.bio,
       profilePicture: user.profilePicture,
       createdAt: user.createdAt,
+      postCount: postCount,
     };
     return result;
   }
@@ -76,6 +81,8 @@ export class ProfileService {
     if (!user) {
       throw new HttpError(404, strings.USER_NOT_FOUND);
     }
+    const postCount = await this.deps.postRepo.getPostCountByProfile(user.id);
+
     const result: ProfileResponseDTO = {
       username: user.username,
       firstName: user.firstName,
@@ -85,6 +92,7 @@ export class ProfileService {
       bio: user.bio,
       profilePicture: user.profilePicture,
       createdAt: user.createdAt,
+      postCount: postCount,
     };
     return result;
   }

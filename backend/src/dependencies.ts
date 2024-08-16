@@ -28,7 +28,15 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true,
   logging: true,
-  entities: [Profile, ForgetPasswordToken, Storage, Post, Hashtag, Content, Mention],
+  entities: [
+    Profile,
+    ForgetPasswordToken,
+    Storage,
+    Post,
+    Hashtag,
+    Content,
+    Mention,
+  ],
   subscribers: [],
   migrations: [],
 });
@@ -57,6 +65,7 @@ export const authService = new AuthService({
 });
 export const profileService = new ProfileService({
   profileRepo: profileRepository,
+  postRepo: postRepository,
 });
 
 export const storageService = new StorageService({
