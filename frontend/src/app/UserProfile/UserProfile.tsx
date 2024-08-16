@@ -18,8 +18,12 @@ interface FromValueProfile {
   isPrivate: boolean;
   bio: string;
 }
+import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
+
+import profilePicture from "../../assets/images/Icons/picture frame.svg";
+
 export default function UserProfile() {
-  const [openModal, setOpenModal] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
   const {
     register,
     handleSubmit,
@@ -28,42 +32,47 @@ export default function UserProfile() {
     control,
   } = useForm<FromValueProfile>();
   return (
-    <div className="flex w-full flex-col">
-      <div className="w-full">
-        <p className="font-bold text-mirza-black"> صفحه من</p>
-      </div>
-      <div className="flex flex-row items-center justify-between">
-        <div className="flex flex-row">
-          <div className="h-[130px] w-[130px] rounded-full">
-            <img
-              src={picProfile}
-              alt="pic profile"
-              className="object-contain"
-            />
+    <div className="px-78 flex h-full w-full flex-col gap-6">
+      <div>
+        <div className="flex pb-8">صفحه من</div>
+        <div className="grid grid-cols-3 items-center gap-8 md:grid-cols-[0.5fr_2fr_1fr]">
+          <div className="h-[8.33rem] w-[8.33rem]">
+            <img src={profilePicture} className="rounded-full"></img>
           </div>
-          <div className="flex flex-col gap-y-4">
-            <p className="text-sm font-normal text-mirza-gold">@mahmz</p>
-            <p className="text-xl font-bold text-mirza-black">مهشید منزه</p>
-            <div className="flex flex-row items-center divide-x-2 divide-x-reverse border-mirza-black">
-              <p className="px-2 text-sm font-normal text-mirza-orange">
-                ۱۳ دنبال‌کننده
+          <div
+            dir="rtl"
+            className="flex h-full w-full flex-col items-start gap-y-4"
+          >
+            <div className="font-normal text-mirza-gold">mahmz@</div>
+            <div className="text-xl font-bold">مهشید منزه</div>
+            <div className="flex flex-row">
+              <p className="text-sm font-normal text-mirza-orange">
+                12 دنبال کننده
               </p>
-              <p className="px-2 text-sm font-normal text-mirza-orange">
-                ۷ دنبال‌شونده
-              </p>
-              <p className="px-2 text-sm font-normal text-mirza-black">
-                19 پست
-              </p>
+              <span className="text-gray-400">|</span>
+              <p className="text-mirza-orange">7دنبال شونده</p>
+              <span className="text-gray-400">|</span>
+              <p>19 پست</p>
             </div>
-            <p>Lover, not a fighter, spreading ✌️all over the 🌎</p>
+            <div dir="ltr">
+              {" "}
+              Lover, not a fighter, spreading ✌️all over the 🌎
+            </div>
           </div>
+          <MirzaButton
+            title="ویرایش پروفایل"
+            onClick={() => setOpenModal(true)}
+          />
         </div>
-        <MirzaButton
-          onClick={() => setOpenModal(true)}
-          title="ویرایش پروفایل"
-        />
       </div>
-      <hr className="w-ful mb-8 mt-6 border" />
+
+      <div className="h-full w-full flex-col gap-8 rounded-3xl border-2 text-sm font-normal">
+        <div className="flex flex-col items-center gap-y-8 px-[298px] py-[222px] text-center">
+          {" "}
+          هنوز هیچ پستی توی صفحه‌ات نذاشتی! بجنب تا دیر نشده
+          <MirzaButton className="gap-y-8" title="ایجاد پست جدید"></MirzaButton>
+        </div>
+      </div>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Body className="bg-neutral-100 px-[90px]">
           <form
