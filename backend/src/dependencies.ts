@@ -17,8 +17,8 @@ import { Hashtag } from "@feature/post/repository/entities/hashtag.entity";
 import { Mention } from "@feature/post/repository/entities/mention.entity";
 import { Post } from "@feature/post/repository/entities/post.entity";
 import { FollowRepository } from "@feature/follow/repository/follow.repo";
-import { Follow } from "@feature/follow/repository/follow.entity";
 import { FollowService } from "@feature/follow/service/follow.service";
+import { Follow } from "@feature/follow/repository/follow.entity";
 dotenv.config();
 
 // DataSource
