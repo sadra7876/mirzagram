@@ -37,7 +37,7 @@ export default function RegisterComponent() {
         toast.success("حساب کاربری شما با موفقیت ایجاد شد");
         setTimeout(() => {
           localStorage.setItem("token", result.result.accessToken);
-          navigate("/dashboard");
+          navigate("/");
         }, 2000);
       } else {
         result.messages.map((message: string) => {
