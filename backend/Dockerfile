@@ -5,5 +5,5 @@ COPY .yarnrc* .
 COPY .pnp* .
 RUN yarn install
 COPY . .
-EXPOSE 2000
+EXPOSE 3000
 CMD [ "yarn" , "start" ]
