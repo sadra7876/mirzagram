@@ -1,7 +1,8 @@
+const flowbite = require("flowbite-react/tailwind");
 /** @type {import('tailwindcss').Config} */
 
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}", flowbite.content()],
   theme: {
     extend: {
       width: {
@@ -22,8 +23,11 @@ export default {
       colors: {
         "mirza-green": "#17494D",
         "mirza-red": "#EA5A69",
+        "mirza-black": "#191919",
+        "mirza-gold": "#C19008",
+        "mirza-orange": "#F7901E",
       },
     },
   },
-  plugins: [],
+  plugins: [flowbite.plugin()],
 };

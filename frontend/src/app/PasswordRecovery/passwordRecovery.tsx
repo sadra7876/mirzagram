@@ -1,6 +1,6 @@
 import rahnamaLogo from "../../assets/images/rahnema-logo.png";
 import MirzaInput from "./../../Shared/Components/MirzaInput";
-import Vector from "../../assets/images/Icons/Vector.jpg";
+import UserIcon from "../../assets/images/Icons/user_icon.jpg";
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +44,7 @@ export default function PasswordRecovery() {
       onSubmit={handleSubmit(onSubmit)}
       className="flex h-screen w-full flex-col items-center justify-center md:bg-background-auth md:bg-cover"
     >
-      <div className="w-485 h-456 md:w-485 flex flex-col items-center gap-8 rounded-3xl bg-neutral-100 px-20 py-16 md:h-[456]">
+      <div className="flex h-456 w-485 flex-col items-center gap-8 rounded-3xl bg-neutral-100 px-20 py-16 md:h-[456] md:w-485">
         <img src={rahnamaLogo} className="h-15 w-28" />
         <div
           dir="rtl"
@@ -64,7 +64,7 @@ export default function PasswordRecovery() {
             name="email"
             register={register("email", { required: true })}
             placeholder="نام کاربری یا ایمیل"
-            inputIcon={Vector}
+            inputIcon={UserIcon}
           />
           {errors.email && (
             <span className="text-xs text-red-500">

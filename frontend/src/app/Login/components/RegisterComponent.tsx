@@ -1,6 +1,6 @@
 import keyIcon from "../../../assets/images/Icons/key.jpg";
 import GmailIcon from "../../../assets/images/Icons/gmail.jpg";
-import Vector from "../../../assets/images/Icons/Vector.jpg";
+import UserIcon from "../../../assets/images/Icons/user_icon.jpg";
 import MirzaInput from "../../../Shared/Components/MirzaInput";
 import MirzaButton from "../../../Shared/Components/MirzaButton";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -65,7 +65,7 @@ export default function RegisterComponent() {
         <MirzaInput
           register={register("username", { required: true })}
           placeholder="نام کاربری"
-          inputIcon={Vector}
+          inputIcon={UserIcon}
         />
         {errors.username && (
           <span className="text-xs text-red-500">نام کاربری الزامی است</span>

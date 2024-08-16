@@ -1,7 +1,12 @@
-import React from "react";
+import React, {
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  ReactHTMLElement,
+} from "react";
 import { RegisterOptions, UseFormRegisterReturn } from "react-hook-form";
+import { IconType } from "react-icons";
 
-interface MirzaInputProps {
+interface MirzaInputProps extends InputHTMLAttributes<HTMLInputElement> {
   name?: string;
   register: UseFormRegisterReturn<any>;
   type?: string;
@@ -16,14 +21,14 @@ const MirzaInput: React.FC<MirzaInputProps> = ({
   inputIcon,
 }) => {
   return (
-    <div className="mb-2 flex h-9 w-full flex-row items-center gap-x-1 rounded-2xl bg-white px-3.5 text-right text-xs">
-      <img src={inputIcon} className="h-4 w-4 object-cover"></img>
+    <div className="mb-2 flex h-9 w-full flex-row items-center rounded-2xl border bg-white px-3.5 text-right text-xs">
       <input
         type={type}
         placeholder={placeholder}
         {...register}
-        className="w-full text-right focus:outline-none"
+        className="w-full border-none bg-transparent text-right focus:border-transparent focus:outline-none focus:ring-0"
       />
+      <img src={inputIcon} className="h-4 w-4 object-cover" />
     </div>
   );
 };
