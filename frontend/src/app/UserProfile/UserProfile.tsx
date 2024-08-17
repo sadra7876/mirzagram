@@ -21,9 +21,11 @@ interface FromValueProfile {
 import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
 
 import profilePicture from "../../assets/images/Icons/picture frame.svg";
+import PostComponent from "./postComponent";
 
 export default function UserProfile() {
   const [openModal, setOpenModal] = useState(false);
+  const [openModalPost, setOpenModalPost] = useState(true);
   const {
     register,
     handleSubmit,
@@ -69,7 +71,11 @@ export default function UserProfile() {
         <div className="flex flex-col items-center gap-y-8 px-[298px] py-[222px] text-center">
           {" "}
           هنوز هیچ پستی توی صفحه‌ات نذاشتی! بجنب تا دیر نشده
-          <MirzaButton className="gap-y-8" title="ایجاد پست جدید"></MirzaButton>
+          <MirzaButton
+            onClick={() => setOpenModalPost(true)}
+            className="gap-y-8"
+            title="ایجاد پست جدید"
+          ></MirzaButton>
         </div>
       </div>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
@@ -161,6 +167,11 @@ export default function UserProfile() {
           <MirzaButton type="submit" title="ثبت تغییرات" />
           <button onClick={() => setOpenModal(false)}>پشیمون شدم</button>
         </Modal.Footer>
+      </Modal>
+      <Modal show={openModalPost} onClose={() => setOpenModalPost(false)}>
+        <Modal.Body>
+          <PostComponent />
+        </Modal.Body>
       </Modal>
     </div>
   );
