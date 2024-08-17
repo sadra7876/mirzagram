@@ -33,7 +33,7 @@ export default function LoginComponent() {
       if (result.isSuccess) {
         setTimeout(() => {
           localStorage.setItem("token", result.result.accessToken);
-          navigate("/dashboard");
+          navigate("/");
         }, 2000);
       } else {
         result.messages.map((message: string) => {
