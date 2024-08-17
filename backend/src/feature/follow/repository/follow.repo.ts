@@ -10,10 +10,10 @@ export interface IFollowRepository {
     followerProfile: Profile,
     followingProfile: Profile
   ): Promise<Follow | null>;
-  getFollowerByPorofileId(id: ProfileId): Promise<Follow[] | null>;
-  getFollowingByPorofileId(id: ProfileId): Promise<Follow[] | null>;
-  getFollowerCountByPorofileId(id: ProfileId): Promise<number>;
-  getFollowingCountByPorofileId(id: ProfileId): Promise<number>;
+  getFollowerByProfileId(id: ProfileId): Promise<Follow[] | null>;
+  getFollowingByProfileId(id: ProfileId): Promise<Follow[] | null>;
+  getFollowerCountByProfileId(id: ProfileId): Promise<number>;
+  getFollowingCountByProfileId(id: ProfileId): Promise<number>;
 }
 
 export class FollowRepository implements IFollowRepository {
@@ -42,28 +42,28 @@ export class FollowRepository implements IFollowRepository {
     });
   }
 
-  async getFollowerByPorofileId(id: ProfileId): Promise<Follow[] | null> {
+  async getFollowerByProfileId(id: ProfileId): Promise<Follow[] | null> {
     return this.repository
       .createQueryBuilder("follow")
       .where("follow.followingId = :id", { id: id })
       .getMany();
   }
 
-  async getFollowingByPorofileId(id: ProfileId): Promise<Follow[] | null> {
+  async getFollowingByProfileId(id: ProfileId): Promise<Follow[] | null> {
     return this.repository
       .createQueryBuilder("follow")
       .where("follow.followerId = :id", { id: id })
       .getMany();
   }
 
-  async getFollowerCountByPorofileId(id: ProfileId): Promise<number> {
+  async getFollowerCountByProfileId(id: ProfileId): Promise<number> {
     return this.repository
       .createQueryBuilder("follow")
       .where("follow.followingId = :id", { id: id })
       .getCount();
   }
 
-  async getFollowingCountByPorofileId(id: ProfileId): Promise<number> {
+  async getFollowingCountByProfileId(id: ProfileId): Promise<number> {
     return this.repository
       .createQueryBuilder("follow")
       .where("follow.followerId = :id", { id: id })

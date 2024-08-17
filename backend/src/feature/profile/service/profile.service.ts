@@ -34,9 +34,9 @@ export class ProfileService {
     }
     const postCount = await this.deps.postRepo.getPostCountByProfile(id);
     const followerCount =
-      await this.deps.followRepo.getFollowerCountByPorofileId(id);
+      await this.deps.followRepo.getFollowerCountByProfileId(id);
     const followingCount =
-      await this.deps.followRepo.getFollowingCountByPorofileId(id);
+      await this.deps.followRepo.getFollowingCountByProfileId(id);
 
     const result: ProfileResponseDTO = {
       username: user.username,
@@ -91,9 +91,9 @@ export class ProfileService {
     }
     const postCount = await this.deps.postRepo.getPostCountByProfile(user.id);
     const followerCount =
-      await this.deps.followRepo.getFollowerCountByPorofileId(user.id);
+      await this.deps.followRepo.getFollowerCountByProfileId(user.id);
     const followingCount =
-      await this.deps.followRepo.getFollowingCountByPorofileId(user.id);
+      await this.deps.followRepo.getFollowingCountByProfileId(user.id);
 
     const result: ProfileResponseDTO = {
       username: user.username,
