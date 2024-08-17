@@ -30,4 +30,6 @@ export const strings = {
   FOLLOWED_SUCCESSFULLY: "دنبال کردن کاربر با موفقیت انجام شد",
   UNFOLLOWED_SUCCESSFULLY: "حذف دنبال کردن کاربر با موفقیت انجام شد",
   USER_IS_NOT_FOLLOWED: "کاربر دنبال نشده است",
+  USER_IS_ALREADY_FOLLOWED: "کاربر قبلا فالو شده است",
+  FOLLOWER_AND_FOLLOWING_IS_SAME: "دنبال کننده و دنبال شونده برابر است",
 };

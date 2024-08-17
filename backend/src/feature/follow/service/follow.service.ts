@@ -25,6 +25,14 @@ export class FollowService {
       throw new HttpError(404, strings.USER_NOT_FOUND);
     }
 
+    if (await this.deps.followRepo.getFollowByTwoProfile(follower, following)) {
+      throw new HttpError(404, strings.USER_IS_ALREADY_FOLLOWED);
+    }
+
+    if (follower === following) {
+      throw new HttpError(404, strings.FOLLOWER_AND_FOLLOWING_IS_SAME);
+    }
+
     const newFollow = new Follow();
     newFollow.follower = follower;
     newFollow.following = following;
