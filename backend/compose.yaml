@@ -1,22 +1,28 @@
 services:
-  minio:
-    image: minio/minio
-    container_name: mirzagram-storage
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    networks:
-      - mirza-net
-    volumes:
-      - "minio_data:/data"
-    environment:
-      - MINIO_ROOT-USER=mirza
-      - MINIO_ROOT_PASSWORD=pass
-      - MINIO_DEFUALT_BUCKET=mirzaBucket
+  # minio:
+  #   image: minio/minio
+  #   container_name: mirzagram-storage
+  #   profiles:
+  #     - dev
+  #     - test
+  #   ports:
+  #     - "9000:9000"
+  #     - "9001:9001"
+  #   networks:
+  #     - mirza-net
+  #   volumes:
+  #     - "minio_data:/data"
+  #   environment:
+  #     - MINIO_ROOT-USER=mirza
+  #     - MINIO_ROOT_PASSWORD=pass
+  #     - MINIO_DEFUALT_BUCKET=mirzaBucket
 
   db:
     container_name: mirzagram-db
     image: postgres
+    profiles:
+      - dev
+      - test
     environment:
       POSTGRES_DB: mirzagram-db
       POSTGRES_PASSWORD: pass
@@ -25,13 +31,16 @@ services:
       - 4000:5432
     networks:
       - mirza-net
+
   api:
     container_name: mirzagram-api
+    profiles:
+      - test
     environment:
       DB_HOST: db
       DB_PORT: 5432
     ports:
-      - 3000:2000
+      - 3000:3000
     build:
       context: .
       dockerfile: Dockerfile
@@ -39,9 +48,11 @@ services:
       - mirza-net
     depends_on:
       - db
+
 networks:
   mirza-net:
     driver: bridge
+
 volumes:
   minio_data:
     driver: local
