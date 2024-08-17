@@ -56,11 +56,4 @@ export type ProfileResponseDTO = {
   followingCount: number;
 };
 
-export const exploreRequestDTO = z.object({
-  username: z
-    .string()
-    .refine(isUsername, { message: strings.INVALID_USERNAME_ERROR }),
-});
-
-export type ExploreRequestDTO = z.infer<typeof exploreRequestDTO>;
 export type profileRequestDTO = z.infer<typeof profileRequestDTO>;

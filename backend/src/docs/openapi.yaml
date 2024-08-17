@@ -108,8 +108,15 @@ paths:
                   - type: object
   /profile:
     get:
-      summary: get profile content
-      tags: [profile]
+      summary: get own profile and other user profile
+      tags: [Profile]
+      parameters:
+        - name: username
+          in: query
+          description: The username of the user
+          schema:
+            type: string
+            nullable: true
       responses:
         200:
           description: "OK"
@@ -125,7 +132,7 @@ paths:
 
     put:
       summary: update profile
-      tags: [profile]
+      tags: [Profile]
       requestBody:
         required: false
         content:
@@ -141,28 +148,6 @@ paths:
                 allOf:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
-  /profile/explore:
-    get:
-      summary: get explore profile content
-      tags: [Profile]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ExploreRequestDTO"
-      responses:
-        200:
-          description: "OK"
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#components/schemas/ApiResponse"
-                  - type: object
-                    properties:
-                      result:
-                        $ref: "#components/schemas/ProfileResponseDTO"
   /follow/follow:
     post:
       summary: follow user
@@ -491,11 +476,6 @@ components:
           type: number
         followingCount:
           type: number
-    ExploreRequestDTO:
-      type: object
-      properties:
-        username:
-          type: string
     FollowRequestDTO:
       type: object
       properties:

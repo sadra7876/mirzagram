@@ -29,7 +29,7 @@ export class FollowService {
       throw new HttpError(404, strings.USER_IS_ALREADY_FOLLOWED);
     }
 
-    if (follower === following) {
+    if (follower.username === following.username) {
       throw new HttpError(404, strings.FOLLOWER_AND_FOLLOWING_IS_SAME);
     }
 

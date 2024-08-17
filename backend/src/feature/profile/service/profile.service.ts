@@ -5,12 +5,8 @@ import {
   passwordMatch,
   verifyPassword,
 } from "feature/auth/utils/password.utils";
-import { ProfileId } from "types/profile.type";
-import {
-  ExploreRequestDTO,
-  profileRequestDTO,
-  ProfileResponseDTO,
-} from "../dto/profile.dto";
+import { ProfileId, Username } from "types/profile.type";
+import { profileRequestDTO, ProfileResponseDTO } from "../dto/profile.dto";
 import { HttpError } from "utils/http-error";
 import { strings } from "resources/strings";
 import { Profile } from "../repository/profile.entity";
@@ -82,10 +78,8 @@ export class ProfileService {
       throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
-  async getExploreProfile(exploreRequestDTO: ExploreRequestDTO) {
-    const user = await this.deps.profileRepo.getByUsername(
-      exploreRequestDTO.username
-    );
+  async getExploreProfile(username: Username) {
+    const user = await this.deps.profileRepo.getByUsername(username);
     if (!user) {
       throw new HttpError(404, strings.USER_NOT_FOUND);
     }
