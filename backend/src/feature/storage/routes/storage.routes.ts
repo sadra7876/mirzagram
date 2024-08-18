@@ -1,4 +1,4 @@
-import express, { Router, Request, Response } from "express";
+import { Router, Request, Response } from "express";
 import { handleRequest } from "../../../utils/handle-request";
 import { ApiSuccess } from "@utils/http-response";
 import { upload } from "middlewares/upload.middleware";

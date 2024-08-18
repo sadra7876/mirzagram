@@ -7,13 +7,11 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Content } from "./content.entity";
 import { Hashtag } from "./hashtag.entity";
 import { Mention } from "./mention.entity";
-import { ProfileId } from "@CommonTypes/profile.type";
 
 @Entity()
 export class Post {

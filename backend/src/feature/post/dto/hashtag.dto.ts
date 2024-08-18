@@ -1,3 +1,3 @@
 export type HashtagDTO = {
-    tag: string,
-}
+  tag: string;
+};

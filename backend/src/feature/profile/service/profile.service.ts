@@ -14,14 +14,14 @@ import { IPostRepository } from "@feature/post/repository/post.repo";
 import { IFollowRepository } from "@feature/follow/repository/follow.repo";
 dotenv.config();
 
-interface dependencies {
+interface Dependencies {
   profileRepo: IProfileRepository;
   postRepo: IPostRepository;
   followRepo: IFollowRepository;
 }
 
 export class ProfileService {
-  constructor(private readonly deps: dependencies) {}
+  constructor(private readonly deps: Dependencies) {}
 
   async getUserProfile(id: ProfileId, username: Username | null) {
     let user;
@@ -55,7 +55,7 @@ export class ProfileService {
     return result;
   }
 
-  async updateUserProfile(profileDTO: profileRequestDTO, id: ProfileId) {
+  async updateUserProfile(profileDTO: ProfileRequestDTO, id: ProfileId) {
     const user = await this.deps.profileRepo.getById(id);
     if (profileDTO.password && profileDTO.confirmPassword) {
       if (!passwordMatch(profileDTO.password, profileDTO.confirmPassword)) {
