@@ -15,14 +15,14 @@ export const authRoutes = Router();
 authRoutes.post("/sign-up", (req, res) => {
   handleRequest(res, async () => {
     const result = await authService.signup(signupRequestDTO.parse(req.body));
-    return new ApiSuccess(result, [ strings.CREATE_USER_SUCCESSFUL ]);
+    return new ApiSuccess(result, [strings.CREATE_USER_SUCCESSFUL]);
   });
 });
 
 authRoutes.post("/sign-in", (req, res) => {
   handleRequest(res, async () => {
     const result = await authService.signin(signinRequestDTO.parse(req.body));
-    return new ApiSuccess(result, [ strings.SIGNIN_USER_SUCCESSFUL ]);
+    return new ApiSuccess(result, [strings.SIGNIN_USER_SUCCESSFUL]);
   });
 });
 
@@ -31,13 +31,17 @@ authRoutes.post("/forgot-password", (req, res) => {
     const result = await authService.sendPasswordResetEmail(
       forgotPasswordDTO.parse(req.body)
     );
-    return new ApiSuccess(result, [ strings.SEND_RESET_PASSWORD_LINK_SUCCESSFUL ]);
+    return new ApiSuccess(result, [
+      strings.SEND_RESET_PASSWORD_LINK_SUCCESSFUL,
+    ]);
   });
 });
 
 authRoutes.post("/reset-password", (req, res) => {
   handleRequest(res, async () => {
-    const result = await authService.resetPassword(resetPasswordDTO.parse(req.body));
-    return new ApiSuccess(result, [ strings.RESET_PASSWORD_SUCCESSFUL ]);
+    const result = await authService.resetPassword(
+      resetPasswordDTO.parse(req.body)
+    );
+    return new ApiSuccess(result, [strings.RESET_PASSWORD_SUCCESSFUL]);
   });
 });

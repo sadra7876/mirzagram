@@ -14,7 +14,7 @@ const ensureDirectoryExists = (dir: string) => {
 const uploadBody = z.union([z.literal("profile"), z.literal("post")]);
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: (req, file, cb) => {
     const typeOfFile = uploadBody.parse(req.body.type);
 
     let uploadPath = "";
@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
 
     cb(null, uploadPath); // Use the resolved path
   },
-  filename: function (_, file: Express.Multer.File, cb) {
+  filename(_, file: Express.Multer.File, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(
       null,
@@ -59,8 +59,8 @@ const fileFilter = (
 
 // Create the multer upload middleware
 export const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
+  storage,
+  fileFilter,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit for file size
     files: 20, // 5 files limit

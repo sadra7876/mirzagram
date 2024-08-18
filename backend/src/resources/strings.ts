@@ -1,5 +1,3 @@
-import { FILE } from "dns";
-
 export const strings = {
   INTERNAL_SERVER_ERROR: "خطای داخلی سرور",
   INVALID_EMAIL_ERROR: "ایمیل نامعتبر است",

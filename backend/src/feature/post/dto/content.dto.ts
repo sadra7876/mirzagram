@@ -1,3 +1,3 @@
 export type ContentDTO = {
-    url: string,
-}
+  url: string;
+};

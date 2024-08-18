@@ -1,12 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
-  PrimaryColumn,
-} from "typeorm";
-import { Profile } from "../../profile/repository/profile.entity";
+import { Entity, Column, PrimaryColumn } from "typeorm";
 import { Email } from "@CommonTypes/profile.type";
 
 @Entity()

@@ -4,10 +4,9 @@ import {
   isUrl,
   isUsername,
 } from "@CommonTypes/profile.type";
-import { url } from "inspector";
 import { strings } from "resources/strings";
-import { date, isValid, string, z } from "zod";
-import { Password, Username, Email } from "../../../types/profile.type";
+import { z } from "zod";
+import { Username, Email } from "../../../types/profile.type";
 
 export const profileRequestDTO = z
   .object({
@@ -56,4 +55,11 @@ export type ProfileResponseDTO = {
   followingCount: number;
 };
 
-export type profileRequestDTO = z.infer<typeof profileRequestDTO>;
+export const exploreRequestDTO = z.object({
+  username: z
+    .string()
+    .refine(isUsername, { message: strings.INVALID_USERNAME_ERROR }),
+});
+
+export type ExploreRequestDTO = z.infer<typeof exploreRequestDTO>;
+export type ProfileRequestDTO = z.infer<typeof profileRequestDTO>;

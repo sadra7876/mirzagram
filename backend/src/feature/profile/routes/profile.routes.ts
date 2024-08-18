@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { profileService } from "../../../dependencies";
 import { handleRequest } from "../../../utils/handle-request";
-import { ProfileId, Username } from "@CommonTypes/profile.type";
-import { profileRequestDTO, ProfileResponseDTO } from "../dto/profile.dto";
-import { parse } from "path";
+import { ProfileId } from "@CommonTypes/profile.type";
+import {
+  exploreRequestDTO,
+  profileRequestDTO,
+  ProfileResponseDTO,
+} from "../dto/profile.dto";
 import { authMiddleware } from "middlewares/auth.middleware";
 import { ApiSuccess } from "@utils/http-response";
-import { string } from "zod";
 import { strings } from "resources/strings";
 
 export const profileRoutes = Router();
@@ -18,10 +20,15 @@ profileRoutes.get("/", (req, res) => {
   handleRequest(res, async () => {
     const profileId: ProfileId = Number(req.subject) as ProfileId;
 
+<<<<<<< backend/src/feature/profile/routes/profile.routes.ts
+    const result: ProfileResponseDTO =
+      await profileService.getUserProfile(profileId);
+=======
     const result: ProfileResponseDTO = await profileService.getUserProfile(
       profileId,
       username
     );
+>>>>>>> backend/src/feature/profile/routes/profile.routes.ts
     return new ApiSuccess(result);
   });
 });
