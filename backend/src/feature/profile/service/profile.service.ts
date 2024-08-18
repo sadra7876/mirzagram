@@ -23,16 +23,21 @@ interface dependencies {
 export class ProfileService {
   constructor(private readonly deps: dependencies) {}
 
-  async getUserProfile(id: ProfileId) {
-    const user = await this.deps.profileRepo.getById(id);
+  async getUserProfile(id: ProfileId, username: Username | null) {
+    let user;
+    if (username) {
+      user = await this.deps.profileRepo.getByUsername(username);
+    } else {
+      user = await this.deps.profileRepo.getById(id);
+    }
     if (!user) {
       throw new HttpError(404, strings.USER_NOT_FOUND);
     }
-    const postCount = await this.deps.postRepo.getPostCountByProfile(id);
+    const postCount = await this.deps.postRepo.getPostCountByProfile(user.id);
     const followerCount =
-      await this.deps.followRepo.getFollowerCountByProfileId(id);
+      await this.deps.followRepo.getFollowerCountByProfileId(user.id);
     const followingCount =
-      await this.deps.followRepo.getFollowingCountByProfileId(id);
+      await this.deps.followRepo.getFollowingCountByProfileId(user.id);
 
     const result: ProfileResponseDTO = {
       username: user.username,
@@ -77,31 +82,5 @@ export class ProfileService {
       console.log(e);
       throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
-  }
-  async getExploreProfile(username: Username) {
-    const user = await this.deps.profileRepo.getByUsername(username);
-    if (!user) {
-      throw new HttpError(404, strings.USER_NOT_FOUND);
-    }
-    const postCount = await this.deps.postRepo.getPostCountByProfile(user.id);
-    const followerCount =
-      await this.deps.followRepo.getFollowerCountByProfileId(user.id);
-    const followingCount =
-      await this.deps.followRepo.getFollowingCountByProfileId(user.id);
-
-    const result: ProfileResponseDTO = {
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      isPrivate: user.isActive,
-      bio: user.bio,
-      profilePicture: user.profilePicture,
-      createdAt: user.createdAt,
-      postCount: postCount,
-      followerCount: followerCount,
-      followingCount: followingCount,
-    };
-    return result;
   }
 }

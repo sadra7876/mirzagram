@@ -13,24 +13,17 @@ export const profileRoutes = Router();
 profileRoutes.use(authMiddleware);
 
 profileRoutes.get("/", (req, res) => {
-  const username = req.query.username;
-  if (username) {
-    handleRequest(res, async () => {
-      const result: ProfileResponseDTO = await profileService.getExploreProfile(
-        username as Username
-      );
-      return new ApiSuccess(result);
-    });
-  } else {
-    handleRequest(res, async () => {
-      const profileId: ProfileId = Number(req.subject) as ProfileId;
+  const username = req.query.username as Username;
 
-      const result: ProfileResponseDTO = await profileService.getUserProfile(
-        profileId
-      );
-      return new ApiSuccess(result);
-    });
-  }
+  handleRequest(res, async () => {
+    const profileId: ProfileId = Number(req.subject) as ProfileId;
+
+    const result: ProfileResponseDTO = await profileService.getUserProfile(
+      profileId,
+      username
+    );
+    return new ApiSuccess(result);
+  });
 });
 
 profileRoutes.put("/", (req, res) => {
