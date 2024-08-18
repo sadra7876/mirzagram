@@ -1,5 +1,15 @@
 import { Profile } from "@feature/profile/repository/profile.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Content } from "./content.entity";
 import { Hashtag } from "./hashtag.entity";
 import { Mention } from "./mention.entity";
@@ -7,33 +17,33 @@ import { ProfileId } from "@CommonTypes/profile.type";
 
 @Entity()
 export class Post {
-    @Column()
-    @PrimaryGeneratedColumn()
-    id: string
+  @Column()
+  @PrimaryGeneratedColumn()
+  id: string;
 
-    @ManyToOne(() => Profile)
-    @JoinColumn()
-    owner: Profile
+  @ManyToOne(() => Profile)
+  @JoinColumn()
+  owner: Profile;
 
-    @Column({
-        type: "timestamptz",
-        default: new Date(),
-      })
-    createdAt: Date
+  @Column({
+    type: "timestamptz",
+    default: new Date(),
+  })
+  createdAt: Date;
 
-    @Column({ 
-        nullable: true,
-    })
-    caption?: string
+  @Column({
+    nullable: true,
+  })
+  caption?: string;
 
-    @OneToMany(() => Content, (c) => c.post, { cascade: true })
-    @JoinTable()
-    contents: Content[]
+  @OneToMany(() => Content, (c) => c.post, { cascade: true })
+  @JoinTable()
+  contents: Content[];
 
-    @ManyToMany(() => Hashtag, { cascade: true })
-    @JoinTable()
-    hashtags?: Hashtag[]
+  @ManyToMany(() => Hashtag, { cascade: true })
+  @JoinTable()
+  hashtags?: Hashtag[];
 
-    @OneToMany(() => Mention, (mention) => mention.post, { cascade: true })
-    mentions: Mention[]
+  @OneToMany(() => Mention, (mention) => mention.post, { cascade: true })
+  mentions: Mention[];
 }
