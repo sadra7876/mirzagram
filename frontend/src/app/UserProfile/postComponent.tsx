@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import { Textarea, TextInput } from "flowbite-react";
 import { FaCheckCircle } from "react-icons/fa";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { postUploadFile } from "./api/uploadFiles";
+import { UploadFile } from "../../Shared/model/responseUpload.interface";
+import { MirzaPost } from "../../Shared/model/post.interface";
+import { postCreatePost } from "./api/createPost";
+import { toast } from "../../Shared/Components/ToastComponent";
 
 interface ImageFile {
   file: File;
@@ -10,18 +15,33 @@ interface ImageFile {
 }
 
 const steps = [
-  { id: 0, label: "عکس" },
-  { id: 1, label: "متن" },
-  { id: 2, label: "تنظیمات" },
+  { id: 0, label: "عکس", filds: ["fileNames"] },
+  { id: 1, label: "متن", filds: ["caption"] },
+  { id: 2, label: "تنظیمات", filds: ["mentions"] },
 ];
-export default function PostComponent() {
+export default function PostComponent(props: { onClose: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [files, setFiles] = useState<ImageFile[]>([]);
-  const { handleSubmit, register } = useForm();
+  const [fileNames, setFileNames] = useState<UploadFile[]>([]);
+  const [mentions, setMentions] = useState<string[]>([]);
+  const {
+    handleSubmit,
+    register,
+    trigger,
+    formState: { errors },
 
-  const next = () => {
+    setValue,
+    reset,
+  } = useForm();
+
+  const next = async () => {
+    const filds = steps[currentStep].filds;
+    const output = await trigger(filds, { shouldFocus: true });
+    if (!output) return;
     if (currentStep < steps.length - 1) {
       setCurrentStep((step) => step + 1);
+    } else {
+      handleSubmit(onSubmitCreatePost)();
     }
   };
   const prev = () => {
@@ -41,10 +61,21 @@ export default function PostComponent() {
       file,
       previewUrl: file.type.match("image.*") ? URL.createObjectURL(file) : null,
     }));
-
+    const formData = new FormData();
+    formData.append("type", "post");
+    for (let index = 0; index < selectedFiles.length; index++) {
+      formData.append("file", selectedFiles[index]);
+    }
+    upload(formData);
     setFiles(newFiles);
   };
 
+  const upload = async (data: FormData) => {
+    const response = await postUploadFile(data);
+    if (response.isSuccess) {
+      setFileNames(response.result);
+    }
+  };
   useEffect(() => {
     return () => {
       files.forEach((file) => {
@@ -55,6 +86,31 @@ export default function PostComponent() {
     };
   }, [files]);
 
+  const onSubmitCreatePost = async (data) => {
+    console.log("onSubmitCreatePost", data);
+    const dataToSend: MirzaPost = {
+      fileNames: [...fileNames?.map((item) => item.fileName)],
+      caption: data.caption,
+      mentions: mentions,
+    };
+    console.log("data", dataToSend);
+
+    const responseCreatePost = await postCreatePost(dataToSend);
+    console.log("responseCreatePost", responseCreatePost);
+    if (responseCreatePost.isSuccess) {
+      responseCreatePost.messa;
+      toast.success(responseCreatePost.messa);
+    }
+  };
+  const handleMention = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value.trim();
+    if (value.endsWith(" ")) {
+      if (value) {
+        setMentions([...mentions, value]);
+        setValue("mention", value); // Replace the entire username with an empty string
+      }
+    }
+  };
   return (
     <div className="flex w-full flex-col justify-center px-[90px]">
       <ul className="relative flex flex-row gap-x-2">
@@ -87,7 +143,7 @@ export default function PostComponent() {
         })}
       </ul>
 
-      <form className="mt-9">
+      <form onSubmit={handleSubmit(onSubmitCreatePost)} className="mt-9">
         {currentStep === 0 && (
           <div className="flex flex-col items-center">
             <p> عکس هاس مورد نظرت رو آپلود کن:</p>
@@ -98,6 +154,8 @@ export default function PostComponent() {
                 </div>
                 <p className="font-medium text-mirza-black">عکس پروفایل</p>
                 <input
+                  id="fileNames"
+                  {...register("fileNames")}
                   multiple
                   type="file"
                   onChange={handleChange}
@@ -126,13 +184,30 @@ export default function PostComponent() {
               <p>aa</p>
               <p>توضیحات</p>
             </div>
-            <Textarea />
+
+            <Textarea
+              className="w-full"
+              id="caption"
+              {...register("caption", {
+                required: "کپشن وارد شود",
+              })}
+            />
+            {errors.caption?.message && (
+              <span className="text-xs text-red-500">
+                {errors.caption.message}
+              </span>
+            )}
           </div>
         )}
         {currentStep === 2 && (
           <div className="flex w-full flex-col items-center gap-y-3">
             <p>اینجا میتونی دوستات رو منشن کنی</p>
-            <TextInput className="w-full" />
+            <TextInput
+              id="mention"
+              className="w-full"
+              {...register("mention")}
+              onChange={handleMention}
+            />
           </div>
         )}
       </form>
@@ -141,7 +216,7 @@ export default function PostComponent() {
           onClick={() => next()}
           title={currentStep < steps.length - 1 ? "بعدی" : "ثبت و انتشار پست"}
         />
-        <button>پشیمون شدم</button>
+        <button onClick={() => props.onClose()}>پشیمون شدم</button>
       </div>
     </div>
   );

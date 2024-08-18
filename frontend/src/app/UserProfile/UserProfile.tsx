@@ -227,7 +227,7 @@ export default function UserProfile() {
       </Modal>
       <Modal show={openModalPost} onClose={() => setOpenModalPost(false)}>
         <Modal.Body>
-          <PostComponent />
+          <PostComponent onClose={() => setOpenModalPost(false)} />
         </Modal.Body>
       </Modal>
     </div>
