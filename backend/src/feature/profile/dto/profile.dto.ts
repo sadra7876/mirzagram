@@ -51,13 +51,9 @@ export type ProfileResponseDTO = {
   bio?: string;
   profilePicture?: string;
   createdAt: Date;
+  postCount: number;
+  followerCount: number;
+  followingCount: number;
 };
 
-export const exploreRequestDTO = z.object({
-  username: z
-    .string()
-    .refine(isUsername, { message: strings.INVALID_USERNAME_ERROR }),
-});
-
-export type ExploreRequestDTO = z.infer<typeof exploreRequestDTO>;
 export type profileRequestDTO = z.infer<typeof profileRequestDTO>;

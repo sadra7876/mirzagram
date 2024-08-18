@@ -108,8 +108,15 @@ paths:
                   - type: object
   /profile:
     get:
-      summary: get profile content
-      tags: [profile]
+      summary: get own profile and other user profile
+      tags: [Profile]
+      parameters:
+        - name: username
+          in: query
+          description: The username of the user
+          schema:
+            type: string
+            nullable: true
       responses:
         200:
           description: "OK"
@@ -125,7 +132,7 @@ paths:
 
     put:
       summary: update profile
-      tags: [profile]
+      tags: [Profile]
       requestBody:
         required: false
         content:
@@ -141,7 +148,44 @@ paths:
                 allOf:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
-
+  /follow/follow:
+    post:
+      summary: follow user
+      tags: [Follow]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+  /follow/unfollow:
+    post:
+      summary: unfollow user
+      tags: [Follow]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
   # add jwt auth for this please
   /upload:
     post:
@@ -206,10 +250,10 @@ paths:
                 format: binary
         "404":
           description: File not found
-  
+
   # Post
   /post:
-    get: 
+    get:
       summary: Get all posts for user
       tags: [Post]
       responses:
@@ -224,7 +268,7 @@ paths:
                     properties:
                       result:
                         $ref: "#components/schemas/PostSummaryDTO"
-    post: 
+    post:
       summary: Create new post
       tags: [Post]
       requestBody:
@@ -246,7 +290,7 @@ paths:
                       result:
                         type: string
   /post/{id}:
-    get: 
+    get:
       summary: Get post details
       tags: [Post]
       parameters:
@@ -268,7 +312,7 @@ paths:
                     properties:
                       result:
                         $ref: "#components/schemas/PostDTO"
-    post: 
+    post:
       summary: Edit existing post
       tags: [Post]
       requestBody:
@@ -426,6 +470,17 @@ components:
           nullable: true
         createdAt:
           type: string
+        postCount:
+          type: number
+        followerCount:
+          type: number
+        followingCount:
+          type: number
+    FollowRequestDTO:
+      type: object
+      properties:
+        followingUserName:
+          type: string
     UploadDTO:
       type: object
       required:
@@ -458,7 +513,7 @@ components:
       properties:
         fileNames:
           type: array
-          items: 
+          items:
             type: string
         caption:
           type: string
@@ -495,11 +550,10 @@ components:
     HashtagDTO:
       type: object
       properties:
-        tag: 
+        tag:
           type: string
     MentionDTO:
       type: object
       properties:
         username:
           type: string
-
