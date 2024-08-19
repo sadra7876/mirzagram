@@ -37,7 +37,7 @@ export class FollowRepository implements IFollowRepository {
     followerProfile: Profile,
     followingProfile: Profile
   ): Promise<Follow | null> {
-    return await this.repository.findOne({
+    return this.repository.findOne({
       where: { follower: followerProfile, following: followingProfile },
     });
   }
@@ -45,28 +45,28 @@ export class FollowRepository implements IFollowRepository {
   async getFollowerByProfileId(id: ProfileId): Promise<Follow[] | null> {
     return this.repository
       .createQueryBuilder("follow")
-      .where("follow.followingId = :id", { id: id })
+      .where("follow.followingId = :id", { id })
       .getMany();
   }
 
   async getFollowingByProfileId(id: ProfileId): Promise<Follow[] | null> {
     return this.repository
       .createQueryBuilder("follow")
-      .where("follow.followerId = :id", { id: id })
+      .where("follow.followerId = :id", { id })
       .getMany();
   }
 
   async getFollowerCountByProfileId(id: ProfileId): Promise<number> {
     return this.repository
       .createQueryBuilder("follow")
-      .where("follow.followingId = :id", { id: id })
+      .where("follow.followingId = :id", { id })
       .getCount();
   }
 
   async getFollowingCountByProfileId(id: ProfileId): Promise<number> {
     return this.repository
       .createQueryBuilder("follow")
-      .where("follow.followerId = :id", { id: id })
+      .where("follow.followerId = :id", { id })
       .getCount();
   }
 }

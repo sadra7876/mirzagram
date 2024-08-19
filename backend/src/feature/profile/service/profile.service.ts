@@ -1,15 +1,10 @@
 import { IProfileRepository } from "../repository/profile.repo";
 import dotenv from "dotenv-flow";
-import {
-  hashPassword,
-  passwordMatch,
-  verifyPassword,
-} from "feature/auth/utils/password.utils";
+import { hashPassword, passwordMatch } from "feature/auth/utils/password.utils";
 import { ProfileId, Username } from "types/profile.type";
-import { profileRequestDTO, ProfileResponseDTO } from "../dto/profile.dto";
+import { ProfileRequestDTO, ProfileResponseDTO } from "../dto/profile.dto";
 import { HttpError } from "utils/http-error";
 import { strings } from "resources/strings";
-import { Profile } from "../repository/profile.entity";
 import { IPostRepository } from "@feature/post/repository/post.repo";
 import { IFollowRepository } from "@feature/follow/repository/follow.repo";
 dotenv.config();
@@ -48,9 +43,9 @@ export class ProfileService {
       bio: user.bio,
       profilePicture: user.profilePicture,
       createdAt: user.createdAt,
-      postCount: postCount,
-      followerCount: followerCount,
-      followingCount: followingCount,
+      postCount,
+      followerCount,
+      followingCount,
     };
     return result;
   }

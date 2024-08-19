@@ -1,19 +1,18 @@
 import { IProfileRepository } from "@feature/profile/repository/profile.repo";
 import { IFollowRepository } from "../repository/follow.repo";
-import { ProfileId, Username } from "@CommonTypes/profile.type";
-import { Profile } from "@feature/profile/repository/profile.entity";
+import { ProfileId } from "@CommonTypes/profile.type";
 import { HttpError } from "@utils/http-error";
 import { strings } from "resources/strings";
 import { FollowRequestDTO } from "../dto/follow.dto";
 import { Follow } from "../repository/follow.entity";
 
-interface dependencies {
+interface Dependencies {
   followRepo: IFollowRepository;
   profileRepo: IProfileRepository;
 }
 
 export class FollowService {
-  constructor(private readonly deps: dependencies) {}
+  constructor(private readonly deps: Dependencies) {}
 
   async followUser(followerId: ProfileId, followRequestDTO: FollowRequestDTO) {
     const follower = await this.deps.profileRepo.getById(followerId);
