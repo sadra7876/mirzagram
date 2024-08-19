@@ -17,11 +17,7 @@ export class PostRepository implements IPostRepository {
   }
 
   async createOrUpdatePost(post: Post): Promise<string> {
-<<<<<<< backend/src/feature/post/repository/post.repo.ts
     const result = await this.repository.save(post);
-=======
-    let result = await this.repository.save(post);
->>>>>>> backend/src/feature/post/repository/post.repo.ts
     return result.id;
   }
 
@@ -45,20 +41,14 @@ export class PostRepository implements IPostRepository {
     return this.repository
       .createQueryBuilder("post")
       .leftJoinAndSelect("post.contents", "content")
-<<<<<<< backend/src/feature/post/repository/post.repo.ts
       .where("post.ownerId = :id", { id })
-      .getMany();
-  }
-=======
-      .where("post.ownerId = :id", { id: id })
       .getMany();
   }
 
   async getPostCountByProfile(id: ProfileId): Promise<number> {
     return this.repository
       .createQueryBuilder("post")
-      .where("post.ownerId = :id", { id: id })
+      .where("post.ownerId = :id", { id })
       .getCount();
   }
->>>>>>> backend/src/feature/post/repository/post.repo.ts
 }
