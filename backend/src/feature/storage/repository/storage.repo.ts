@@ -17,6 +17,6 @@ export class StorageRepository implements IStorageRepository {
   }
 
   async getByName(name: string): Promise<Storage | null> {
-    return await this.repo.findOneBy({ fileName: name });
+    return this.repo.findOneBy({ fileName: name });
   }
 }

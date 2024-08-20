@@ -12,4 +12,4 @@ export const signupRequestDTO = z.object({
 });
 
 export type SignupRequestDTO = z.infer<typeof signupRequestDTO>;
-export type SignupResponseDTO = { accessToken: string }
+export type SignupResponseDTO = { accessToken: string };

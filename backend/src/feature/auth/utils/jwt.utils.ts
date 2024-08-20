@@ -19,9 +19,10 @@ export function verifyAccessToken(token: string): {
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
     return {
       valid: true,
-      payload: payload,
+      payload,
     };
-  } catch (e: any) {
+  } catch (e) {
+    console.log(e); // FIXME - add logging
     return {
       valid: false,
     };

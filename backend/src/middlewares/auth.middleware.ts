@@ -2,7 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "../feature/auth/utils/jwt.utils";
 import { ApiError } from "@utils/http-response";
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const accessToken = req.headers.authorization?.split(" ")[1];
 
   if (!accessToken) {

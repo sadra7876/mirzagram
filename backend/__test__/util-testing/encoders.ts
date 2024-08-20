@@ -6,5 +6,4 @@ function encodeKey(keyType: "access" | "refresh") {
   return Buffer.from(key, "base64").toString("ascii");
 }
 
-
 console.log(encodeKey("access")); // Expected output

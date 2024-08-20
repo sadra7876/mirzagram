@@ -21,21 +21,21 @@ export class TokenRepository implements ITokenRepository {
   }
 
   async getByToken(token: string): Promise<ForgetPasswordToken | null> {
-    return await this.repo.findOneBy({ resetPasswordToken: token });
+    return this.repo.findOneBy({ resetPasswordToken: token });
   }
 
   async getByProfileEmail(email: Email): Promise<ForgetPasswordToken | null> {
-    return await this.repo.findOneBy({ profileEmail: email });
+    return this.repo.findOneBy({ profileEmail: email });
   }
 
   async getProfileByAccessToken(
     token: string
   ): Promise<ForgetPasswordToken | null> {
-    return await this.repo.findOneBy({ resetPasswordToken: token });
+    return this.repo.findOneBy({ resetPasswordToken: token });
   }
 
   async expireToken(accessToken: ForgetPasswordToken) {
     accessToken.expired = true;
-    return await this.repo.save({ ...accessToken, expired: true });
+    return this.repo.save({ ...accessToken, expired: true });
   }
 }

@@ -1,4 +1,4 @@
-import { Email, Password, Username, isEmail } from "@CommonTypes/profile.type";
+import { Email, Username, isEmail } from "@CommonTypes/profile.type";
 import { isValidEmail } from "@utils/type-checking";
 import { HttpError } from "@utils/http-error";
 import { Profile } from "../../profile/repository/profile.entity";
@@ -10,7 +10,6 @@ import {
   SigninResponseDTO,
   SignupRequestDTO,
   SignupResponseDTO,
-  signupRequestDTO,
 } from "../dto";
 import {
   verifyPassword,
@@ -28,13 +27,13 @@ import { strings } from "resources/strings";
 
 dotenv.config();
 
-interface dependencies {
+interface Dependencies {
   tokenRepo: ITokenRepository;
   profileRepo: IProfileRepository;
 }
 
 export class AuthService {
-  constructor(private readonly deps: dependencies) {}
+  constructor(private readonly deps: Dependencies) {}
 
   async signup(signupDTO: SignupRequestDTO): Promise<SignupResponseDTO> {
     await this.handleUserCheck(signupDTO.email, signupDTO.username);
@@ -48,6 +47,7 @@ export class AuthService {
       const jwt = generateAccessToken(user.id);
       return { accessToken: jwt };
     } catch (e) {
+      console.error(e);
       throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
@@ -96,6 +96,7 @@ export class AuthService {
       );
       return;
     } catch (e) {
+      console.error(e); //FIXME - add logging
       throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
@@ -138,7 +139,8 @@ export class AuthService {
       });
       await this.deps.tokenRepo.expireToken(tokenData);
       return;
-    } catch (error) {
+    } catch (e) {
+      console.error(e); //FIXME - add logging
       throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
@@ -161,18 +163,17 @@ export class AuthService {
     newUserAuth.email = signupDTO.email;
     newUserAuth.password = await hashPassword(signupDTO.password);
     newUserAuth.createdAt = new Date(); // check this in entity
-    return await this.deps.profileRepo.createOrUpdate(newUserAuth);
+    return this.deps.profileRepo.createOrUpdate(newUserAuth);
   }
 
   private async handleTokenCreation(user: Profile) {
     //FIXME - change this later, add timer and more checks i guess
-    const userToken = await this.deps.tokenRepo.getByProfileEmail(user.email);
     const resetToken = crypto.randomBytes(20).toString("hex");
     const newAccessToken = new ForgetPasswordToken();
 
     newAccessToken.resetPasswordToken = resetToken;
     newAccessToken.expirationDate = new Date(Date.now() + 3600000);
     newAccessToken.profileEmail = user.email;
-    return await this.deps.tokenRepo.createOrUpdate(newAccessToken);
+    return this.deps.tokenRepo.createOrUpdate(newAccessToken);
   }
 }
