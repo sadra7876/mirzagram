@@ -15,8 +15,12 @@ import { MentionDTO } from "../dto/mentions.dto";
 import { PostDTO } from "../dto/post.dto";
 import { PostSummaryDTO } from "../dto/post-summary.dto";
 import { convertFileNameToURL } from "@utils/utils";
+import { EditPostRequestDTO } from "../dto/edit-post-request.dto";
+
+const EMAIL_REGEX = /#[a-z0-9_]+/g;
 
 export class PostService {
+  
   constructor(
     private readonly postRepo: IPostRepository,
     private readonly profileRepo: IProfileRepository
@@ -27,7 +31,7 @@ export class PostService {
     request: CreatePostRequestDTO
   ): Promise<string> {
     const profile = await this.profileRepo.getById(profileId);
-
+    
     if (!profile || !profile.isActive) {
       throw new HttpError(400, strings.CANNOT_ADD_POST_FOR_PROFILE_ERROR);
     }
@@ -75,7 +79,7 @@ export class PostService {
   async editPost(
     profileId: ProfileId,
     id: string,
-    modifiedPost: CreatePostRequestDTO
+    modifiedPost: EditPostRequestDTO
   ): Promise<string> {
     const orgPost = await this.postRepo.getPost(id);
 
@@ -114,84 +118,81 @@ export class PostService {
     });
   }
 
-  private async buildPostFromPostRequest(
-    data: CreatePostRequestDTO,
-    owner: Profile
-  ): Promise<Post> {
+  private async buildPostFromPostRequest(data: CreatePostRequestDTO, owner: Profile): Promise<Post> {
     const newPost = new Post();
 
     newPost.owner = owner;
-    newPost.caption = data.caption;
-    newPost.contents = data.fileNames.map((n, index) => {
-      const c = new Content();
-      c.fileName = n;
-      c.owner = owner;
-      c.order = index;
-      return c;
+
+    if(data.caption) {
+        newPost.caption = data.caption || undefined;
+        newPost.hashtags = data.caption.match(EMAIL_REGEX)?.map((h) => {
+            const hastag = new Hashtag();
+            hastag.tag = h.replace("#", "");
+            return hastag;
+        });
+    }
+
+    newPost.contents = data.fileNames.map((n, index) => { 
+        const c = new Content();
+        c.fileName = n;
+        c.owner = owner;
+        c.order = index;
+        return c;
     });
 
-    newPost.mentions = await Promise.all(
-      data.mentions.map(async (m) => {
-        const mentionedProfile = await this.profileRepo.getByUsername(
-          m as unknown as Username
-        );
+    if(data.mentions) {
+        newPost.mentions = await Promise.all(data.mentions.map(async (m) => {
+            let mentionedProfile = await this.profileRepo.getByUsername(m as unknown as Username);
+            
+            if(!mentionedProfile) {
+                throw new HttpError(400, strings.MENTION_USERNAME_NOT_EXIST_ERROR);
+            }
 
-        if (!mentionedProfile) {
-          throw new HttpError(400, strings.MENTION_USERNAME_NOT_EXIST_ERROR);
-        }
-
-        const men = new Mention();
-        men.mentionedProfile = mentionedProfile;
-        men.mentioningProfile = owner;
-        return men;
-      })
-    );
-
-    newPost.hashtags = data.caption.match(/#[a-z0-9_]+/g)?.map((h) => {
-      const hastag = new Hashtag();
-      hastag.tag = h.replace("#", "");
-      return hastag;
-    });
+            const men = new Mention();
+            men.mentionedProfile = mentionedProfile;
+            men.mentioningProfile = owner;
+            return men;
+        }));
+    }
 
     return newPost;
   }
 
-  private async editPostFromPostRequest(
-    post: Post,
-    modifiedPost: CreatePostRequestDTO
-  ): Promise<Post> {
-    post.caption = modifiedPost.caption || post.caption;
-    post.contents = modifiedPost.fileNames.map((n, index) => {
-      const c = new Content();
-      c.fileName = n;
-      c.owner = post.owner;
-      c.order = index;
-      return c;
-    });
+  private async editPostFromPostRequest(post: Post, modifiedPost: EditPostRequestDTO): Promise<Post> {
+    post.caption = modifiedPost.caption || post.caption
 
-    post.mentions = await Promise.all(
-      modifiedPost.mentions.map(async (m) => {
-        const mentionedProfile = await this.profileRepo.getByUsername(
-          m as unknown as Username
-        );
+    if(modifiedPost.fileNames && modifiedPost.fileNames?.length > 0) {
+        post.contents = modifiedPost.fileNames.map((n, index) => { 
+            const c = new Content();
+            c.fileName = n;
+            c.owner = post.owner;
+            c.order = index;
+            return c;
+        });
+    }
 
-        if (!mentionedProfile) {
-          throw new HttpError(400, strings.MENTION_USERNAME_NOT_EXIST_ERROR);
-        }
+    if(modifiedPost.mentions && modifiedPost.mentions.length > 0) {
+        post.mentions = await Promise.all(modifiedPost.mentions.map(async (m) => {
+            let mentionedProfile = await this.profileRepo.getByUsername(m as unknown as Username);
+            
+            if(!mentionedProfile) {
+                throw new HttpError(400, strings.MENTION_USERNAME_NOT_EXIST_ERROR);
+            }
 
-        const men = new Mention();
-        men.mentionedProfile = mentionedProfile;
-        men.mentioningProfile = post.owner;
-        return men;
-      })
-    );
+            const men = new Mention();
+            men.mentionedProfile = mentionedProfile;
+            men.mentioningProfile = post.owner;
+            return men;
+        }));
+    }
 
-    post.hashtags = modifiedPost.caption.match(/#[a-z0-9_]+/g)?.map((h) => {
-      const hastag = new Hashtag();
-      hastag.tag = h;
-      return hastag;
+    post.hashtags = modifiedPost.caption?.match(EMAIL_REGEX)?.map((h) => {
+        const hastag = new Hashtag();
+        hastag.tag = h;
+        return hastag;
     });
 
     return post;
   }
+    
 }

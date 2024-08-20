@@ -25,6 +25,8 @@ export const strings = {
   CANNOT_ADD_POST_FOR_PROFILE_ERROR: "این پروفایل امکان افزودن عکس را ندارد",
   POST_FORBIDDEN_ERROR: "شما به این پست دسترسی ندارید",
   MENTION_USERNAME_NOT_EXIST_ERROR: "نام کاربری منشن شده وجود ندارد",
+  MENTION_EMPTY_ERROR: "منشن وارد شده خالی است",
+  POST_MUST_HAVE_PHOTO_ERROR: "پست نمیتواند بدون عکس باشد",
   FOLLOWED_SUCCESSFULLY: "دنبال کردن کاربر با موفقیت انجام شد",
   UNFOLLOWED_SUCCESSFULLY: "حذف دنبال کردن کاربر با موفقیت انجام شد",
   USER_IS_NOT_FOLLOWED: "کاربر دنبال نشده است",
