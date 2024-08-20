@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import { Textarea, TextInput } from "flowbite-react";
 import { FaCheckCircle } from "react-icons/fa";
+import { TbCameraPlus } from "react-icons/tb";
+
 import { Controller, useForm } from "react-hook-form";
 import { postUploadFile } from "./api/uploadFiles";
 import { UploadFile } from "../../Shared/model/responseUpload.interface";
@@ -22,14 +24,15 @@ const steps = [
 export default function PostComponent(props: { onClose: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [files, setFiles] = useState<ImageFile[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [fileNames, setFileNames] = useState<UploadFile[]>([]);
   const [mentions, setMentions] = useState<string[]>([]);
+  const [mentionInput, setMentionInput] = useState("");
   const {
     handleSubmit,
     register,
     trigger,
     formState: { errors },
-
     setValue,
     reset,
   } = useForm();
@@ -51,7 +54,7 @@ export default function PostComponent(props: { onClose: () => void }) {
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
-
+    setIsLoading(true);
     if (!selectedFiles || selectedFiles.length === 0) {
       setFiles([]);
       return;
@@ -66,8 +69,10 @@ export default function PostComponent(props: { onClose: () => void }) {
     for (let index = 0; index < selectedFiles.length; index++) {
       formData.append("file", selectedFiles[index]);
     }
-    upload(formData);
-    setFiles(newFiles);
+    upload(formData).then(() => {
+      setFiles(newFiles);
+      setIsLoading(false);
+    });
   };
 
   const upload = async (data: FormData) => {
@@ -87,29 +92,35 @@ export default function PostComponent(props: { onClose: () => void }) {
   }, [files]);
 
   const onSubmitCreatePost = async (data) => {
-    console.log("onSubmitCreatePost", data);
     const dataToSend: MirzaPost = {
       fileNames: [...fileNames?.map((item) => item.fileName)],
       caption: data.caption,
       mentions: mentions,
     };
-    console.log("data", dataToSend);
 
     const responseCreatePost = await postCreatePost(dataToSend);
-    console.log("responseCreatePost", responseCreatePost);
     if (responseCreatePost.isSuccess) {
-      responseCreatePost.messa;
-      toast.success(responseCreatePost.messa);
+      responseCreatePost.messages.map((item) => toast.success(item));
+      props.onClose();
     }
   };
   const handleMention = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.trim();
+    const value = event.target.value;
+    setMentionInput(value);
+
     if (value.endsWith(" ")) {
-      if (value) {
-        setMentions([...mentions, value]);
-        setValue("mention", value); // Replace the entire username with an empty string
+      const newMention = value.trim();
+      if (newMention) {
+        setMentions((prevMentions) => [...prevMentions, newMention]);
+        setMentionInput("");
+        setValue("mention", ""); // Clear the input field in the form
       }
     }
+  };
+  const removeMention = (mentionToRemove: string) => {
+    setMentions((prevMentions) =>
+      prevMentions.filter((mention) => mention !== mentionToRemove),
+    );
   };
   return (
     <div className="flex w-full flex-col justify-center px-[90px]">
@@ -150,7 +161,7 @@ export default function PostComponent(props: { onClose: () => void }) {
             <div className="flex flex-wrap gap-2">
               <label className="flex w-24 flex-col gap-y-2">
                 <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-mirza-orange">
-                  <p>aa</p>
+                  <TbCameraPlus className="text-3xl text-mirza-orange" />
                 </div>
                 <p className="font-medium text-mirza-black">عکس پروفایل</p>
                 <input
@@ -163,17 +174,24 @@ export default function PostComponent(props: { onClose: () => void }) {
                 />
               </label>
 
-              {files.map((file) => {
-                return (
-                  <div key={file.file.name} className="h-28 w-28 rounded-3xl">
-                    <img
-                      src={file.previewUrl || ""}
-                      alt="Selected Image"
-                      className="rounded-3xl object-contain"
-                    />
-                  </div>
-                );
-              })}
+              {isLoading ? (
+                <div className="flex h-28 w-28 items-center justify-center">
+                  <div className="loader"></div>{" "}
+                  {/* Add your loading spinner here */}
+                </div>
+              ) : (
+                files.map((file) => {
+                  return (
+                    <div key={file.file.name} className="h-28 w-28 rounded-3xl">
+                      <img
+                        src={file.previewUrl || ""}
+                        alt="Selected Image"
+                        className="rounded-3xl object-contain"
+                      />
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         )}
@@ -205,9 +223,21 @@ export default function PostComponent(props: { onClose: () => void }) {
             <TextInput
               id="mention"
               className="w-full"
+              value={mentionInput}
               {...register("mention")}
               onChange={handleMention}
             />
+            <div className="flex flex-wrap gap-2">
+              {mentions.map((mention, index) => (
+                <div
+                  key={index}
+                  onClick={() => removeMention(mention)}
+                  className="flex h-6 flex-row items-center justify-center rounded-full bg-blue-500 px-2 text-white"
+                >
+                  {mention}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </form>
