@@ -28,6 +28,7 @@ export default {
         "mirza-black": "#191919",
         "mirza-gold": "#C19008",
         "mirza-orange": "#F7901E",
+        "mirza-dsiable": "#6F6F6F",
       },
     },
   },
