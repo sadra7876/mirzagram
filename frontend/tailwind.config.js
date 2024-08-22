@@ -9,11 +9,13 @@ export default {
         15: "3.75rem", //60px
         485: "485px", //485px
         78: "78px",
+        385: "24.063rem",
       },
       height: {
         15: "3.75rem", //60px
         456: "456px",
         300: "300px",
+        376: "23.5rem",
       },
       backgroundImage: {
         "background-auth": "url('../src/assets/images/Background.jpg')",
@@ -21,6 +23,8 @@ export default {
       padding: {
         3.5: "14px",
         78: "78px",
+        146: "9.125rem",
+        216: "13.5rem",
       },
       colors: {
         "mirza-green": "#17494D",

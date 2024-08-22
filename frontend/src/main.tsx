@@ -14,6 +14,7 @@ import { ToastComponent } from "./Shared/Components/ToastComponent.tsx";
 import PublicRoute from "./utils/PublicRout.tsx";
 import DashboardLayout from "./app/dashboard/MainPage.tsx";
 import MessagesPage from "./app/messages/messagesPage.tsx";
+import SinglePost from "./app/SinglePost/singlePost.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Router>
@@ -30,6 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route element={<DashboardLayout />} path="/">
             <Route path="profile" element={<UserProfile />} />
             <Route path="messages" element={<MessagesPage />} />
+            <Route path="SinglePost" element={<SinglePost />} />
           </Route>
         </Route>
         <Route element={<NotFoundPage />} path="*" />
