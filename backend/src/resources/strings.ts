@@ -38,4 +38,6 @@ export const strings = {
   PROFILE_NOT_FOUND_ERROR: "پروفایل پیدا نشد",
   COMMENT_NOT_AVAILABLE_ERROR: "کامنت پیدا نشد",
   POST_ID_NOT_PROVIDED: "آیدی پست باید ارسال شود",
+  HAVE_NOT_ANY_FOLLOWING: "شما کسی را فالو نکردید",
+  HAVE_NOT_ANY_FOLLOWER: "کسی شما را فالو نکرده است",
 };

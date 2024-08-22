@@ -45,14 +45,18 @@ export class FollowRepository implements IFollowRepository {
   async getFollowerByProfileId(id: ProfileId): Promise<Follow[] | null> {
     return this.repository
       .createQueryBuilder("follow")
-      .where("follow.followingId = :id", { id })
+      .leftJoinAndSelect("follow.follower", "profile")
+      .where("follow.followingId = :id", { id: id })
+      .orderBy("follow.createdAt", "DESC")
       .getMany();
   }
 
   async getFollowingByProfileId(id: ProfileId): Promise<Follow[] | null> {
     return this.repository
       .createQueryBuilder("follow")
-      .where("follow.followerId = :id", { id })
+      .leftJoinAndSelect("follow.following", "profile")
+      .where("follow.followerId = :id", { id: id })
+      .orderBy("follow.createdAt", "DESC")
       .getMany();
   }
 
