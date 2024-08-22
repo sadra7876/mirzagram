@@ -7,6 +7,7 @@ import arow from "../../../assets/images/Icons/arrow.svg";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../../../Shared/Components/ToastComponent";
+import axiosInstance from "../../../api/axiosInstance";
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -14,35 +15,16 @@ interface FormValues {
   identifier: string;
   password: string;
 }
-export default function LoginComponent() {
+export default function LoginComponent(props: { onClick: () => void }) {
   const { register, handleSubmit } = useForm<FormValues>();
   const navigate = useNavigate();
   const onSubmit = async (data: FormValues) => {
-    try {
-      const response = await fetch(`${BASE_URL}auth/sign-in`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-      console.log(result);
-
-      if (result.isSuccess) {
-        setTimeout(() => {
-          localStorage.setItem("token", result.result.accessToken);
-          navigate("/");
-        }, 2000);
-      } else {
-        result.messages.map((message: string) => {
-          toast.error(message);
-        });
-      }
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      toast.error("There was a problem with the registration");
+    const response = await axiosInstance.post("auth/sign-in", data);
+    if (response.data.isSuccess) {
+      setTimeout(() => {
+        localStorage.setItem("token", response.data.result.accessToken);
+        navigate("/");
+      }, 2000);
     }
   };
 
@@ -89,7 +71,7 @@ export default function LoginComponent() {
         />
         <MirzaAuthLinks
           title="ثبت نام در میرزاگرام"
-          onClick={() => console.log("clickme")}
+          onClick={() => props.onClick()}
           icon={arow}
         />
       </div>

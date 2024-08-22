@@ -26,7 +26,7 @@ interface FromValueProfile {
 export default function UserProfile() {
   const token = localStorage.getItem("token");
   const [openModal, setOpenModal] = useState(false);
-  const [openModalPost, setOpenModalPost] = useState(true);
+  const [openModalPost, setOpenModalPost] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<FromValueProfile>({
     firstName: "",
@@ -86,7 +86,7 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="px-78 flex h-full w-full flex-col gap-6">
+    <div className="flex h-full w-full flex-col gap-6 px-78">
       <div>
         <div className="flex pb-8">صفحه من</div>
         {loading ? (
