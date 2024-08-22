@@ -33,10 +33,7 @@ export default function LoginComponent(props: { onClick: () => void }) {
       className="mr-0 w-full content-center py-6"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <p
-        dir="rtl"
-        className="w-400 leading-24px text-right text-sm text-amber-950"
-      >
+      <p className="w-400 leading-24px text-right text-sm text-amber-950">
         به کالج‌گرام خوش آمدید. برای ورود کافیه نام کاربری/ایمیل و رمز عبور
         خود‌تون رو وارد کنید:
       </p>
@@ -56,7 +53,7 @@ export default function LoginComponent(props: { onClick: () => void }) {
           inputIcon={keyIcon}
         />
       </div>
-      <label className="flex flex-row-reverse items-end gap-2 text-center text-xs">
+      <label className="flex flex-row items-end gap-2 pb-4 text-center text-xs">
         <input type="checkbox" className="h-3 w-3 rounded-[4px]" />
         مرا به خاطر بسپار
       </label>
