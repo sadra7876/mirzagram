@@ -6,6 +6,7 @@ import MirzaButton from "../../../Shared/Components/MirzaButton";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../../../Shared/Components/ToastComponent";
+import axiosInstance from "../../../api/axiosInstance";
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 interface FormValues {
   username: string;
@@ -22,31 +23,14 @@ export default function RegisterComponent() {
   } = useForm<FormValues>();
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    try {
-      const response = await fetch(`${BASE_URL}auth/sign-up`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+    const response = await axiosInstance.post("auth/sign-up", data);
 
-      const result = await response.json();
-
-      if (result.isSuccess) {
-        toast.success("حساب کاربری شما با موفقیت ایجاد شد");
-        setTimeout(() => {
-          localStorage.setItem("token", result.result.accessToken);
-          navigate("/");
-        }, 2000);
-      } else {
-        result.messages.map((message: string) => {
-          toast.error(message);
-        });
-      }
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      toast.error("There was a problem with the registration");
+    if (response.data.isSuccess) {
+      toast.success("حساب کاربری شما با موفقیت ایجاد شد");
+      setTimeout(() => {
+        localStorage.setItem("token", response.data.result.accessToken);
+        navigate("/");
+      }, 2000);
     }
   };
 

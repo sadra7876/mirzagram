@@ -29,7 +29,11 @@ export default function LoginPage() {
           </button>
         </div>
 
-        {state === "LOGIN" ? <LoginComponent /> : <RegisterComponent />}
+        {state === "LOGIN" ? (
+          <LoginComponent onClick={() => setState("REGISTER")} />
+        ) : (
+          <RegisterComponent />
+        )}
       </div>
     </div>
   );
