@@ -11,26 +11,26 @@
   font-family: irsansweb;
   font-style: normal;
   font-weight: normal;
-  src: url("../assets/fonts/IRANSansWeb(FaNum).ttf");
+  src: url("../src/assets/fonts/IRANSansWeb\(FaNum\).ttf");
 }
 
 @font-face {
   font-family: irsansweb-bold;
   font-style: bold;
   font-weight: bold;
-  src: url("../assets/fonts/IRANSansWeb(FaNum)_Bold.ttf");
+  src: url("../src/assets/fonts/IRANSansWeb(FaNum)_Bold.ttf");
 }
 
 @font-face {
   font-family: irsansweb-light;
   font-style: light;
   font-weight: light;
-  src: url("../assets/fonts/IRANSansWeb(FaNum)_Light.ttf");
+  src: url("../src/assets/fonts/IRANSansWeb(FaNum)_Light.ttf");
 }
 
 @font-face {
   font-family: irsansweb-Ultralight;
   font-style: lighter;
   font-weight: lighter;
-  src: url("../assets/fonts/IRANSansWeb(FaNum)_Light.ttf");
+  src: url("../src/assets/fonts/IRANSansWeb(FaNum)_Light.ttf");
 }

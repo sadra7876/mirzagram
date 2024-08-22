@@ -8,6 +8,9 @@ import UserIcon from "../../assets/images/Icons/user_icon.jpg";
 import EmailIcon from "../../assets/images/Icons/gmail.jpg";
 import KeyIcon from "../../assets/images/Icons/key.jpg";
 import { ToggleSwitch, Label, Textarea } from "flowbite-react";
+
+import profilePicture from "../../assets/images/Icons/picture frame.svg";
+import PostComponent from "./postComponent";
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 interface FromValueProfile {
   firstName: string;
@@ -19,14 +22,11 @@ interface FromValueProfile {
   bio: string;
   username: string;
 }
-import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
-
-import profilePicture from "../../assets/images/Icons/picture frame.svg";
-import { getUserProfile } from "./api/userProfile";
 
 export default function UserProfile() {
   const token = localStorage.getItem("token");
   const [openModal, setOpenModal] = useState(false);
+  const [openModalPost, setOpenModalPost] = useState(true);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<FromValueProfile>({
     firstName: "",
@@ -69,7 +69,6 @@ export default function UserProfile() {
   };
 
   const editProfile = async (value: FromValueProfile) => {
-    console.log("first", value);
     const response = await fetch(`${BASE_URL}profile`, {
       method: "PUT",
       headers: {
@@ -129,7 +128,11 @@ export default function UserProfile() {
       <div className="h-full w-full flex-col gap-8 rounded-3xl border-2 text-sm font-normal">
         <div className="flex flex-col items-center gap-y-8 px-[298px] py-[222px] text-center">
           هنوز هیچ پستی توی صفحه‌ات نذاشتی! بجنب تا دیر نشده
-          <MirzaButton className="gap-y-8" title="ایجاد پست جدید"></MirzaButton>
+          <MirzaButton
+            onClick={() => setOpenModalPost(true)}
+            className="gap-y-8"
+            title="ایجاد پست جدید"
+          ></MirzaButton>
         </div>
       </div>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
@@ -220,6 +223,11 @@ export default function UserProfile() {
               <button onClick={() => setOpenModal(false)}>پشیمون شدم</button>
             </div>
           </form>
+        </Modal.Body>
+      </Modal>
+      <Modal show={openModalPost} onClose={() => setOpenModalPost(false)}>
+        <Modal.Body>
+          <PostComponent onClose={() => setOpenModalPost(false)} />
         </Modal.Body>
       </Modal>
     </div>
