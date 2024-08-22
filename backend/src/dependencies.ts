@@ -16,6 +16,9 @@ import { Content } from "@feature/post/repository/entities/content.entity";
 import { Hashtag } from "@feature/post/repository/entities/hashtag.entity";
 import { Mention } from "@feature/post/repository/entities/mention.entity";
 import { Post } from "@feature/post/repository/entities/post.entity";
+import { FollowRepository } from "@feature/follow/repository/follow.repo";
+import { FollowService } from "@feature/follow/service/follow.service";
+import { Follow } from "@feature/follow/repository/follow.entity";
 dotenv.config();
 
 // DataSource
@@ -28,7 +31,16 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true,
   logging: true,
-  entities: [Profile, ForgetPasswordToken, Storage, Post, Hashtag, Content, Mention],
+  entities: [
+    Profile,
+    ForgetPasswordToken,
+    Storage,
+    Post,
+    Hashtag,
+    Content,
+    Mention,
+    Follow,
+  ],
   subscribers: [],
   migrations: [],
 });
@@ -49,6 +61,7 @@ const profileRepository = new ProfileRepository(AppDataSource);
 const tokenRepository = new TokenRepository(AppDataSource);
 const storageRepository = new StorageRepository(AppDataSource);
 const postRepository = new PostRepository(AppDataSource);
+const followRepository = new FollowRepository(AppDataSource);
 
 // Services
 export const authService = new AuthService({
@@ -57,9 +70,16 @@ export const authService = new AuthService({
 });
 export const profileService = new ProfileService({
   profileRepo: profileRepository,
+  postRepo: postRepository,
+  followRepo: followRepository,
 });
 
 export const storageService = new StorageService({
   storageRepo: storageRepository,
 });
 export const postService = new PostService(postRepository, profileRepository);
+
+export const followService = new FollowService({
+  followRepo: followRepository,
+  profileRepo: profileRepository,
+});

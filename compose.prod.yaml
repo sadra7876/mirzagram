@@ -1,0 +1,46 @@
+name: mirzagram-prod
+services:
+  db:
+    container_name: mirzagram-db-prod
+    image: postgres
+    environment:
+      POSTGRES_DB: mirzagram-db
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: mirza
+    networks:
+      - mirza-net-prod
+
+  api:
+    container_name: mirzagram-api-prod
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+    ports:
+      - 81:3000
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    networks:
+      - mirza-net-prod
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+
+  front:
+    container_name: mirzagram-front-prod
+    environment:
+      VITE_REACT_APP_BASE_URL: http://37.32.6.153:81/
+    ports:
+      - 80:8000
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - mirza-net-prod
+    depends_on:
+      - api
+
+networks:
+  mirza-net-prod:
+    driver: bridge

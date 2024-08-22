@@ -17,18 +17,18 @@ export class ProfileRepository implements IProfileRepository {
   }
 
   async getById(id: ProfileId): Promise<Profile | null> {
-    return await this.repo.findOneBy({ id });
+    return this.repo.findOneBy({ id });
   }
 
   async createOrUpdate(profile: Profile) {
-    return await this.repo.save(profile);
+    return this.repo.save(profile);
   }
 
   async getByUsername(username: Username): Promise<Profile | null> {
-    return await this.repo.findOneBy({ username });
+    return this.repo.findOneBy({ username });
   }
 
   async getByEmail(email: Email): Promise<Profile | null> {
-    return await this.repo.findOneBy({ email });
+    return this.repo.findOneBy({ email });
   }
 }

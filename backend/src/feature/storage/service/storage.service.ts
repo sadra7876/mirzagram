@@ -1,12 +1,12 @@
 import { IStorageRepository } from "../repository/storage.repo";
 import { Storage } from "../repository/storage.entity";
 import { HttpError } from "@utils/http-error";
-interface dependencies {
+interface Dependencies {
   storageRepo: IStorageRepository;
 }
 
 export class StorageService {
-  constructor(private readonly deps: dependencies) {}
+  constructor(private readonly deps: Dependencies) {}
 
   async uploadFiles(
     files: Express.Multer.File[],

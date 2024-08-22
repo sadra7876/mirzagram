@@ -1,5 +1,3 @@
-import { FILE } from "dns";
-
 export const strings = {
   INTERNAL_SERVER_ERROR: "خطای داخلی سرور",
   INVALID_EMAIL_ERROR: "ایمیل نامعتبر است",
@@ -26,5 +24,12 @@ export const strings = {
   FILE_NAME_EMPTY_ERROR: "نام فایل نمیتواند خالی باشد",
   CANNOT_ADD_POST_FOR_PROFILE_ERROR: "این پروفایل امکان افزودن عکس را ندارد",
   POST_FORBIDDEN_ERROR: "شما به این پست دسترسی ندارید",
-  MENTION_USERNAME_NOT_EXIST_ERROR: "نام کاربری منشن شده وجود ندارد"
+  MENTION_USERNAME_NOT_EXIST_ERROR: "نام کاربری منشن شده وجود ندارد",
+  MENTION_EMPTY_ERROR: "منشن وارد شده خالی است",
+  POST_MUST_HAVE_PHOTO_ERROR: "پست نمیتواند بدون عکس باشد",
+  FOLLOWED_SUCCESSFULLY: "دنبال کردن کاربر با موفقیت انجام شد",
+  UNFOLLOWED_SUCCESSFULLY: "حذف دنبال کردن کاربر با موفقیت انجام شد",
+  USER_IS_NOT_FOLLOWED: "کاربر دنبال نشده است",
+  USER_IS_ALREADY_FOLLOWED: "کاربر قبلا فالو شده است",
+  FOLLOWER_AND_FOLLOWING_IS_SAME: "دنبال کننده و دنبال شونده برابر است",
 };

@@ -1,23 +1,28 @@
-import { Profile } from "@feature/profile/repository/profile.entity"
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Column } from "typeorm"
-import { Post } from "./post.entity"
-import { ProfileId } from "@CommonTypes/profile.type"
+import { Profile } from "@feature/profile/repository/profile.entity";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  Column,
+} from "typeorm";
+import { Post } from "./post.entity";
 
 @Entity()
 export class Content {
-    @PrimaryGeneratedColumn()
-    id: string
+  @PrimaryGeneratedColumn()
+  id: string;
 
-    @Column()
-    fileName: string
+  @Column()
+  fileName: string;
 
-    @Column()
-    order: number
-    
-    @ManyToOne(() => Profile)
-    @JoinColumn()
-    owner: Profile
+  @Column()
+  order: number;
 
-    @ManyToOne(() => Post, (post) => post.contents)
-    post: Post
+  @ManyToOne(() => Profile)
+  @JoinColumn()
+  owner: Profile;
+
+  @ManyToOne(() => Post, (post) => post.contents)
+  post: Post;
 }

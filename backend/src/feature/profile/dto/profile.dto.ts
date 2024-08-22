@@ -4,10 +4,9 @@ import {
   isUrl,
   isUsername,
 } from "@CommonTypes/profile.type";
-import { url } from "inspector";
 import { strings } from "resources/strings";
-import { date, isValid, string, z } from "zod";
-import { Password, Username, Email } from "../../../types/profile.type";
+import { z } from "zod";
+import { Username, Email } from "../../../types/profile.type";
 
 export const profileRequestDTO = z
   .object({
@@ -51,6 +50,9 @@ export type ProfileResponseDTO = {
   bio?: string;
   profilePicture?: string;
   createdAt: Date;
+  postCount: number;
+  followerCount: number;
+  followingCount: number;
 };
 
 export const exploreRequestDTO = z.object({
@@ -60,4 +62,4 @@ export const exploreRequestDTO = z.object({
 });
 
 export type ExploreRequestDTO = z.infer<typeof exploreRequestDTO>;
-export type profileRequestDTO = z.infer<typeof profileRequestDTO>;
+export type ProfileRequestDTO = z.infer<typeof profileRequestDTO>;
