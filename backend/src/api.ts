@@ -7,6 +7,7 @@ import { storageRouter } from "@feature/storage/routes/storage.routes";
 import path from "path";
 import { postRoutes } from "@feature/post/routes/post.routes";
 import { followRoutes } from "@feature/follow/routes/follow.routes";
+import { commentRoutes } from "@feature/comment/routes/comment.routes";
 
 export const api = express();
 
@@ -20,3 +21,4 @@ api.use("/profile", profileRoutes);
 api.use("/upload", storageRouter);
 api.use("/post", postRoutes);
 api.use("/follow", followRoutes);
+api.use("/comment", commentRoutes);

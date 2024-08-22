@@ -12,6 +12,8 @@ import {
 import { Content } from "./content.entity";
 import { Hashtag } from "./hashtag.entity";
 import { Mention } from "./mention.entity";
+import { ProfileId } from "@CommonTypes/profile.type";
+import { Comment } from "@feature/comment/repository/entity/comment.entity";
 
 @Entity()
 export class Post {
@@ -42,6 +44,9 @@ export class Post {
   @JoinTable()
   hashtags?: Hashtag[];
 
-  @OneToMany(() => Mention, (mention) => mention.post, { cascade: true })
-  mentions: Mention[];
+    @OneToMany(() => Mention, (mention) => mention.post, { cascade: true })
+    mentions: Mention[]
+
+    @OneToMany(() => Comment, (comment) => comment.post)
+    comments: Comment[]
 }

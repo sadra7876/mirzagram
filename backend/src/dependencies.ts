@@ -19,6 +19,10 @@ import { Post } from "@feature/post/repository/entities/post.entity";
 import { FollowRepository } from "@feature/follow/repository/follow.repo";
 import { FollowService } from "@feature/follow/service/follow.service";
 import { Follow } from "@feature/follow/repository/follow.entity";
+import { CommentRepository } from "@feature/comment/repository/comment.repo";
+import { CommentService } from "@feature/comment/service/comment.service";
+import { Comment, CommentLike } from "@feature/comment/repository/entity/comment.entity";
+import { CommentLikeRepository } from "@feature/comment/repository/comment-like.repo";
 dotenv.config();
 
 // DataSource
@@ -40,6 +44,8 @@ export const AppDataSource = new DataSource({
     Content,
     Mention,
     Follow,
+    Comment,
+    CommentLike,
   ],
   subscribers: [],
   migrations: [],
@@ -62,6 +68,8 @@ const tokenRepository = new TokenRepository(AppDataSource);
 const storageRepository = new StorageRepository(AppDataSource);
 const postRepository = new PostRepository(AppDataSource);
 const followRepository = new FollowRepository(AppDataSource);
+const commentRepository = new CommentRepository(AppDataSource.getRepository<Comment>(Comment));
+const commentLikeRepository = new CommentLikeRepository(AppDataSource.getRepository<CommentLike>(CommentLike));
 
 // Services
 export const authService = new AuthService({
@@ -83,3 +91,9 @@ export const followService = new FollowService({
   followRepo: followRepository,
   profileRepo: profileRepository,
 });
+export const commentService = new CommentService({
+  commentRepo: commentRepository,
+  postRepo: postRepository,
+  profileRepo: profileRepository,
+  commentLikeRepo: commentLikeRepository,
+})
