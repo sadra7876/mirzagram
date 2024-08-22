@@ -341,6 +341,96 @@ paths:
                       result:
                         type: string
 
+  # Comment
+  /comment:
+    get:
+      summary: Get comments for post
+      tags: [Comment]
+      parameters:
+        - in: query
+          name: postId
+          schema:
+            type: integer
+          required: true
+          description: Post id
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: true
+          description: Page number
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+          required: true
+          description: Page size
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#components/schemas/CommentResponseDTO"
+    post:
+      summary: Create new comment
+      tags: [Comment]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCommentRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+  /comment/{id}:
+    get: 
+      summary: Get comment details
+      tags: [Comment]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The id of the comment to retrieve
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#/components/schemas/CommentResponseDTO"
+  /comment/{id}/like:
+    post:
+      summary: Like a comment
+      tags: [Comment]
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+
 components:
   securitySchemes:
     BearerAuth:
@@ -557,3 +647,51 @@ components:
       properties:
         username:
           type: string
+    CommentResponseDTO:
+      type: object
+      properties:
+        page:
+          type: number
+        data: 
+          type: object
+          properties:
+            id:
+              type: string
+            text:
+              type: string
+            postId:
+              type: string
+            author: 
+              type: object
+              properties:
+                displayName: 
+                  type: string
+            likeCount:
+              type: number
+            replies: 
+              type: object
+              properties:
+                id:
+                  type: string
+                text:
+                  type: string
+                postId:
+                  type: string
+                author: 
+                  type: object
+                  properties:
+                    displayName: 
+                      type: string
+    CreateCommentRequestDTO: 
+      type: object
+      required:
+        - postId
+        - text
+      properties:
+        postId:
+          type: string
+        text:
+          type: string
+        parentCommentId:
+          type: string
+

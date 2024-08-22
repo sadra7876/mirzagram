@@ -32,4 +32,10 @@ export const strings = {
   USER_IS_NOT_FOLLOWED: "کاربر دنبال نشده است",
   USER_IS_ALREADY_FOLLOWED: "کاربر قبلا فالو شده است",
   FOLLOWER_AND_FOLLOWING_IS_SAME: "دنبال کننده و دنبال شونده برابر است",
+  COMMENT_ADDED_SUCCESSFULLY: "کامنت با موفقیت اضافه شد",
+  COMMENT_TEXT_CANNOT_BE_EMPTY_ERROR: "متن کامنت نمیتواند خالی باشد",
+  POST_ID_CANNOT_BE_EMPTY_ERROR: "آیدی پست نمیتواند خالی باشد",
+  PROFILE_NOT_FOUND_ERROR: "پروفایل پیدا نشد",
+  COMMENT_NOT_AVAILABLE_ERROR: "کامنت پیدا نشد",
+  POST_ID_NOT_PROVIDED: "آیدی پست باید ارسال شود",
 };
