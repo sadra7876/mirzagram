@@ -340,7 +340,75 @@ paths:
                     properties:
                       result:
                         type: string
-
+  /post/like:
+    get:
+      summary: Get likes for post
+      tags: [Post]
+      parameters:
+        - in: query
+          name: postId
+          schema:
+            type: integer
+          required: true
+          description: Post id
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: true
+          description: Page number
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+          required: true
+          description: Page size
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#components/schemas/PostLikesResponseDTO"
+    post:
+      summary: Like a post
+      tags: [Post]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostLikeRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+    delete:
+      summary: Unlike a post
+      tags: [Post]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostLikeRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
   # Comment
   /comment:
     get:
@@ -430,6 +498,57 @@ paths:
                 allOf:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
+  /bookmark:
+    get:
+      summary: Get bookmarks for profile
+      tags: [Bookmark]
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#components/schemas/BookmarkResponseDTO"
+    post:
+      summary: Bookmark a post
+      tags: [Bookmark]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookmarkRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+    delete:
+      summary: Delete bookmark
+      tags: [Bookmark]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookmarkRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+
 
 components:
   securitySchemes:
@@ -622,6 +741,8 @@ components:
           type: string
         caption:
           type: string
+        likeCount:
+          type: number
         hashtags:
           type: array
           items:
@@ -694,4 +815,53 @@ components:
           type: string
         parentCommentId:
           type: string
-
+    BookmarkResponseDTO:
+      type: object
+      properties:
+        id:
+          type: number
+        createdAt:
+          type: string
+        post: 
+          type: object
+          properties:
+            id:
+              type: number
+            thumbnail:
+              type: string
+    BookmarkRequestDTO:
+      type: object
+      required:
+        - postId
+      properties:
+        postId:
+          type: string
+    PostLikeRequestDTO:
+      type: object
+      required:
+        - postId
+      properties:
+        postId:
+          type: string
+    PostLikesResponseDTO:
+      type: object
+      properties:
+        page:
+          type: number
+        data: 
+          type: object
+          properties:
+            id:
+              type: string
+            likedAt:
+              type: string
+            profile: 
+              type: object
+              properties:
+                username:
+                  type: string
+                displayName: 
+                  type: string
+                profilePictureURL:
+                  type: string
+                  nullable: true

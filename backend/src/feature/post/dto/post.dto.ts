@@ -11,4 +11,5 @@ export type PostDTO = {
   hashtags?: HashtagDTO[];
   mentions?: MentionDTO[];
   contents: ContentDTO[];
+  likeCount: number;
 };
