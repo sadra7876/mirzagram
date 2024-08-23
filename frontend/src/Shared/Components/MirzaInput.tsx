@@ -21,7 +21,10 @@ const MirzaInput: React.FC<MirzaInputProps> = ({
   inputIcon,
 }) => {
   return (
-    <div className="mb-2 flex h-9 w-full flex-row items-center rounded-2xl border bg-white px-3.5 text-right text-xs">
+    <div
+      dir="ltr"
+      className="mb-2 flex h-9 w-full flex-row items-center rounded-2xl border bg-white px-3.5 text-right text-xs"
+    >
       <input
         type={type}
         placeholder={placeholder}
