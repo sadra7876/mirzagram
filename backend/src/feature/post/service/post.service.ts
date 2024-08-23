@@ -16,40 +16,48 @@ import { PostDTO } from "../dto/post.dto";
 import { PostSummaryDTO } from "../dto/post-summary.dto";
 import { convertFileNameToURL } from "@utils/utils";
 import { EditPostRequestDTO } from "../dto/edit-post-request.dto";
+import { IPostLikeRepository } from "../repository/post-like.repo";
+import { PostLike } from "../repository/entities/post-like.entity";
+import { PostLikeRequestDTO } from "../dto/post-like-request.dto";
 
 const EMAIL_REGEX = /#[a-z0-9_]+/g;
 
+interface Dependencies {
+  postRepo: IPostRepository;
+  profileRepo: IProfileRepository;
+  postLikeRepo: IPostLikeRepository;
+}
+
 export class PostService {
-  
-  constructor(
-    private readonly postRepo: IPostRepository,
-    private readonly profileRepo: IProfileRepository
-  ) {}
+  constructor(private readonly deps: Dependencies) {}
 
   async createPost(
     profileId: ProfileId,
     request: CreatePostRequestDTO
   ): Promise<string> {
-    const profile = await this.profileRepo.getById(profileId);
-    
+    const profile = await this.deps.profileRepo.getById(profileId);
+
     if (!profile || !profile.isActive) {
       throw new HttpError(400, strings.CANNOT_ADD_POST_FOR_PROFILE_ERROR);
     }
 
     const post = await this.buildPostFromPostRequest(request, profile);
-    return this.postRepo.createOrUpdatePost(post);
+    return this.deps.postRepo.createOrUpdatePost(post);
   }
 
   async getPost(profileId: ProfileId, id: string): Promise<PostDTO> {
-    const post = await this.postRepo.getPost(id);
+    const post = await this.deps.postRepo.getPost(id);
 
     if (!post) {
       throw new HttpError(404, strings.POST_NOT_FOUND_ERROR);
     }
 
-    if (post.owner.id !== profileId) {
-      throw new HttpError(403, strings.POST_FORBIDDEN_ERROR);
-    }
+    // Commented to allow public access to posts!
+    // if (post.owner.id !== profileId) {
+    //   throw new HttpError(403, strings.POST_FORBIDDEN_ERROR);
+    // }
+
+    const likeCount = await this.deps.postLikeRepo.getLikeCountForPost(post.id);
 
     return {
       id: post?.id,
@@ -73,6 +81,7 @@ export class PostService {
             url: convertFileNameToURL(c.fileName, "post"),
           };
         }),
+      likeCount,
     };
   }
 
@@ -81,7 +90,7 @@ export class PostService {
     id: string,
     modifiedPost: EditPostRequestDTO
   ): Promise<string> {
-    const orgPost = await this.postRepo.getPost(id);
+    const orgPost = await this.deps.postRepo.getPost(id);
 
     if (!orgPost) {
       throw new HttpError(400, strings.POST_NOT_FOUND_ERROR);
@@ -92,13 +101,13 @@ export class PostService {
     }
 
     const newPost = await this.editPostFromPostRequest(orgPost, modifiedPost);
-    return this.postRepo.createOrUpdatePost(newPost);
+    return this.deps.postRepo.createOrUpdatePost(newPost);
   }
 
   async getPostsByProfileId(
     profileId: ProfileId
   ): Promise<PostSummaryDTO[] | undefined> {
-    const posts = await this.postRepo.getPostsByProfile(profileId);
+    const posts = await this.deps.postRepo.getPostsByProfile(profileId);
 
     if (!posts) {
       return undefined;
@@ -118,81 +127,156 @@ export class PostService {
     });
   }
 
-  private async buildPostFromPostRequest(data: CreatePostRequestDTO, owner: Profile): Promise<Post> {
+  async getPostLikes(
+    profileId: ProfileId,
+    postId: string,
+    page: number,
+    pageSize: number
+  ) {
+    const likes = await this.deps.postLikeRepo.getPaginatedLikesForPost(
+      postId,
+      page,
+      pageSize
+    );
+
+    const mappedLikes = likes.map((l) => {
+      return {
+        id: l.id,
+        likedAt: l.likedAt,
+        profile: {
+          username: l.profile.username,
+          displayName: `${l.profile.firstName} ${l.profile.lastName}`,
+          profilePictureURL: l.profile.profilePicture
+            ? convertFileNameToURL(l.profile.profilePicture || "", "profile")
+            : null,
+        },
+      };
+    });
+
+    return {
+      page,
+      data: mappedLikes,
+    };
+  }
+
+  async likePost(profileId: ProfileId, likeReq: PostLikeRequestDTO) {
+    const bookmark = await this.deps.postLikeRepo.getLike(
+      profileId,
+      likeReq.postId
+    );
+    if (bookmark) {
+      return;
+    }
+
+    const profile = await this.deps.profileRepo.getById(profileId);
+    if (!profile) {
+      throw new HttpError(400, strings.PROFILE_NOT_FOUND_ERROR);
+    }
+
+    const post = await this.deps.postRepo.getPost(likeReq.postId);
+    if (!post) {
+      throw new HttpError(400, strings.POST_NOT_FOUND_ERROR);
+    }
+
+    const like = new PostLike();
+    like.post = post;
+    like.profile = profile;
+    return this.deps.postLikeRepo.addLikeToPost(like);
+  }
+
+  async removeLike(profileId: ProfileId, likeReq: PostLikeRequestDTO) {
+    await this.deps.postLikeRepo.removeLikeFromPost(profileId, likeReq.postId);
+    return;
+  }
+
+  private async buildPostFromPostRequest(
+    data: CreatePostRequestDTO,
+    owner: Profile
+  ): Promise<Post> {
     const newPost = new Post();
 
     newPost.owner = owner;
 
-    if(data.caption) {
-        newPost.caption = data.caption || undefined;
-        newPost.hashtags = data.caption.match(EMAIL_REGEX)?.map((h) => {
-            const hastag = new Hashtag();
-            hastag.tag = h.replace("#", "");
-            return hastag;
-        });
+    if (data.caption) {
+      newPost.caption = data.caption || undefined;
+      newPost.hashtags = data.caption.match(EMAIL_REGEX)?.map((h) => {
+        const hastag = new Hashtag();
+        hastag.tag = h.replace("#", "");
+        return hastag;
+      });
     }
 
-    newPost.contents = data.fileNames.map((n, index) => { 
-        const c = new Content();
-        c.fileName = n;
-        c.owner = owner;
-        c.order = index;
-        return c;
+    newPost.contents = data.fileNames.map((n, index) => {
+      const c = new Content();
+      c.fileName = n;
+      c.owner = owner;
+      c.order = index;
+      return c;
     });
 
-    if(data.mentions) {
-        newPost.mentions = await Promise.all(data.mentions.map(async (m) => {
-            let mentionedProfile = await this.profileRepo.getByUsername(m as unknown as Username);
-            
-            if(!mentionedProfile) {
-                throw new HttpError(400, strings.MENTION_USERNAME_NOT_EXIST_ERROR);
-            }
+    if (data.mentions) {
+      newPost.mentions = await Promise.all(
+        data.mentions.map(async (m) => {
+          const mentionedProfile = await this.deps.profileRepo.getByUsername(
+            m as unknown as Username
+          );
 
-            const men = new Mention();
-            men.mentionedProfile = mentionedProfile;
-            men.mentioningProfile = owner;
-            return men;
-        }));
+          if (!mentionedProfile) {
+            throw new HttpError(400, strings.MENTION_USERNAME_NOT_EXIST_ERROR);
+          }
+
+          const men = new Mention();
+          men.mentionedProfile = mentionedProfile;
+          men.mentioningProfile = owner;
+          return men;
+        })
+      );
     }
 
     return newPost;
   }
 
-  private async editPostFromPostRequest(post: Post, modifiedPost: EditPostRequestDTO): Promise<Post> {
-    post.caption = modifiedPost.caption || post.caption
+  private async editPostFromPostRequest(
+    post: Post,
+    modifiedPost: EditPostRequestDTO
+  ): Promise<Post> {
+    post.caption = modifiedPost.caption || post.caption;
 
-    if(modifiedPost.fileNames && modifiedPost.fileNames?.length > 0) {
-        post.contents = modifiedPost.fileNames.map((n, index) => { 
-            const c = new Content();
-            c.fileName = n;
-            c.owner = post.owner;
-            c.order = index;
-            return c;
-        });
+    if (modifiedPost.fileNames && modifiedPost.fileNames?.length > 0) {
+      post.contents = modifiedPost.fileNames.map((n, index) => {
+        const c = new Content();
+        c.fileName = n;
+        c.owner = post.owner;
+        c.order = index;
+        return c;
+      });
     }
 
-    if(modifiedPost.mentions && modifiedPost.mentions.length > 0) {
-        post.mentions = await Promise.all(modifiedPost.mentions.map(async (m) => {
-            let mentionedProfile = await this.profileRepo.getByUsername(m as unknown as Username);
-            
-            if(!mentionedProfile) {
-                throw new HttpError(400, strings.MENTION_USERNAME_NOT_EXIST_ERROR);
-            }
+    if (modifiedPost.mentions && modifiedPost.mentions.length > 0) {
+      post.mentions = await Promise.all(
+        modifiedPost.mentions.map(async (m) => {
+          const mentionedProfile = await this.deps.profileRepo.getByUsername(
+            m as unknown as Username
+          );
 
-            const men = new Mention();
-            men.mentionedProfile = mentionedProfile;
-            men.mentioningProfile = post.owner;
-            return men;
-        }));
+          if (!mentionedProfile) {
+            throw new HttpError(400, strings.MENTION_USERNAME_NOT_EXIST_ERROR);
+          }
+
+          const men = new Mention();
+          men.mentionedProfile = mentionedProfile;
+          men.mentioningProfile = post.owner;
+          return men;
+        })
+      );
     }
 
     post.hashtags = modifiedPost.caption?.match(EMAIL_REGEX)?.map((h) => {
-        const hastag = new Hashtag();
-        hastag.tag = h;
-        return hastag;
+      const hastag = new Hashtag();
+      hastag.tag = h;
+      return hastag;
     });
 
     return post;
   }
-    
 }

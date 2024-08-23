@@ -21,8 +21,16 @@ import { FollowService } from "@feature/follow/service/follow.service";
 import { Follow } from "@feature/follow/repository/follow.entity";
 import { CommentRepository } from "@feature/comment/repository/comment.repo";
 import { CommentService } from "@feature/comment/service/comment.service";
-import { Comment, CommentLike } from "@feature/comment/repository/entity/comment.entity";
+import {
+  Comment,
+  CommentLike,
+} from "@feature/comment/repository/entity/comment.entity";
 import { CommentLikeRepository } from "@feature/comment/repository/comment-like.repo";
+import { BookmarkRepository } from "@feature/bookmark/repository/bookmark.repo";
+import { Bookmark } from "@feature/bookmark/repository/bookmark.entity";
+import { BookmarkService } from "@feature/bookmark/service/bookmark.service";
+import { PostLikeRepository } from "@feature/post/repository/post-like.repo";
+import { PostLike } from "@feature/post/repository/entities/post-like.entity";
 dotenv.config();
 
 // DataSource
@@ -46,6 +54,8 @@ export const AppDataSource = new DataSource({
     Follow,
     Comment,
     CommentLike,
+    Bookmark,
+    PostLike,
   ],
   subscribers: [],
   migrations: [],
@@ -68,8 +78,18 @@ const tokenRepository = new TokenRepository(AppDataSource);
 const storageRepository = new StorageRepository(AppDataSource);
 const postRepository = new PostRepository(AppDataSource);
 const followRepository = new FollowRepository(AppDataSource);
-const commentRepository = new CommentRepository(AppDataSource.getRepository<Comment>(Comment));
-const commentLikeRepository = new CommentLikeRepository(AppDataSource.getRepository<CommentLike>(CommentLike));
+const commentRepository = new CommentRepository(
+  AppDataSource.getRepository<Comment>(Comment)
+);
+const commentLikeRepository = new CommentLikeRepository(
+  AppDataSource.getRepository<CommentLike>(CommentLike)
+);
+const bookmarkRepository = new BookmarkRepository(
+  AppDataSource.getRepository<Bookmark>(Bookmark)
+);
+const postLikeRepository = new PostLikeRepository(
+  AppDataSource.getRepository<PostLike>(PostLike)
+);
 
 // Services
 export const authService = new AuthService({
@@ -85,7 +105,11 @@ export const profileService = new ProfileService({
 export const storageService = new StorageService({
   storageRepo: storageRepository,
 });
-export const postService = new PostService(postRepository, profileRepository);
+export const postService = new PostService({
+  postLikeRepo: postLikeRepository,
+  postRepo: postRepository,
+  profileRepo: profileRepository,
+});
 
 export const followService = new FollowService({
   followRepo: followRepository,
@@ -96,4 +120,9 @@ export const commentService = new CommentService({
   postRepo: postRepository,
   profileRepo: profileRepository,
   commentLikeRepo: commentLikeRepository,
-})
+});
+export const bookmarkService = new BookmarkService({
+  bookmarkRepo: bookmarkRepository,
+  profileRepo: profileRepository,
+  postRepo: postRepository,
+});
