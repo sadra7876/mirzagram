@@ -1,35 +1,30 @@
-import {
-  isEmail,
-  isPassword,
-  isUrl,
-  isUsername,
-} from "@CommonTypes/profile.type";
+import { isEmail, isPassword, isUsername } from "@CommonTypes/profile.type";
 import { strings } from "resources/strings";
 import { z } from "zod";
 import { Username, Email } from "../../../types/profile.type";
 
 export const profileRequestDTO = z
   .object({
-    firstName: z.string().min(1).optional(),
-    lastName: z.string().min(1).optional(),
+    firstName: z.string().min(1).optional().nullish(),
+    lastName: z.string().min(1).optional().nullish(),
     email: z
       .string()
       .refine(isEmail, { message: strings.INVALID_EMAIL_ERROR })
-      .optional(),
+      .optional()
+      .nullish(),
     password: z
       .string()
       .refine(isPassword, { message: strings.INVALID_PASSWORD_ERROR })
-      .optional(),
+      .optional()
+      .nullish(),
     confirmPassword: z
       .string()
       .refine(isPassword, { message: strings.INVALID_PASSWORD_ERROR })
-      .optional(),
-    isPrivate: z.boolean().optional(),
-    bio: z.string(),
-    profilePicture: z
-      .string()
-      .refine(isUrl, { message: strings.INVALID_URL_ERROR })
-      .optional(),
+      .optional()
+      .nullish(),
+    isPrivate: z.boolean().optional().nullish(),
+    bio: z.string().nullish(),
+    profilePicture: z.string().optional().nullish(),
   })
   .refine(
     (date) => {
