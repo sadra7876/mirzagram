@@ -8,27 +8,25 @@ import UserIcon from "../../assets/images/Icons/user_icon.jpg";
 import EmailIcon from "../../assets/images/Icons/gmail.jpg";
 import KeyIcon from "../../assets/images/Icons/key.jpg";
 import { ToggleSwitch, Label, Textarea } from "flowbite-react";
-
+import { TbCameraPlus } from "react-icons/tb";
 import profilePicture from "../../assets/images/Icons/picture frame.svg";
 import PostComponent from "./postComponent";
+import { UserProfileModel } from "../../model/userProfile.interface";
+import { getProfile } from "./api/getProfile";
+import { ImageFile } from "../../model/imageFile.interface";
+import { UploadFile } from "../../Shared/model/responseUpload.interface";
+import { postUploadFile } from "./api/uploadFiles";
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
-interface FromValueProfile {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  isPrivate: boolean;
-  bio: string;
-  username: string;
-}
 
 export default function UserProfile() {
   const token = localStorage.getItem("token");
   const [openModal, setOpenModal] = useState(false);
   const [openModalPost, setOpenModalPost] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState<FromValueProfile>({
+  const [loadingFile, setLoadingFile] = useState(false);
+  const [fileNames, setFileNames] = useState<UploadFile[]>([]);
+  const [profilePicFile, setProfilePicFile] = useState<ImageFile>();
+  const [profile, setProfile] = useState<UserProfileModel>({
     firstName: "",
     lastName: "",
     email: "",
@@ -44,38 +42,45 @@ export default function UserProfile() {
     watch,
     formState: { errors },
     control,
-  } = useForm<FromValueProfile>();
+    setValue,
+  } = useForm<UserProfileModel>();
 
   useEffect(() => {
-    getProfile();
+    const fetchProfile = async () => {
+      try {
+        const userProfile = await getProfile();
+
+        setValue("firstName", userProfile.firstName);
+        setValue("lastName", userProfile.lastName);
+        setValue("email", userProfile.email);
+        setValue("profilePicture", userProfile.profilePicture);
+        setValue("bio", userProfile.bio);
+        setValue("isPrivate", userProfile.isPrivate);
+        setProfile(userProfile);
+      } catch (error) {
+        // toast.error('Failed to fetch user profile.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+
     return () => {};
   }, []);
 
-  const getProfile = async () => {
-    setLoading(true);
-    const response = await fetch(`${BASE_URL}profile`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const result = await response.json();
-    if (result.isSuccess) {
-      setProfile(result.result);
-    }
-    setLoading(false);
-  };
-
-  const editProfile = async (value: FromValueProfile) => {
+  const editProfile = async (value: UserProfileModel) => {
+    const dataToSend: UserProfileModel = {
+      ...value,
+      profilePicture: fileNames[0].fileName,
+    };
     const response = await fetch(`${BASE_URL}profile`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(value),
+      body: JSON.stringify(dataToSend),
     });
 
     const result = await response.json();
@@ -85,6 +90,32 @@ export default function UserProfile() {
     }
   };
 
+  const handleChangeUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    setLoadingFile(true);
+    if (!selectedFile) {
+      return;
+    }
+
+    setProfilePicFile({
+      file: selectedFile,
+      previewUrl: selectedFile.type.match("image.*")
+        ? URL.createObjectURL(selectedFile)
+        : null,
+    });
+    const formData = new FormData();
+    formData.append("type", "profile");
+    formData.append("file", selectedFile);
+    upload(formData);
+  };
+
+  const upload = async (data: FormData) => {
+    const response = await postUploadFile(data);
+    if (response.isSuccess) {
+      setFileNames(response.result);
+    }
+    setLoadingFile(false);
+  };
   return (
     <div className="flex h-full w-full flex-col gap-6 px-78">
       <div>
@@ -108,12 +139,14 @@ export default function UserProfile() {
               </p>
               <div className="flex flex-row gap-x-3">
                 <p className="text-sm font-normal text-mirza-orange">
-                  12 دنبال کننده
+                  {profile.followerCount} دنبال کننده
                 </p>
                 <span className="text-gray-400">|</span>
-                <p className="text-mirza-orange">7دنبال شونده</p>
+                <p className="text-mirza-orange">
+                  {profile.followingCount}دنبال شونده
+                </p>
                 <span className="text-gray-400">|</span>
-                <p>19 پست</p>
+                <p>{profile.postCount} پست</p>
               </div>
               <div dir="ltr">{profile.bio}</div>
             </div>
@@ -146,9 +179,26 @@ export default function UserProfile() {
             </div>
 
             <div className="flex w-24 flex-col gap-y-2">
-              <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-mirza-orange">
-                <p>aa</p>
-              </div>
+              <label className="flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-mirza-orange">
+                {loadingFile ? (
+                  <p>loading..</p>
+                ) : (
+                  profilePicFile?.file && (
+                    <img
+                      className="flex h-24 w-24 flex-col items-center justify-center rounded-full"
+                      src={profilePicFile.previewUrl ?? ""}
+                    />
+                  )
+                )}
+                <TbCameraPlus className="text-3xl text-mirza-orange" />
+                <input
+                  id=""
+                  {...register("profilePicture")}
+                  type="file"
+                  onChange={handleChangeUpload}
+                  className="hidden"
+                />
+              </label>
               <p className="font-medium text-mirza-black">عکس پروفایل</p>
             </div>
             <MirzaInput
@@ -201,7 +251,7 @@ export default function UserProfile() {
                   <p>پیج خصوصی باشه</p>
                   <ToggleSwitch
                     className=""
-                    checked={value}
+                    checked={value ?? false}
                     onChange={onChange}
                   />
                 </div>

@@ -1,13 +1,26 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// interface ErrorResponse {
+//   statusCode: number;
+//   isSuccess: boolean;
+//   result: any;
+//   messages: string[];
+// }
+
+// Define the interface for the success response
+interface SuccessResponse<T> {
+  statusCode: number;
+  isSuccess: boolean;
+  result: T;
+}
+
+// Define the interface for the error response
 interface ErrorResponse {
   statusCode: number;
   isSuccess: boolean;
-  result: any;
   messages: string[];
 }
-
 // Create an Axios instance
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_REACT_APP_BASE_URL, // Set your base URL here
@@ -32,7 +45,14 @@ axiosInstance.interceptors.request.use(
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
-    return response;
+    const data = response.data as SuccessResponse<any>; // Type the response data as SuccessResponse
+    if (data.isSuccess) {
+      return data.result; // Return the result if the response is successful
+    } else {
+      // Handle unexpected success response structure
+      toast.error("Unexpected response structure.");
+      return Promise.reject(new Error("Unexpected response structure."));
+    }
   },
   (error) => {
     if (error.response) {

@@ -10,11 +10,7 @@ import { UploadFile } from "../../Shared/model/responseUpload.interface";
 import { MirzaPost } from "../../Shared/model/post.interface";
 import { postCreatePost } from "./api/createPost";
 import { toast } from "../../Shared/Components/ToastComponent";
-
-interface ImageFile {
-  file: File;
-  previewUrl: string | null;
-}
+import { ImageFile } from "../../model/imageFile.interface";
 
 const steps = [
   { id: 0, label: "عکس", filds: ["fileNames"] },
@@ -100,7 +96,7 @@ export default function PostComponent(props: { onClose: () => void }) {
 
     const responseCreatePost = await postCreatePost(dataToSend);
     if (responseCreatePost.isSuccess) {
-      responseCreatePost.messages.map((item) => toast.success(item));
+      responseCreatePost.messages.map((item: string) => toast.success(item));
       props.onClose();
     }
   };
@@ -163,7 +159,7 @@ export default function PostComponent(props: { onClose: () => void }) {
                 <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-mirza-orange">
                   <TbCameraPlus className="text-3xl text-mirza-orange" />
                 </div>
-                <p className="font-medium text-mirza-black">عکس پروفایل</p>
+                <p className="text-center font-medium text-mirza-black">عکس</p>
                 <input
                   id="fileNames"
                   {...register("fileNames")}
