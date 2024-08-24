@@ -47,7 +47,11 @@ axiosInstance.interceptors.response.use(
   (response) => {
     const data = response.data as SuccessResponse<any>; // Type the response data as SuccessResponse
     if (data.isSuccess) {
-      return data.result; // Return the result if the response is successful
+      if (data.result) {
+        return data.result; // Return the result if the response is successful
+      } else {
+        return true;
+      }
     } else {
       // Handle unexpected success response structure
       toast.error("Unexpected response structure.");
@@ -62,7 +66,7 @@ axiosInstance.interceptors.response.use(
         // Handle unauthorized errors, e.g., redirect to login
         window.location.href = "/login";
       } else if (
-        status === 400 &&
+        (status === 400 || status === 404) &&
         errorData.messages &&
         errorData.messages.length > 0
       ) {

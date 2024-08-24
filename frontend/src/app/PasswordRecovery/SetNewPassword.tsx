@@ -6,18 +6,17 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "../../Shared/Components/ToastComponent";
 import { useEffect } from "react";
+import { SetNewPasswordValue } from "../../model/setpassword.interface";
+import { postSetNewPassword } from "./api/postSetNewPassword";
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
-interface FromValueSetNewPassword {
-  password: string;
-  confirmPassword: string;
-}
+
 export default function SetNewPassword() {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FromValueSetNewPassword>();
+  } = useForm<SetNewPasswordValue>();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,32 +29,17 @@ export default function SetNewPassword() {
     }
   }, [location, navigate]);
 
-  const onSubmit: SubmitHandler<FromValueSetNewPassword> = async (data) => {
+  const onSubmit: SubmitHandler<SetNewPasswordValue> = async (
+    data: SetNewPasswordValue,
+  ) => {
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get("token");
-    try {
-      const response = await fetch(`${BASE_URL}auth/reset-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...data, token }),
-      });
 
-      const result = await response.json();
-
-      if (result.isSuccess) {
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
-      } else {
-        result.messages.map((message: string) => {
-          toast.error(message);
-        });
-      }
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      toast.error("There was a problem with the registration");
+    const response = await postSetNewPassword({ ...data, token: token! });
+    if (response) {
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     }
   };
   return (
@@ -63,7 +47,7 @@ export default function SetNewPassword() {
       onSubmit={handleSubmit(onSubmit)}
       className="flex h-screen w-full flex-col items-center justify-center md:bg-background-auth md:bg-cover"
     >
-      <div className="h-456 w-485 md:w-485 flex flex-col items-center gap-8 rounded-3xl bg-neutral-100 px-20 py-16 md:h-[456]">
+      <div className="flex h-456 w-485 flex-col items-center gap-8 rounded-3xl bg-neutral-100 px-20 py-16 md:h-[456] md:w-485">
         <img src={rahnamaLogo} className="h-15 w-28" />
         <div
           dir="rtl"
