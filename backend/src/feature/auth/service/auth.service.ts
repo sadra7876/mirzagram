@@ -24,6 +24,7 @@ import { ForgetPasswordToken } from "../repository/token.entity";
 import { ITokenRepository } from "../repository/token.repo";
 import { generateAccessToken } from "../utils/jwt.utils";
 import { strings } from "resources/strings";
+import { env } from "process";
 
 dotenv.config();
 
@@ -92,11 +93,10 @@ export class AuthService {
       mailer.sendResetPasswordEmail(
         user.email,
         user.username,
-        `yousef/${newAccessToken.resetPasswordToken}`
+        `${env.WEB_BASE_URL}/${env.RESET_PASSWORD_ROUTE}?token=${newAccessToken.resetPasswordToken}`
       );
       return;
     } catch (e) {
-      console.error(e); //FIXME - add logging
       throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
