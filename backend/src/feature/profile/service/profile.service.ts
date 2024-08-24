@@ -7,6 +7,7 @@ import { HttpError } from "utils/http-error";
 import { strings } from "resources/strings";
 import { IPostRepository } from "@feature/post/repository/post.repo";
 import { IFollowRepository } from "@feature/follow/repository/follow.repo";
+import { convertFileNameToURL } from "@utils/utils";
 dotenv.config();
 
 interface Dependencies {
@@ -41,7 +42,9 @@ export class ProfileService {
       email: user.email,
       isPrivate: user.isActive,
       bio: user.bio,
-      profilePicture: user.profilePicture,
+      profilePicture: user.profilePicture
+        ? convertFileNameToURL(user.profilePicture, "profile")
+        : undefined,
       createdAt: user.createdAt,
       postCount,
       followerCount,
