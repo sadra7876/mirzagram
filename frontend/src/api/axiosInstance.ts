@@ -13,6 +13,7 @@ interface SuccessResponse<T> {
   statusCode: number;
   isSuccess: boolean;
   result: T;
+  messages?: string[];
 }
 
 // Define the interface for the error response
@@ -47,6 +48,7 @@ axiosInstance.interceptors.response.use(
   (response) => {
     const data = response.data as SuccessResponse<any>; // Type the response data as SuccessResponse
     if (data.isSuccess) {
+      toast.success(data.messages?.join(", "));
       if (data.result) {
         return data.result; // Return the result if the response is successful
       } else {
@@ -70,18 +72,14 @@ axiosInstance.interceptors.response.use(
         errorData.messages &&
         errorData.messages.length > 0
       ) {
-        // Show the first error message from the messages array
-        errorData.messages.forEach((item) => toast.error(item));
+        toast.error(errorData.messages.join(", "));
       } else {
-        // Handle other errors
-        toast.error("An error occurred. Please try again.");
+        toast.error("An unexpected error occurred.");
       }
     } else {
-      // Handle network or other errors
-      toast.error("An error occurred. Please check your network connection.");
+      toast.error("Network error.");
     }
     return Promise.reject(error);
   },
 );
-
 export default axiosInstance;
