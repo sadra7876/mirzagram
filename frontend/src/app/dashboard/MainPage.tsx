@@ -5,7 +5,7 @@ import vector from "../../assets/images/Icons/Vector.jpg";
 import { useNavigate, Outlet } from "react-router-dom";
 
 import PinIcon from "../../assets/images/Icons/pin.svg";
-import SavedIcon from "../../assets/images/Icons/saved.svg";
+import { FaRegBookmark } from "react-icons/fa6";
 import SpeachIcon from "../../assets/images/Icons/speech.svg";
 import BellIcon from "../../assets/images/Icons/bell.svg";
 import TagIcon from "../../assets/images/Icons/Tag.svg";
@@ -35,7 +35,7 @@ const DashboardLayout = () => {
           />
           <MirzaMenuButton
             title="ذخیره‌‌ها"
-            icon={<img src={SavedIcon} alt="pin icon" />}
+            icon={<FaRegBookmark />}
             onClick={() => navigate("/messages")}
           />
 
