@@ -19,22 +19,6 @@ import { FaRegComment } from "react-icons/fa";
 
 import profilePicture from "../../assets/images/Icons/picture frame.svg";
 
-const iconStyle = {
-  marginRight: "8px",
-  display: "flex",
-  alignItems: "center",
-};
-const buttonStyle = {
-  padding: "10px 20px",
-  fontSize: "16px",
-
-  cursor: "pointer",
-  backgroundColor: "white",
-
-  display: "flex",
-  alignItems: "center",
-};
-
 export default function SinglePost() {
   const [liked, setLiked] = useState(false);
   const LikeButton = () => {
@@ -79,18 +63,16 @@ export default function SinglePost() {
         <div className="h-[335px] w-full">
           <div className="flex w-full flex-row justify-end">
             {" "}
-            <button className="p-1" style={buttonStyle}>
-              <span style={iconStyle}>{<FaRegComment />}</span>
+            <button className="p-1">
+              <span>{<FaRegComment />}</span>
             </button>
-            <button className="p-1" onClick={toggleLike} style={buttonStyle}>
-              <span style={iconStyle}>
+            <button className="p-1" onClick={toggleLike}>
+              <span>
                 {liked ? <FaHeart className="fill-red-600" /> : <FaRegHeart />}
               </span>
             </button>
-            <button className="p-1" onClick={toggleSave} style={buttonStyle}>
-              <span style={iconStyle}>
-                {saved ? <FaBookmark /> : <FaRegBookmark />}
-              </span>
+            <button className="p-1" onClick={toggleSave}>
+              <span>{saved ? <FaBookmark /> : <FaRegBookmark />}</span>
             </button>
           </div>
         </div>
