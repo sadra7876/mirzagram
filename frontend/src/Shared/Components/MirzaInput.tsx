@@ -8,7 +8,7 @@ import { IconType } from "react-icons";
 
 interface MirzaInputProps extends InputHTMLAttributes<HTMLInputElement> {
   name?: string;
-  register: UseFormRegisterReturn<any>;
+  register?: UseFormRegisterReturn<any>;
   type?: string;
   placeholder?: string;
   inputIcon?: string;
