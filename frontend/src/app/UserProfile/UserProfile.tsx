@@ -125,7 +125,10 @@ export default function UserProfile() {
         ) : (
           <div className="grid grid-cols-3 items-center gap-8 md:grid-cols-[0.5fr_2fr_1fr]">
             <div className="h-[8.33rem] w-[8.33rem]">
-              <img src={profilePicture} className="rounded-full"></img>
+              <img
+                src={profile.profilePicture && profile.profilePicture}
+                className="rounded-full"
+              ></img>
             </div>
             <div
               dir="rtl"

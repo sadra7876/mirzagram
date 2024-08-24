@@ -6,25 +6,19 @@ import MirzaAuthLinks from "../../../Shared/Components/MirzaAuthLinks";
 import arow from "../../../assets/images/Icons/arrow.svg";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { toast } from "../../../Shared/Components/ToastComponent";
-import axiosInstance from "../../../api/axiosInstance";
+import { LoginValues } from "../../../model/login.interface";
+import { postSignin } from "../api/signin";
 
-const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
-
-interface FormValues {
-  identifier: string;
-  password: string;
-}
 export default function LoginComponent(props: { onClick: () => void }) {
-  const { register, handleSubmit } = useForm<FormValues>();
+  const { register, handleSubmit } = useForm<LoginValues>();
   const navigate = useNavigate();
-  const onSubmit = async (data: FormValues) => {
-    const response = await axiosInstance.post("auth/sign-in", data);
-    if (response.data.isSuccess) {
+  const onSubmit = async (data: LoginValues) => {
+    const responseSignin = await postSignin(data);
+    if (responseSignin) {
       setTimeout(() => {
-        localStorage.setItem("token", response.data.result.accessToken);
+        localStorage.setItem("token", responseSignin.accessToken);
         navigate("/");
-      }, 2000);
+      }, 100);
     }
   };
 
