@@ -31,6 +31,7 @@ import { Bookmark } from "@feature/bookmark/repository/bookmark.entity";
 import { BookmarkService } from "@feature/bookmark/service/bookmark.service";
 import { PostLikeRepository } from "@feature/post/repository/post-like.repo";
 import { PostLike } from "@feature/post/repository/entities/post-like.entity";
+import { env } from "process";
 dotenv.config();
 
 // DataSource
@@ -63,12 +64,12 @@ export const AppDataSource = new DataSource({
 
 // Mailer service
 export const transporter = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  host: env.SMTP_HOST,
+  port: parseInt(env.SMTP_PORT!),
   secure: false, // Set to true if using TLS
   auth: {
-    user: "e417952c53db95",
-    pass: "527a2f4dc9004d",
+    user: env.SMTP_USERNAME,
+    pass: env.SMTP_PASSWORD,
   },
 });
 
