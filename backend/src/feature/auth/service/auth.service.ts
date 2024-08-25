@@ -96,7 +96,7 @@ export class AuthService {
         `${env.WEB_BASE_URL}/${env.RESET_PASSWORD_ROUTE}?token=${newAccessToken.resetPasswordToken}`
       );
       return;
-    } catch (e) {
+    } catch {
       throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
     }
   }
