@@ -4,11 +4,9 @@ import key from "../../assets/images/Icons/key.jpg";
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "../../Shared/Components/ToastComponent";
 import { useEffect } from "react";
 import { SetNewPasswordValue } from "../../model/setpassword.interface";
 import { postSetNewPassword } from "./api/postSetNewPassword";
-const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 export default function SetNewPassword() {
   const {

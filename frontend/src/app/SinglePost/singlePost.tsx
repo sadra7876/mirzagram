@@ -1,16 +1,7 @@
 import { useState } from "react";
-import picProfile from "../../assets/images/picture_profile.jpg";
 import MirzaButton from "../../Shared/Components/MirzaButton";
-import { Modal } from "flowbite-react";
-import MirzaInput from "../../Shared/Components/MirzaInput";
-import { Controller, useForm } from "react-hook-form";
-import UserIcon from "../../assets/images/Icons/user_icon.jpg";
-import EmailIcon from "../../assets/images/Icons/gmail.jpg";
-import KeyIcon from "../../assets/images/Icons/key.jpg";
-import { ToggleSwitch, Label, Textarea } from "flowbite-react";
 import Editicon from "../../assets/images/Icons/editIcon.svg";
 import siglepostImage from "../../assets/images/Singlepost-image.svg";
-import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa";
@@ -21,13 +12,13 @@ import profilePicture from "../../assets/images/Icons/picture frame.svg";
 
 export default function SinglePost() {
   const [liked, setLiked] = useState(false);
-  const LikeButton = () => {
-    setLiked(!liked);
-  };
+  // const LikeButton = () => {
+  //   setLiked(!liked);
+  // };
   const [saved, setSaved] = useState(false);
-  const SavedButton = () => {
-    setSaved(!saved);
-  };
+  // const SavedButton = () => {
+  //   setSaved(!saved);
+  // };
   const toggleLike = () => {
     setLiked(!liked);
   };

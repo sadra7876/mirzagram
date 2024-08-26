@@ -1,9 +1,7 @@
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import MirzaMenuButton from "../../Shared/Components/MirzaMenuButton";
 import PlusIcon from "../../assets/images/Icons/plus.svg";
-import vector from "../../assets/images/Icons/Vector.jpg";
 import { useNavigate, Outlet } from "react-router-dom";
-
 import PinIcon from "../../assets/images/Icons/pin.svg";
 import { FaRegBookmark } from "react-icons/fa6";
 import SpeachIcon from "../../assets/images/Icons/speech.svg";

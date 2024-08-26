@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import picProfile from "../../assets/images/picture_profile.jpg";
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import { Modal } from "flowbite-react";
 import MirzaInput from "../../Shared/Components/MirzaInput";
@@ -9,7 +8,6 @@ import EmailIcon from "../../assets/images/Icons/gmail.jpg";
 import KeyIcon from "../../assets/images/Icons/key.jpg";
 import { ToggleSwitch, Label, Textarea } from "flowbite-react";
 import { TbCameraPlus } from "react-icons/tb";
-import profilePicture from "../../assets/images/Icons/picture frame.svg";
 import PostComponent from "./postComponent";
 import { UserProfileModel } from "../../model/userProfile.interface";
 import { getProfile } from "./api/getProfile";
@@ -65,8 +63,6 @@ export default function UserProfile() {
     };
 
     fetchProfile();
-
-    return () => {};
   }, []);
 
   const editProfile = async (value: UserProfileModel) => {

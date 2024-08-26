@@ -1,7 +1,4 @@
-import {
-  ToastComponent,
-  toast,
-} from "../../../Shared/Components/ToastComponent";
+import { toast } from "../../../Shared/Components/ToastComponent";
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 

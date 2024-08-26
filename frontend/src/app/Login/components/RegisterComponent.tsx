@@ -6,10 +6,8 @@ import MirzaButton from "../../../Shared/Components/MirzaButton";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../../../Shared/Components/ToastComponent";
-import axiosInstance from "../../../api/axiosInstance";
 import { SignUpValue } from "../../../model/signup.intreface";
 import { postSignUp } from "../api/signup";
-const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 export default function RegisterComponent() {
   const {

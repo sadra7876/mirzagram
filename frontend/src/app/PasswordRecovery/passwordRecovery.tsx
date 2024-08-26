@@ -4,10 +4,8 @@ import UserIcon from "../../assets/images/Icons/user_icon.jpg";
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { toast } from "../../Shared/Components/ToastComponent";
 import { ResetPasswordValue } from "../../model/resetPsswrord.interface";
 import { postResetPassword } from "./api/postResetPassword";
-const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 export default function PasswordRecovery() {
   const {
     register,
