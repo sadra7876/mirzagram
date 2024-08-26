@@ -4,14 +4,14 @@ import { Comment } from "./comment.entity";
 
 @Entity()
 export class CommentLike {
-    @PrimaryGeneratedColumn()
-    id: string
+  @PrimaryGeneratedColumn()
+  id: string;
 
-    @ManyToOne(() => Comment, (comment) => comment.likes)
-    @JoinColumn()
-    comment: Comment
+  @ManyToOne(() => Comment, (comment) => comment.likes)
+  @JoinColumn()
+  comment: Comment;
 
-    @ManyToOne(() => Profile)
-    @JoinColumn()
-    user: Profile;
+  @ManyToOne(() => Profile)
+  @JoinColumn()
+  user: Profile;
 }
