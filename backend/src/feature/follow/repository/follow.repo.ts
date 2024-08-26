@@ -10,8 +10,16 @@ export interface IFollowRepository {
     followerProfile: Profile,
     followingProfile: Profile
   ): Promise<Follow | null>;
-  getFollowerByProfileId(id: ProfileId): Promise<Follow[] | null>;
-  getFollowingByProfileId(id: ProfileId): Promise<Follow[] | null>;
+  getFollowerByProfileId(
+    id: ProfileId,
+    page: number,
+    pagelimit: number
+  ): Promise<Follow[] | null>;
+  getFollowingByProfileId(
+    id: ProfileId,
+    page: number,
+    pagelimit: number
+  ): Promise<Follow[] | null>;
   getFollowerCountByProfileId(id: ProfileId): Promise<number>;
   getFollowingCountByProfileId(id: ProfileId): Promise<number>;
 }
@@ -42,22 +50,42 @@ export class FollowRepository implements IFollowRepository {
     });
   }
 
-  async getFollowerByProfileId(id: ProfileId): Promise<Follow[] | null> {
-    return this.repository
+  async getFollowerByProfileId(
+    id: ProfileId,
+    page: number,
+    pagelimit: number
+  ): Promise<Follow[] | null> {
+    const quryBuilder = this.repository
       .createQueryBuilder("follow")
       .leftJoinAndSelect("follow.follower", "profile")
-      .where("follow.followingId = :id", { id: id })
-      .orderBy("follow.createdAt", "DESC")
+      .where("follow.followingId = :id", { id })
+      .orderBy("follow.createdAt", "DESC");
+
+    const follower = quryBuilder
+      .skip((page - 1) * pagelimit)
+      .take(pagelimit)
       .getMany();
+
+    return follower;
   }
 
-  async getFollowingByProfileId(id: ProfileId): Promise<Follow[] | null> {
-    return this.repository
+  async getFollowingByProfileId(
+    id: ProfileId,
+    page: number,
+    pagelimit: number
+  ): Promise<Follow[] | null> {
+    const quryBuilder = this.repository
       .createQueryBuilder("follow")
       .leftJoinAndSelect("follow.following", "profile")
-      .where("follow.followerId = :id", { id: id })
-      .orderBy("follow.createdAt", "DESC")
+      .where("follow.followerId = :id", { id })
+      .orderBy("follow.createdAt", "DESC");
+
+    const following = quryBuilder
+      .skip((page - 1) * pagelimit)
+      .take(pagelimit)
       .getMany();
+
+    return following;
   }
 
   async getFollowerCountByProfileId(id: ProfileId): Promise<number> {

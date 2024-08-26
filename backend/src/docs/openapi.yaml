@@ -186,7 +186,7 @@ paths:
                 allOf:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
-  /follow/getfollowing:
+  /follow/following:
     get:
       summary: get following user
       tags: [Follow]
@@ -218,7 +218,7 @@ paths:
                   - type: array
                     items:
                       $ref: "#/components/schemas/FollowResponseDTO"
-  /follow/getfollower:
+  /follow/follower:
     get:
       summary: get follower user
       tags: [Follow]

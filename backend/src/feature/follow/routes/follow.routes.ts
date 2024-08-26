@@ -36,10 +36,10 @@ followRoutes.post("/unfollow", (req, res) => {
   });
 });
 
-followRoutes.get("/getfollowing", (req, res) => {
+followRoutes.get("/following", (req, res) => {
   const username = req.query.username as Username;
-  const page = parseInt(req.query.page as string);
-  const pagelimit = parseInt(req.query.pagelimit as string);
+  const page = parseInt(req.query.page as string) || 1;
+  const pagelimit = parseInt(req.query.pagelimit as string) || 10;
 
   handleRequest(res, async () => {
     const profileId: ProfileId = Number(req.subject) as ProfileId;
@@ -54,10 +54,10 @@ followRoutes.get("/getfollowing", (req, res) => {
   });
 });
 
-followRoutes.get("/getfollower", (req, res) => {
+followRoutes.get("/follower", (req, res) => {
   const username = req.query.username as Username;
-  const page = parseInt(req.query.page as string);
-  const pagelimit = parseInt(req.query.pagelimit as string);
+  const page = parseInt(req.query.page as string) || 1;
+  const pagelimit = parseInt(req.query.pagelimit as string) || 10;
 
   handleRequest(res, async () => {
     const profileId: ProfileId = Number(req.subject) as ProfileId;

@@ -80,15 +80,17 @@ export class FollowService {
       throw new HttpError(404, strings.USER_NOT_FOUND);
     }
 
-    const follow = await this.deps.followRepo.getFollowingByProfileId(user.id);
+    const follow = await this.deps.followRepo.getFollowingByProfileId(
+      user.id,
+      page,
+      pagelimit
+    );
     if (!follow) {
       throw new HttpError(404, strings.HAVE_NOT_ANY_FOLLOWING);
     }
 
     const following = await Promise.all(
-      follow.map(
-        async (i) => await this.deps.profileRepo.getById(i.following.id)
-      )
+      follow.map((i) => this.deps.profileRepo.getById(i.following.id))
     );
 
     const result = following.map((i) => {
@@ -107,7 +109,7 @@ export class FollowService {
       return result;
     });
 
-    return this.paginateResult(result, page, pagelimit);
+    return result;
   }
 
   async getFollower(
@@ -126,7 +128,11 @@ export class FollowService {
       throw new HttpError(404, strings.USER_NOT_FOUND);
     }
 
-    const follow = await this.deps.followRepo.getFollowerByProfileId(user.id);
+    const follow = await this.deps.followRepo.getFollowerByProfileId(
+      user.id,
+      page,
+      pagelimit
+    );
     if (!follow) {
       throw new HttpError(404, strings.HAVE_NOT_ANY_FOLLOWER);
     }
@@ -151,20 +157,6 @@ export class FollowService {
       return result;
     });
 
-    return this.paginateResult(result, page, pagelimit);
-  }
-
-  private paginateResult<T>(array: T[], page: number, pagelimit: number): T[] {
-    if (page < 1 || pagelimit < 1) return [];
-
-    const totalItems = array.length;
-    const totalPages = Math.ceil(totalItems / pagelimit);
-
-    if (page > totalPages) return [];
-
-    const startIndex = (page - 1) * pagelimit;
-    const endIndex = Math.min(startIndex + pagelimit, totalItems);
-
-    return array.slice(startIndex, endIndex);
+    return result;
   }
 }
