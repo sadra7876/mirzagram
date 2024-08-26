@@ -4,7 +4,7 @@ import { Textarea, TextInput } from "flowbite-react";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbCameraPlus } from "react-icons/tb";
 
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { postUploadFile } from "./api/uploadFiles";
 import { UploadFile } from "../../Shared/model/responseUpload.interface";
 import { MirzaPost } from "../../Shared/model/post.interface";
@@ -17,6 +17,19 @@ const steps = [
   { id: 1, label: "متن", filds: ["caption"] },
   { id: 2, label: "تنظیمات", filds: ["mentions"] },
 ];
+interface PostValue {
+  fileNames: string[];
+  caption: string;
+  mention: string[];
+}
+// Define the correct type for filds
+type FieldType =
+  | "fileNames"
+  | "caption"
+  | "mention"
+  | `fileNames.${number}`
+  | `mention.${number}`;
+
 export default function PostComponent(props: { onClose: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [files, setFiles] = useState<ImageFile[]>([]);
@@ -30,11 +43,11 @@ export default function PostComponent(props: { onClose: () => void }) {
     trigger,
     formState: { errors },
     setValue,
-    reset,
-  } = useForm();
+  } = useForm<PostValue>();
 
   const next = async () => {
-    const filds = steps[currentStep].filds;
+    const filds: FieldType[] = ["fileNames", "caption", "mention"];
+    // const filds = steps[currentStep].filds;
     const output = await trigger(filds, { shouldFocus: true });
     if (!output) return;
     if (currentStep < steps.length - 1) {
@@ -43,11 +56,11 @@ export default function PostComponent(props: { onClose: () => void }) {
       handleSubmit(onSubmitCreatePost)();
     }
   };
-  const prev = () => {
-    if (currentStep > 0) {
-      setCurrentStep((step) => step - 1);
-    }
-  };
+  // const prev = () => {
+  //   if (currentStep > 0) {
+  //     setCurrentStep((step) => step - 1);
+  //   }
+  // };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
     setIsLoading(true);
@@ -87,9 +100,9 @@ export default function PostComponent(props: { onClose: () => void }) {
     };
   }, [files]);
 
-  const onSubmitCreatePost = async (data) => {
+  const onSubmitCreatePost = async (data: PostValue) => {
     const dataToSend: MirzaPost = {
-      fileNames: [...fileNames?.map((item) => item.fileName)],
+      fileNames: fileNames ? fileNames.map((item) => item.fileName) : [],
       caption: data.caption,
       mentions: mentions,
     };
@@ -109,7 +122,7 @@ export default function PostComponent(props: { onClose: () => void }) {
       if (newMention) {
         setMentions((prevMentions) => [...prevMentions, newMention]);
         setMentionInput("");
-        setValue("mention", ""); // Clear the input field in the form
+        setValue("mention", [""]); // Clear the input field in the form
       }
     }
   };

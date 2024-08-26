@@ -1,10 +1,5 @@
 import { ToggleSwitch } from "flowbite-react";
-import {
-  useForm,
-  useController,
-  UseControllerProps,
-  Controller,
-} from "react-hook-form";
+import { UseControllerProps, Controller } from "react-hook-form";
 
 type FormValues = {
   inputName: string;
