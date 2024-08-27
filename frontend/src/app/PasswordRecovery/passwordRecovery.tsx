@@ -45,11 +45,7 @@ export default function PasswordRecovery() {
           <MirzaInput
             name="email"
             register={register("email", {
-              required: "ایمیل الزامی است",
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "فرمت ایمیل نامعتبر است",
-              },
+              required: "ایمیل یا نام کاربری الزامی است",
             })}
             placeholder="نام کاربری یا ایمیل"
             inputIcon={UserIcon}
