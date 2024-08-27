@@ -1,7 +1,7 @@
 import { authMiddleware } from "middlewares/auth.middleware";
 import { handleRequest } from "../../../utils/handle-request";
 import { Router } from "express";
-import { ProfileId } from "@CommonTypes/profile.type";
+import { ProfileId, Username } from "@CommonTypes/profile.type";
 import { followService } from "dependencies";
 import { followRequestDTO } from "../dto/follow.dto";
 import { strings } from "resources/strings";
@@ -33,5 +33,41 @@ followRoutes.post("/unfollow", (req, res) => {
     );
 
     return new ApiSuccess(strings.UNFOLLOWED_SUCCESSFULLY);
+  });
+});
+
+followRoutes.get("/following", (req, res) => {
+  const username = req.query.username as Username;
+  const page = parseInt(req.query.page as string) || 1;
+  const pagelimit = parseInt(req.query.pagelimit as string) || 10;
+
+  handleRequest(res, async () => {
+    const profileId: ProfileId = Number(req.subject) as ProfileId;
+
+    const result = await followService.getFollowing(
+      profileId,
+      username,
+      page,
+      pagelimit
+    );
+    return new ApiSuccess(result);
+  });
+});
+
+followRoutes.get("/follower", (req, res) => {
+  const username = req.query.username as Username;
+  const page = parseInt(req.query.page as string) || 1;
+  const pagelimit = parseInt(req.query.pagelimit as string) || 10;
+
+  handleRequest(res, async () => {
+    const profileId: ProfileId = Number(req.subject) as ProfileId;
+
+    const result = await followService.getFollower(
+      profileId,
+      username,
+      page,
+      pagelimit
+    );
+    return new ApiSuccess(result);
   });
 });
