@@ -16,18 +16,7 @@ export const postCreatePost = async (data: MirzaPost) => {
     });
 
     const result = await response.json();
-    console.log(result);
     return result;
-    // if (result.isSuccess) {
-    //   setTimeout(() => {
-    //     localStorage.setItem("token", result.result.accessToken);
-    //     navigate("/");
-    //   }, 2000);
-    // } else {
-    //   result.messages.map((message: string) => {
-    //     toast.error(message);
-    //   });
-    // }
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error);
     toast.error("There was a problem with the registration");
