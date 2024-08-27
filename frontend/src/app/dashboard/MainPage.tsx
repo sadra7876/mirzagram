@@ -17,7 +17,7 @@ const DashboardLayout = () => {
       <div className="flex flex-col items-center pt-10">
         <MirzaButton
           title="ایجاد پست جدید"
-          onClick={() => console.log("new post")}
+          // onClick={() => console.log("new post")}
           icon={<img src={PlusIcon} alt="Plus Icon" />}
         />
 
@@ -40,17 +40,17 @@ const DashboardLayout = () => {
           <MirzaMenuButton
             title="پیام‌ها"
             icon={<img src={SpeachIcon} alt="pin icon" />}
-            onClick={() => console.log("aaa")}
+            onClick={() => {}}
           />
           <MirzaMenuButton
             title="اعلانات"
             icon={<img src={BellIcon} alt="pin icon" />}
-            onClick={() => console.log("aaa")}
+            onClick={() => {}}
           />
           <MirzaMenuButton
             title="تگ‌ شده‌ها"
             icon={<img src={TagIcon} alt="pin icon" />}
-            onClick={() => console.log("aaa")}
+            onClick={() => {}}
           />
           <hr className="my-8 h-px w-full border-0 bg-gray-300" />
           <div className="flex h-full w-full flex-col justify-between">
@@ -58,18 +58,18 @@ const DashboardLayout = () => {
               <MirzaMenuButton
                 title="اکسپلور"
                 icon={<img src={TagIcon} alt="pin icon" />}
-                onClick={() => console.log("aaa")}
+                onClick={() => {}}
               />
               <MirzaMenuButton
                 title="جستجو"
                 icon={<img src={TagIcon} alt="pin icon" />}
-                onClick={() => console.log("aaa")}
+                onClick={() => {}}
               />
             </div>
             <MirzaMenuButton
               title="بیشتر"
               icon={<img src={TagIcon} alt="pin icon" />}
-              onClick={() => console.log("aaa")}
+              onClick={() => {}}
             />
           </div>
         </div>
