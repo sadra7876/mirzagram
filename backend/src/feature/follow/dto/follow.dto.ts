@@ -1,4 +1,4 @@
-import { isUsername } from "@CommonTypes/profile.type";
+import { Email, isUsername, Username } from "@CommonTypes/profile.type";
 import { strings } from "resources/strings";
 import { z } from "zod";
 
@@ -9,3 +9,15 @@ export const followRequestDTO = z.object({
 });
 
 export type FollowRequestDTO = z.infer<typeof followRequestDTO>;
+
+export type FollowResponseDTO = {
+  username: Username;
+  email: Email;
+  firstName?: string;
+  lastName?: string;
+  isActive: boolean;
+  isPrivate: boolean;
+  bio?: string;
+  profilePicture?: string;
+  createdAt: Date;
+};

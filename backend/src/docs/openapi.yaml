@@ -186,6 +186,70 @@ paths:
                 allOf:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
+  /follow/following:
+    get:
+      summary: get following user
+      tags: [Follow]
+      parameters:
+        - name: username
+          in: query
+          description: The username of the user
+          schema:
+            type: string
+            nullable: true
+        - name: page
+          in: query
+          description: The number of page
+          schema:
+            type: string
+        - name: pagelimit
+          in: query
+          description: The array length
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/FollowResponseDTO"
+  /follow/follower:
+    get:
+      summary: get follower user
+      tags: [Follow]
+      parameters:
+        - name: username
+          in: query
+          description: The username of the user
+          schema:
+            type: string
+            nullable: true
+        - name: page
+          in: query
+          description: The number of page
+          schema:
+            type: string
+        - name: pagelimit
+          in: query
+          description: The array length
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/FollowResponseDTO"
   # add jwt auth for this please
   /upload:
     post:
@@ -463,7 +527,7 @@ paths:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
   /comment/{id}:
-    get: 
+    get:
       summary: Get comment details
       tags: [Comment]
       parameters:
@@ -685,6 +749,34 @@ components:
           type: number
         followingCount:
           type: number
+    FollowResponseDTO:
+      type: object
+      properties:
+        username:
+          type: string
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        email:
+          type: string
+        isPrivate:
+          type: boolean
+        bio:
+          type: string
+          nullable: true
+        profilePicture:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+    GetFollow:
+      type: array
+      items:
+        type: object
+
     FollowRequestDTO:
       type: object
       properties:
@@ -773,7 +865,7 @@ components:
       properties:
         page:
           type: number
-        data: 
+        data:
           type: object
           properties:
             id:
@@ -782,14 +874,14 @@ components:
               type: string
             postId:
               type: string
-            author: 
+            author:
               type: object
               properties:
-                displayName: 
+                displayName:
                   type: string
             likeCount:
               type: number
-            replies: 
+            replies:
               type: object
               properties:
                 id:
@@ -798,12 +890,12 @@ components:
                   type: string
                 postId:
                   type: string
-                author: 
+                author:
                   type: object
                   properties:
-                    displayName: 
+                    displayName:
                       type: string
-    CreateCommentRequestDTO: 
+    CreateCommentRequestDTO:
       type: object
       required:
         - postId
