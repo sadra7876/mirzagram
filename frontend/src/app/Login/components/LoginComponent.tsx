@@ -10,7 +10,11 @@ import { LoginValues } from "../../../model/login.interface";
 import { postSignin } from "../api/signin";
 
 export default function LoginComponent(props: { onClick: () => void }) {
-  const { register, handleSubmit } = useForm<LoginValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginValues>({});
   const navigate = useNavigate();
   const onSubmit = async (data: LoginValues) => {
     const responseSignin = await postSignin(data);
@@ -31,21 +35,35 @@ export default function LoginComponent(props: { onClick: () => void }) {
         به کالج‌گرام خوش آمدید. برای ورود کافیه نام کاربری/ایمیل و رمز عبور
         خود‌تون رو وارد کنید:
       </p>
-      <div className="flex flex-col justify-center gap-y-6 py-8">
+      <div className="flex flex-col justify-center gap-y-2 py-8">
         <MirzaInput
           name="identifier"
           type="text"
-          register={register("identifier", { required: true })}
+          register={register("identifier", {
+            required: "لطفا نام کاربری یا ایمیل را وارد نمایید",
+          })}
           placeholder="نام کاربری/ایمیل"
           inputIcon={GmailIcon}
         />
+        {errors.identifier && (
+          <span className="text-xs text-red-500">
+            {errors.identifier.message}
+          </span>
+        )}
         <MirzaInput
           name="password"
           type="password"
-          register={register("password", { required: true })}
+          register={register("password", {
+            required: "رمز عبور را وارد نمایید",
+          })}
           placeholder="رمز عبور"
           inputIcon={keyIcon}
         />
+        {errors.password && (
+          <span className="text-xs text-red-500">
+            {errors.password.message}
+          </span>
+        )}
       </div>
       <label className="flex flex-row items-end gap-2 pb-4 text-center text-xs">
         <input type="checkbox" className="h-3 w-3 rounded-[4px]" />

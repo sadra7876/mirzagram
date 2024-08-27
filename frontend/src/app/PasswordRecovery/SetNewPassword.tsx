@@ -47,29 +47,33 @@ export default function SetNewPassword() {
     >
       <div className="flex h-456 w-485 flex-col items-center gap-8 rounded-3xl bg-neutral-100 px-20 py-16 md:h-[456] md:w-485">
         <img src={rahnamaLogo} className="h-15 w-28" />
-        <div
-          dir="rtl"
-          className="flex size-5 w-full flex-row justify-center py-2"
-        >
+        <div className="flex size-5 w-full flex-row justify-center py-2">
           تنظیم رمز عبور جدید
         </div>
 
-        <div dir="rtl" className="flex flex-col justify-center text-amber-950">
+        <div className="flex flex-col justify-center text-amber-950">
           لطفا رمز جدیدی برای حساب خود انتخاب کنید:
         </div>
-        <div className="flex w-full flex-col items-end justify-center">
+        <div className="flex w-full flex-col items-start justify-center">
           <MirzaInput
             name="password"
             type="password"
-            register={register("password", { required: true })}
+            register={register("password", {
+              required: "رمز عبور جدید را وارد نمایید",
+            })}
             placeholder="رمز عبور جدید"
             inputIcon={key}
           />
+          {errors.password && (
+            <span className="text-xs text-red-500">
+              {errors.password.message}
+            </span>
+          )}
           <MirzaInput
             name="confirmPassword"
             type="password"
             register={register("confirmPassword", {
-              required: true,
+              required: "تکرار رمز عبور الزامی است",
               validate: (value) =>
                 value === watch("password") || "رمز عبور مطابقت ندارد",
             })}
