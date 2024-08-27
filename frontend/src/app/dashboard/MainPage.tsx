@@ -12,7 +12,7 @@ import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
 const DashboardLayout = () => {
   const navigate = useNavigate();
   return (
-    <div className="grid h-full grid-cols-[310px_1fr] bg-neutral-100 pr-14 pt-10">
+    <div className="grid h-screen grid-cols-[310px_1fr] bg-neutral-100 pr-14 pt-10">
       {/* right sidebar */}
       <div className="flex flex-col items-center pt-10">
         <MirzaButton
