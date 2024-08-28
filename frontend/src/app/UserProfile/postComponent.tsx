@@ -56,11 +56,13 @@ export default function PostComponent(props: { onClose: () => void }) {
       handleSubmit(onSubmitCreatePost)();
     }
   };
-  // const prev = () => {
-  //   if (currentStep > 0) {
-  //     setCurrentStep((step) => step - 1);
-  //   }
-  // };
+  const prev = () => {
+    if (currentStep > 0) {
+      setCurrentStep((step) => step - 1);
+    } else {
+      props.onClose();
+    }
+  };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
     setIsLoading(true);
@@ -175,17 +177,24 @@ export default function PostComponent(props: { onClose: () => void }) {
                 <p className="text-center font-medium text-mirza-black">عکس</p>
                 <input
                   id="fileNames"
-                  {...register("fileNames")}
+                  {...register("fileNames", {
+                    required: "شما باید حداقل یک عکس انتخاب کنید",
+                  })}
                   multiple
                   type="file"
                   onChange={handleChange}
                   className="hidden"
                 />
+                {errors.fileNames && fileNames.length === 0 && (
+                  <span className="w-48 text-center text-xs text-red-500">
+                    {errors.fileNames.message}
+                  </span>
+                )}
               </label>
 
               {isLoading ? (
                 <div className="flex h-28 w-28 items-center justify-center">
-                  <div className="loader"></div>{" "}
+                  <div className="loader"></div>
                   {/* Add your loading spinner here */}
                 </div>
               ) : (
@@ -213,7 +222,7 @@ export default function PostComponent(props: { onClose: () => void }) {
             </div>
 
             <Textarea
-              className="w-full"
+              className="w-full text-right"
               id="caption"
               {...register("caption", {
                 required: "کپشن وارد شود",
@@ -229,6 +238,7 @@ export default function PostComponent(props: { onClose: () => void }) {
         {currentStep === 2 && (
           <div className="flex w-full flex-col items-center gap-y-3">
             <p>اینجا میتونی دوستات رو منشن کنی</p>
+            <p className="text-xs">با یک فاصله ایدی دوستت اضافه میشه</p>
             <TextInput
               id="mention"
               className="w-full"
@@ -252,10 +262,13 @@ export default function PostComponent(props: { onClose: () => void }) {
       </form>
       <div className="mt-6 flex flex-row gap-x-3">
         <MirzaButton
+          onClick={() => prev()}
+          title={currentStep > 0 ? "قبلی" : "بستن"}
+        />
+        <MirzaButton
           onClick={() => next()}
           title={currentStep < steps.length - 1 ? "بعدی" : "ثبت و انتشار پست"}
         />
-        <button onClick={() => props.onClose()}>پشیمون شدم</button>
       </div>
     </div>
   );
