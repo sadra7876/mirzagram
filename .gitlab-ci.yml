@@ -3,7 +3,7 @@ stages:
   - build
 build:
   stage: build
-  image: node:18.17.1-alpine
+  image: node:21.1.0-alpine
 #   before_script:
 #     - corepack enable
 #     - corepack prepare pnpm@latest-9 --activate
