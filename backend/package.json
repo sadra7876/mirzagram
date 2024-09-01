@@ -15,6 +15,7 @@
     ]
   },
   "scripts": {
+    "build": "tsc",
     "start": "nodemon src/main.ts",
     "prettier": "npx prettier --config .prettierrc **//*.{ts,js,mjs} --write",
     "lint": "npx eslint",
