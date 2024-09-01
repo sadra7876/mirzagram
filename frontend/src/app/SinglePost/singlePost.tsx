@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import picProfile from "../../assets/images/picture_profile.jpg";
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import { Modal } from "flowbite-react";
@@ -26,6 +26,8 @@ import profilePicture from "../../assets/images/Icons/picture frame.svg";
 
 export default function SinglePost() {
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [commsnts, setComments] = useState();
   const SavedButton = () => {
     setSaved(!saved);
   };
@@ -34,79 +36,96 @@ export default function SinglePost() {
     setSaved(!saved);
   };
 
+  useEffect(() => {
+    init();
+
+    return () => {};
+  }, []);
+
+  const init = async () => {
+    setLoading(true);
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+      "http://37.32.6.153:81/comment?postId=23&page=1&pageSize=10",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    const result = await response.json();
+    if (result.isSuccess) {
+      setComments(result.result);
+    }
+    // console.log("response", result);
+    setLoading(false);
+  };
+
   return (
-    <div className="h-full w-full px-216">
-      <div className="h-20 w-full py-4">
-        <div className="flex h-12 w-full flex-row gap-2">
+    <div className="flex h-full w-full flex-row px-6">
+      <div className="h-376 w-full items-center">
+        <img className="rounded-3xl" src={siglepostImage} />
+      </div>
+
+      <div className="w-full">
+        <div className="flex flex-col gap-y-3">
           <div className="flex w-385 flex-row gap-4">
             <img className="h-12 w-12 rounded-full" src={profilePicture} />
             <p className="py-3">mahmz</p>
           </div>
-          <MirzaButton
-            title="ویرایش پست"
-            icon={<img src={Editicon} alt="Edit Icon" />}
-          />
+          <div className="w-24 pb-4 text-xs">2 ماه پیش</div>
         </div>
-      </div>
-      <div className="h-376 w-full items-center">
-        <img src={siglepostImage} />
-      </div>
-      <div className="h-15 w-full"></div>
-      <div className="w-full">
-        <div className="w-24 pb-4 text-xs">2 ماه پیش</div>
-        <div className="">
-          ترس یکی از عوامل #قدرت است. کسی که بتواند در #جامعه سمت و سوی ترس را{" "}
-          معین کند
+
+        <div className="text-">
+          ترس یکی از مهمترین عوامل #قدرت است؛ کسی که بتواند در #جامعه سمت و سوی
+          ترس را معین کند #قدرت زیادی بر آن جامعه پیدا می‌کند. شاید بتوان هم صدا
+          با جورجو آگامبنِ فیلسوف گفت که ما امروزه همیشه در یک حالت اضطراری
+          زندگی می‌کنیم
         </div>
         <div className="flex w-full flex-row gap-2 pt-4">
-          <p className="bg-green-400">جامعه</p>
-          <p className="bg-blue-500">قدرت</p>
+          <div className="rounded-md bg-mirza-orange px-1">
+            <p className="text-white">جامعه</p>
+          </div>
+          <div className="rounded-md bg-mirza-orange px-1">
+            <p className="text-white">جامعه</p>
+          </div>
         </div>
-        <div className="h-[335px] w-full">
-          <div className="flex w-full flex-row justify-end">
-            {" "}
-            {/* <button className="p-1">
-              <span>{<FaRegComment className="text-mirza-red" />}</span>
-            </button> */}
-            {/* <button className="p-1" onClick={toggleLike}>
-              <span>
-                {liked ? (
-                  <FaHeart className="fill-mirza-red text-mirza-red" />
-                ) : (
-                  <FaRegHeart className="text-mirza-red" />
-                )}
-              </span>
-            </button> */}
-            <div>
-              <CommentComponent />
-            </div>
-            <div>
-              <LikeComponent />
-            </div>
-            <div>
-              <SaveComponent />
-            </div>
-            {/* <button className="p-1" onClick={toggleSave}>
-              <span>
-                {saved ? (
-                  <FaBookmark className="text-mirza-red" />
-                ) : (
-                  <FaRegBookmark className="text-mirza-red" />
-                )}
-              </span>
-            </button> */}
-          </div>
 
-          <div className="w-100 flex h-10 flex-row gap-4">
-            <img className="h-10 w-10" src={profilePicture} />
-            <input
-              className="h-9 w-[423px] rounded-2xl border-[1px] border-mirza-gray-comment px-4 py-1"
-              placeholder="نظر خود را بنویسید...  "
-            />{" "}
-            <button className="h-8 w-6 pt-2">
-              {<GrSend className="size-5 text-mirza-red" />}{" "}
-            </button>
+        <div className="flex w-full flex-row justify-end">
+          <LikeComponent />
+          <SaveComponent />
+        </div>
+
+        <div className="w-100 flex h-10 flex-row items-center gap-4">
+          <img className="h-10 w-10" src={profilePicture} />
+          <div>
+            <CommentComponent
+              onCommentSubmit={function (comment: CommentComponent): void {
+                throw new Error("Function not implemented.");
+              }}
+            />
           </div>
+        </div>
+        <div className="felx w-full flex-col">
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <div className="flex flex-row justify-between">
+              <div className="flex flex-row gap-x-1">
+                <p className="text-xs font-bold">
+                  {commsnts.data[0].author.displayName}
+                </p>
+                <p className="text-[10px] font-normal text-gray-500">
+                  ۵ هفته پیش
+                </p>
+              </div>
+              <div></div>
+            </div>
+          )}
+          <div></div>
         </div>
       </div>
     </div>
