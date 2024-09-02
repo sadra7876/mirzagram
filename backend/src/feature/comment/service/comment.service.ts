@@ -2,7 +2,7 @@ import { ProfileId } from "@CommonTypes/profile.type";
 import { ICommentRepository } from "../repository/comment.repo";
 import { CreateCommentRequestDTO } from "../dto/new-comment.dto";
 import { IPostRepository } from "@feature/post/repository/post.repo";
-import { HttpError } from "@utils/http-error";
+import { ClientError } from "@utils/http-error";
 import { strings } from "resources/strings";
 import { IProfileRepository } from "@feature/profile/repository/profile.repo";
 import { ICommentLikeRepository } from "../repository/comment-like.repo";
@@ -29,12 +29,12 @@ export class CommentService {
   ) {
     const post = await this.deps.postRepo.getPost(commentReq.postId);
     if (!post) {
-      throw new HttpError(400, strings.POST_NOT_FOUND_ERROR);
+      throw new ClientError(strings.POST_NOT_FOUND_ERROR);
     }
 
     const profile = await this.deps.profileRepo.getById(profileId);
     if (!profile) {
-      throw new HttpError(400, strings.PROFILE_NOT_FOUND_ERROR);
+      throw new ClientError(strings.PROFILE_NOT_FOUND_ERROR);
     }
 
     const comment = new Comment();
@@ -47,7 +47,7 @@ export class CommentService {
         commentReq.parentCommentId
       );
       if (!repliedToComment) {
-        throw new HttpError(400, strings.COMMENT_NOT_AVAILABLE_ERROR);
+        throw new ClientError(strings.COMMENT_NOT_AVAILABLE_ERROR);
       }
       comment.repliedTo = repliedToComment;
     }
@@ -126,12 +126,12 @@ export class CommentService {
   async likeComment(profileId: ProfileId, commentId: string) {
     const profile = await this.deps.profileRepo.getById(profileId);
     if (!profile) {
-      throw new HttpError(400, strings.PROFILE_NOT_FOUND_ERROR);
+      throw new ClientError(strings.PROFILE_NOT_FOUND_ERROR);
     }
 
     const comment = await this.deps.commentRepo.getComment(commentId);
     if (!comment) {
-      throw new HttpError(400, strings.COMMENT_NOT_AVAILABLE_ERROR);
+      throw new ClientError(strings.COMMENT_NOT_AVAILABLE_ERROR);
     }
 
     const like = new CommentLike();

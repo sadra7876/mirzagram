@@ -1,4 +1,5 @@
 export const strings = {
+  BAD_REQUEST_ERROR: "درخواست نامعتبر است",
   INTERNAL_SERVER_ERROR: "خطای داخلی سرور",
   INVALID_EMAIL_ERROR: "ایمیل نامعتبر است",
   INVALID_PASSWORD_ERROR: "پسورد نامعتبر است",

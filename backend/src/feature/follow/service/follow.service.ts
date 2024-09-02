@@ -1,7 +1,7 @@
 import { IProfileRepository } from "@feature/profile/repository/profile.repo";
 import { IFollowRepository } from "../repository/follow.repo";
 import { ProfileId, Username } from "@CommonTypes/profile.type";
-import { HttpError } from "@utils/http-error";
+import { ClientError } from "@utils/http-error";
 import { strings } from "resources/strings";
 import { FollowRequestDTO, FollowResponseDTO } from "../dto/follow.dto";
 import { Follow } from "../repository/follow.entity";
@@ -21,15 +21,15 @@ export class FollowService {
     );
 
     if (!follower || !following) {
-      throw new HttpError(404, strings.USER_NOT_FOUND);
+      throw new ClientError(strings.USER_NOT_FOUND);
     }
 
     if (await this.deps.followRepo.getFollowByTwoProfile(follower, following)) {
-      throw new HttpError(404, strings.USER_IS_ALREADY_FOLLOWED);
+      throw new ClientError(strings.USER_IS_ALREADY_FOLLOWED);
     }
 
     if (follower.username === following.username) {
-      throw new HttpError(404, strings.FOLLOWER_AND_FOLLOWING_IS_SAME);
+      throw new ClientError(strings.FOLLOWER_AND_FOLLOWING_IS_SAME);
     }
 
     const newFollow = new Follow();
@@ -49,7 +49,7 @@ export class FollowService {
     );
 
     if (!follower || !following) {
-      throw new HttpError(404, strings.USER_NOT_FOUND);
+      throw new ClientError(strings.USER_NOT_FOUND);
     }
 
     const newUnFollow = await this.deps.followRepo.getFollowByTwoProfile(
@@ -58,7 +58,7 @@ export class FollowService {
     );
 
     if (!newUnFollow) {
-      throw new HttpError(404, strings.USER_IS_NOT_FOLLOWED);
+      throw new ClientError(strings.USER_IS_NOT_FOLLOWED);
     }
 
     await this.deps.followRepo.unFollowProfile(newUnFollow);
@@ -77,7 +77,7 @@ export class FollowService {
       user = await this.deps.profileRepo.getById(id);
     }
     if (!user) {
-      throw new HttpError(404, strings.USER_NOT_FOUND);
+      throw new ClientError(strings.USER_NOT_FOUND);
     }
 
     const follow = await this.deps.followRepo.getFollowingByProfileId(
@@ -86,7 +86,7 @@ export class FollowService {
       pagelimit
     );
     if (!follow) {
-      throw new HttpError(404, strings.HAVE_NOT_ANY_FOLLOWING);
+      throw new ClientError(strings.HAVE_NOT_ANY_FOLLOWING);
     }
 
     const following = await Promise.all(
@@ -125,7 +125,7 @@ export class FollowService {
       user = await this.deps.profileRepo.getById(id);
     }
     if (!user) {
-      throw new HttpError(404, strings.USER_NOT_FOUND);
+      throw new ClientError(strings.USER_NOT_FOUND);
     }
 
     const follow = await this.deps.followRepo.getFollowerByProfileId(
@@ -134,7 +134,7 @@ export class FollowService {
       pagelimit
     );
     if (!follow) {
-      throw new HttpError(404, strings.HAVE_NOT_ANY_FOLLOWER);
+      throw new ClientError(strings.HAVE_NOT_ANY_FOLLOWER);
     }
 
     const follower = await Promise.all(
