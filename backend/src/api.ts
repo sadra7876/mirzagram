@@ -9,6 +9,7 @@ import { postRoutes } from "@feature/post/routes/post.routes";
 import { followRoutes } from "@feature/follow/routes/follow.routes";
 import { commentRoutes } from "@feature/comment/routes/comment.routes";
 import { bookmarkRoutes } from "@feature/bookmark/routes/bookmark.routes";
+import { notificationRoutes } from "@feature/notification/routes/notification.routes";
 
 export const api = express();
 
@@ -24,3 +25,4 @@ api.use("/post", postRoutes);
 api.use("/follow", followRoutes);
 api.use("/comment", commentRoutes);
 api.use("/bookmark", bookmarkRoutes);
+api.use("/notification", notificationRoutes);

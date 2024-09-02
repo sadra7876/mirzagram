@@ -5,10 +5,14 @@ import { ClientError } from "@utils/http-error";
 import { strings } from "resources/strings";
 import { FollowRequestDTO, FollowResponseDTO } from "../dto/follow.dto";
 import { Follow } from "../repository/follow.entity";
+import { INotificationRepository } from "@feature/notification/repository/notification.repo";
+import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 
 interface Dependencies {
   followRepo: IFollowRepository;
   profileRepo: IProfileRepository;
+  notificationRepo: INotificationRepository;
+  notificationEventEmitter: NotificationEventEmitter;
 }
 
 export class FollowService {
@@ -37,6 +41,12 @@ export class FollowService {
     newFollow.following = following;
 
     await this.deps.followRepo.followProfile(newFollow);
+
+    this.deps.notificationEventEmitter.emit("FOLLOW_NOTIFICATION", {
+      followedBy: follower,
+      target: following,
+      action: "follow",
+    });
   }
 
   async unFollowUser(
