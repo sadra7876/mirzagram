@@ -6,7 +6,6 @@ variables:
   API_IMAGE: mirzagram1234/mirzagram
 
 api-build-job:
-  image: alpine:3.20.2
   stage: build
   script:
     - cd backend
