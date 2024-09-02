@@ -1,15 +1,12 @@
 stages:
   - build
   - deploy
-  
-build:
-  stage: build
-  image: node:21.1.0-alpine
 
 variables:
   API_IMAGE: mirzagram1234/mirzagram
 
 api-build-job:
+  image: alpine:3.20.2
   stage: build
   script:
     - cd backend
