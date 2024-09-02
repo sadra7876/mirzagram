@@ -19,6 +19,8 @@ import { EditPostRequestDTO } from "../dto/edit-post-request.dto";
 import { IPostLikeRepository } from "../repository/post-like.repo";
 import { PostLike } from "../repository/entities/post-like.entity";
 import { PostLikeRequestDTO } from "../dto/post-like-request.dto";
+import { INotificationRepository } from "@feature/notification/repository/notification.repo";
+import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 
 const EMAIL_REGEX = /#[a-z0-9_]+/g;
 
@@ -26,6 +28,8 @@ interface Dependencies {
   postRepo: IPostRepository;
   profileRepo: IProfileRepository;
   postLikeRepo: IPostLikeRepository;
+  postLikeNotificationRepo: INotificationRepository;
+  notificationEventEmitter: NotificationEventEmitter;
 }
 
 export class PostService {
@@ -42,7 +46,18 @@ export class PostService {
     }
 
     const post = await this.buildPostFromPostRequest(request, profile);
-    return this.deps.postRepo.createOrUpdatePost(post);
+
+    const result = this.deps.postRepo.createOrUpdatePost(post);
+
+    if (post.mentions) {
+      this.deps.notificationEventEmitter.emit("MENTION_NOTIFICATION", {
+        mentions: post.mentions,
+        action: "mentioned",
+        post,
+      });
+    }
+
+    return result;
   }
 
   async getPost(profileId: ProfileId, id: string): Promise<PostDTO> {
@@ -181,12 +196,43 @@ export class PostService {
     const like = new PostLike();
     like.post = post;
     like.profile = profile;
-    return this.deps.postLikeRepo.addLikeToPost(like);
+    await this.deps.postLikeRepo.addLikeToPost(like);
+
+    // const notif = new LikeNotification();
+    // notif.action = "like";
+    // notif.likedPost = post;
+    // notif.likedByProfile = profile;
+    // await this.deps.postLikeNotificationRepo.insertLikeNotification(notif);
+    this.deps.notificationEventEmitter.emit("POST_LIKE_NOTIFICATION", {
+      action: "like",
+      likedByProfile: profile,
+      likedPost: post,
+    });
   }
 
   async removeLike(profileId: ProfileId, likeReq: PostLikeRequestDTO) {
-    await this.deps.postLikeRepo.removeLikeFromPost(profileId, likeReq.postId);
-    return;
+    const profile = await this.deps.profileRepo.getById(profileId);
+    if (!profile) {
+      throw new ClientError(strings.PROFILE_NOT_FOUND_ERROR);
+    }
+
+    const post = await this.deps.postRepo.getPost(likeReq.postId);
+    if (!post) {
+      throw new ClientError(strings.POST_NOT_FOUND_ERROR);
+    }
+
+    const result = await this.deps.postLikeRepo.removeLikeFromPost(
+      profileId,
+      likeReq.postId
+    );
+
+    if (result.affected) {
+      this.deps.notificationEventEmitter.emit("POST_LIKE_NOTIFICATION", {
+        action: "dislike",
+        likedByProfile: profile,
+        likedPost: post,
+      });
+    }
   }
 
   private async buildPostFromPostRequest(

@@ -20,6 +20,8 @@ export interface IFollowRepository {
     page: number,
     pagelimit: number
   ): Promise<Follow[] | null>;
+  getAllFollowingByProfileId(id: ProfileId): Promise<Follow[] | null>;
+  getAllFollowerByProfileId(id: ProfileId): Promise<Follow[] | null>;
   getFollowerCountByProfileId(id: ProfileId): Promise<number>;
   getFollowingCountByProfileId(id: ProfileId): Promise<number>;
 }
@@ -86,6 +88,22 @@ export class FollowRepository implements IFollowRepository {
       .getMany();
 
     return following;
+  }
+
+  getAllFollowingByProfileId(id: ProfileId): Promise<Follow[] | null> {
+    return this.repository
+      .createQueryBuilder("follow")
+      .leftJoinAndSelect("follow.following", "profile")
+      .where("follow.followerId = :id", { id })
+      .getMany();
+  }
+
+  getAllFollowerByProfileId(id: ProfileId): Promise<Follow[] | null> {
+    return this.repository
+      .createQueryBuilder("follow")
+      .leftJoinAndSelect("follow.follower", "profile")
+      .where("follow.followingId = :id", { id })
+      .getMany();
   }
 
   async getFollowerCountByProfileId(id: ProfileId): Promise<number> {

@@ -33,6 +33,18 @@ import { PostLikeRepository } from "@feature/post/repository/post-like.repo";
 import { PostLike } from "@feature/post/repository/entities/post-like.entity";
 import { env } from "process";
 import { MailerService } from "@feature/mailer/service/mailer.service";
+import {
+  Notification,
+  LikeNotification,
+  FollowRequestNotification,
+  MentionNotification,
+  FollowNotification,
+  FollowRequestResultNotification,
+} from "@feature/notification/repository/entity/notification.entity";
+import { NotificationRepository } from "@feature/notification/repository/notification.repo";
+import { NotificationService } from "@feature/notification/service/notification.service";
+import { NotificationEventHandler } from "@feature/notification/event-handler/notification-event-handler";
+import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 dotenv.config();
 
 // DataSource
@@ -58,6 +70,12 @@ export const AppDataSource = new DataSource({
     CommentLike,
     Bookmark,
     PostLike,
+    Notification,
+    LikeNotification,
+    MentionNotification,
+    FollowNotification,
+    FollowRequestNotification,
+    FollowRequestResultNotification,
   ],
   subscribers: [],
   migrations: [],
@@ -93,6 +111,32 @@ const bookmarkRepository = new BookmarkRepository(
 const postLikeRepository = new PostLikeRepository(
   AppDataSource.getRepository<PostLike>(PostLike)
 );
+const notificationRepository = new NotificationRepository({
+  repo: AppDataSource.getRepository<Notification>(Notification),
+  likeRepository:
+    AppDataSource.getRepository<LikeNotification>(LikeNotification),
+  followRequestRepository:
+    AppDataSource.getRepository<FollowRequestNotification>(
+      FollowRequestNotification
+    ),
+  mentionRepository:
+    AppDataSource.getRepository<MentionNotification>(MentionNotification),
+  followRepository:
+    AppDataSource.getRepository<FollowNotification>(FollowNotification),
+  acceptedFollowRequestRepository:
+    AppDataSource.getRepository<FollowRequestResultNotification>(
+      FollowRequestResultNotification
+    ),
+});
+
+// Event emitters
+export const notificationEventEmitter = new NotificationEventEmitter();
+new NotificationEventHandler({
+  notificationRepo: notificationRepository,
+  profileRepo: profileRepository,
+  followRepo: followRepository,
+  notificationEventEmitter,
+});
 
 // Services
 export const authService = new AuthService({
@@ -113,11 +157,15 @@ export const postService = new PostService({
   postLikeRepo: postLikeRepository,
   postRepo: postRepository,
   profileRepo: profileRepository,
+  postLikeNotificationRepo: notificationRepository,
+  notificationEventEmitter,
 });
 
 export const followService = new FollowService({
   followRepo: followRepository,
   profileRepo: profileRepository,
+  notificationRepo: notificationRepository,
+  notificationEventEmitter,
 });
 export const commentService = new CommentService({
   commentRepo: commentRepository,
@@ -130,3 +178,9 @@ export const bookmarkService = new BookmarkService({
   profileRepo: profileRepository,
   postRepo: postRepository,
 });
+export const notificationService = new NotificationService({
+  notificationRepo: notificationRepository,
+});
+
+//TODO:
+namespace Services {}

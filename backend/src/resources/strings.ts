@@ -1,3 +1,5 @@
+/* eslint @typescript-eslint/naming-convention: 0 */
+
 export const strings = {
   BAD_REQUEST_ERROR: "درخواست نامعتبر است",
   INTERNAL_SERVER_ERROR: "خطای داخلی سرور",
@@ -43,4 +45,16 @@ export const strings = {
   HAVE_NOT_ANY_FOLLOWER: "کسی شما را فالو نکرده است",
   LIKE_ADDED_SUCCESSFULLY: "لایک با موفقیت اضافه شد",
   LIKE_REMOVED_SUCCESSFULLY: "لایک با موفقیت حذف شد",
+  FOLLOW_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
+    `دنبالت کرد ${firstName} ${lastName}`,
+  LIKE_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
+    `این عکس رو لایک کرده ${firstName} ${lastName}`,
+  MENTION_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
+    `توی اون یکی  عکس تگت کرده ${firstName} ${lastName}`,
+  FOLLOW_REQUEST_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
+    `درخواست دوستی داده ${firstName} ${lastName}`,
+  FOLLOW_REQUEST_RESULT_NOTIFICATION_TITLE: (
+    firstName: string,
+    lastName: string
+  ) => `درخواست دوستی‌ات رو قبول کرد ${firstName} ${lastName}`,
 };

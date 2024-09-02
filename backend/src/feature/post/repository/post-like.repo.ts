@@ -1,11 +1,14 @@
 import { ProfileId } from "@CommonTypes/profile.type";
-import { Repository } from "typeorm";
+import { DeleteResult, Repository } from "typeorm";
 import { PostLike } from "./entities/post-like.entity";
 
 export interface IPostLikeRepository {
   getLike(profileId: ProfileId, postId: string): Promise<PostLike | null>;
   addLikeToPost(like: PostLike): Promise<void>;
-  removeLikeFromPost(profileId: ProfileId, postId: string): Promise<void>;
+  removeLikeFromPost(
+    profileId: ProfileId,
+    postId: string
+  ): Promise<DeleteResult>;
   getLikeCountForPost(postId: string): Promise<number>;
   getPaginatedLikesForPost(
     postId: string,
@@ -39,8 +42,8 @@ export class PostLikeRepository implements IPostLikeRepository {
   async removeLikeFromPost(
     profileId: ProfileId,
     postId: string
-  ): Promise<void> {
-    await this.repo.delete({
+  ): Promise<DeleteResult> {
+    return this.repo.delete({
       profile: {
         id: profileId,
       },
