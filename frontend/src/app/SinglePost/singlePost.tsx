@@ -58,7 +58,7 @@ export default function SinglePost() {
     const token = localStorage.getItem("token");
 
     const response = await fetch(
-      "http://37.32.6.153:81/comment?postId=23&page=1&pageSize=10",
+      `http://37.32.6.153:81/comment?postId=${postId}&page=1&pageSize=10`,
       {
         method: "GET",
         headers: {
@@ -67,20 +67,25 @@ export default function SinglePost() {
         },
       },
     );
-    const responsePostDetails = await fetch(`http://37.32.6.153:81/post/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+    const responsePostDetails = await fetch(
+      `http://37.32.6.153:81/post/${postId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
-    console.log("responsePostDetails", responsePostDetails);
-    const resultPostDetails = await response.json();
+    );
+
+    const resultPostDetails = await responsePostDetails.json();
+    console.log("resultPostDetails", resultPostDetails);
     if (resultPostDetails.isSuccess) {
       // setComments(resultPostDetails.result as IGetCommentById);
       setPostDetails(responsePostDetails.result as PostDetails);
     }
     const result = await response.json();
+    console.log("result", result);
     if (result.isSuccess) {
       setComments(result.result as MirzaComment);
     }
@@ -142,7 +147,7 @@ export default function SinglePost() {
               <div className="flex flex-row gap-x-1">
                 <p className="text-xs font-bold">
                   {comments &&
-                    (comments?.data.author.displayName || "موجود نیست")}
+                    (comments?.data[0].author.displayName || "موجود نیست")}
                 </p>
                 <p className="text-[10px] font-normal text-gray-500">
                   ۵ هفته پیش

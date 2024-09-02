@@ -14,7 +14,7 @@ export interface MirzaComment {
       postId: string;
       author: {
         displayName: string;
-      };
+      }[];
     }[];
-  };
+  }[];
 }
