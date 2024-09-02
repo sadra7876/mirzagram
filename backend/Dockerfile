@@ -1,11 +1,10 @@
 FROM node:21.1.0-alpine AS alpine
-# RUN apk update
+RUN apk update
 # RUN set -ex && apk --no-cache add sudo
 RUN apk --no-cache add libc6-compat curl nano
 
-# RUN npm install -g yarn
-
-
+# - - - - - -
+    
 FROM alpine AS base
 WORKDIR /app
 
@@ -14,8 +13,8 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-
-
+# - - - - - -
+    
 FROM base AS builder
 WORKDIR /app
 
@@ -26,7 +25,7 @@ RUN yarn build
 RUN rm -rf ./src
 RUN rm -rf ./__test__
 
-
+# - - - - - -
 
 FROM alpine AS runner
 WORKDIR /app

@@ -1,0 +1,16 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  API_IMAGE: mirzagram1234/mirzagram
+
+api-build-job:
+  stage: build
+  before_script:
+    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
+  script:
+    - cd backend
+    - docker build -t ${API_IMAGE}:$CI_COMMIT_SHORT_SHA .
+    - docker push ${API_IMAGE}:$CI_COMMIT_SHORT_SHA
+
