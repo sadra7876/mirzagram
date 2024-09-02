@@ -18,30 +18,3 @@ storageRouter.post("/", upload.array("file"), (req: Request, res: Response) => {
     return new ApiSuccess(uploadFiles, [strings.FILE_UPLOAD_SUCCESSFUL]);
   });
 });
-/*
-storageRouter.get("/:filename", (req: Request, res: Response) => {
-  //   handleRequest(res, async () => {
-  //     // const filename = req.body.filename;
-
-  //     return new ApiSuccess(filePath, ["salam"]);
-  //   });
-  const filename = req.params.filename;
-  const filePath = path.join(
-    __dirname,
-    "../../../../uploads/others/",
-    filename
-  );
-
-  // Check if the file exists
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      throw new HttpError(404, "No file found.");
-    }
-
-    //   // Set Content-Disposition header to force download
-    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-
-    //   Send the file as a response
-    res.sendFile(filePath);
-  });
-});*/

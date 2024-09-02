@@ -32,6 +32,7 @@ import { BookmarkService } from "@feature/bookmark/service/bookmark.service";
 import { PostLikeRepository } from "@feature/post/repository/post-like.repo";
 import { PostLike } from "@feature/post/repository/entities/post-like.entity";
 import { env } from "process";
+import { MailerService } from "@feature/mailer/service/mailer.service";
 dotenv.config();
 
 // DataSource
@@ -63,7 +64,7 @@ export const AppDataSource = new DataSource({
 });
 
 // Mailer service
-export const transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   host: env.SMTP_HOST,
   port: parseInt(env.SMTP_PORT!),
   secure: false, // Set to true if using TLS
@@ -72,6 +73,7 @@ export const transporter = nodemailer.createTransport({
     pass: env.SMTP_PASSWORD,
   },
 });
+const mailerService = new MailerService(transporter);
 
 // Repositories
 const profileRepository = new ProfileRepository(AppDataSource);
@@ -96,6 +98,7 @@ const postLikeRepository = new PostLikeRepository(
 export const authService = new AuthService({
   profileRepo: profileRepository,
   tokenRepo: tokenRepository,
+  mailerService,
 });
 export const profileService = new ProfileService({
   profileRepo: profileRepository,

@@ -3,7 +3,7 @@ import { IBookmarkRepository } from "../repository/bookmark.repo";
 import { ProfileId } from "@CommonTypes/profile.type";
 import { BookmarkRequestDTO } from "../dto/bookmark-request.dto";
 import { Bookmark } from "../repository/bookmark.entity";
-import { HttpError } from "@utils/http-error";
+import { ClientError } from "@utils/http-error";
 import { strings } from "resources/strings";
 import { IPostRepository } from "@feature/post/repository/post.repo";
 import { convertFileNameToURL } from "@utils/utils";
@@ -47,12 +47,12 @@ export class BookmarkService {
 
     const profile = await this.deps.profileRepo.getById(profileId);
     if (!profile || !profile.isActive) {
-      throw new HttpError(400, strings.PROFILE_NOT_FOUND_ERROR);
+      throw new ClientError(strings.PROFILE_NOT_FOUND_ERROR);
     }
 
     const post = await this.deps.postRepo.getPost(bookmarkReq.postId);
     if (!post) {
-      throw new HttpError(400, strings.POST_NOT_FOUND_ERROR);
+      throw new ClientError(strings.POST_NOT_FOUND_ERROR);
     }
 
     const newBookmark = new Bookmark();

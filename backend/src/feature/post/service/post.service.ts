@@ -1,7 +1,7 @@
 import { ProfileId, Username } from "@CommonTypes/profile.type";
 import { CreatePostRequestDTO } from "../dto/create-post-request.dto";
 import { IPostRepository } from "../repository/post.repo";
-import { HttpError } from "@utils/http-error";
+import { ClientError } from "@utils/http-error";
 import { strings } from "resources/strings";
 import { IProfileRepository } from "@feature/profile/repository/profile.repo";
 import { Profile } from "@feature/profile/repository/profile.entity";
@@ -38,7 +38,7 @@ export class PostService {
     const profile = await this.deps.profileRepo.getById(profileId);
 
     if (!profile || !profile.isActive) {
-      throw new HttpError(400, strings.CANNOT_ADD_POST_FOR_PROFILE_ERROR);
+      throw new ClientError(strings.CANNOT_ADD_POST_FOR_PROFILE_ERROR);
     }
 
     const post = await this.buildPostFromPostRequest(request, profile);
@@ -49,12 +49,12 @@ export class PostService {
     const post = await this.deps.postRepo.getPost(id);
 
     if (!post) {
-      throw new HttpError(404, strings.POST_NOT_FOUND_ERROR);
+      throw new ClientError(strings.POST_NOT_FOUND_ERROR);
     }
 
     // Commented to allow public access to posts!
     // if (post.owner.id !== profileId) {
-    //   throw new HttpError(403, strings.POST_FORBIDDEN_ERROR);
+    //   throw new ClientError(strings.POST_FORBIDDEN_ERROR, 403);
     // }
 
     const likeCount = await this.deps.postLikeRepo.getLikeCountForPost(post.id);
@@ -93,11 +93,11 @@ export class PostService {
     const orgPost = await this.deps.postRepo.getPost(id);
 
     if (!orgPost) {
-      throw new HttpError(400, strings.POST_NOT_FOUND_ERROR);
+      throw new ClientError(strings.POST_NOT_FOUND_ERROR);
     }
 
     if (orgPost.owner.id !== profileId) {
-      throw new HttpError(403, strings.POST_FORBIDDEN_ERROR);
+      throw new ClientError(strings.POST_FORBIDDEN_ERROR, 403);
     }
 
     const newPost = await this.editPostFromPostRequest(orgPost, modifiedPost);
@@ -170,12 +170,12 @@ export class PostService {
 
     const profile = await this.deps.profileRepo.getById(profileId);
     if (!profile) {
-      throw new HttpError(400, strings.PROFILE_NOT_FOUND_ERROR);
+      throw new ClientError(strings.PROFILE_NOT_FOUND_ERROR);
     }
 
     const post = await this.deps.postRepo.getPost(likeReq.postId);
     if (!post) {
-      throw new HttpError(400, strings.POST_NOT_FOUND_ERROR);
+      throw new ClientError(strings.POST_NOT_FOUND_ERROR);
     }
 
     const like = new PostLike();
@@ -222,7 +222,7 @@ export class PostService {
           );
 
           if (!mentionedProfile) {
-            throw new HttpError(400, strings.MENTION_USERNAME_NOT_EXIST_ERROR);
+            throw new ClientError(strings.MENTION_USERNAME_NOT_EXIST_ERROR);
           }
 
           const men = new Mention();
@@ -260,7 +260,7 @@ export class PostService {
           );
 
           if (!mentionedProfile) {
-            throw new HttpError(400, strings.MENTION_USERNAME_NOT_EXIST_ERROR);
+            throw new ClientError(strings.MENTION_USERNAME_NOT_EXIST_ERROR);
           }
 
           const men = new Mention();
