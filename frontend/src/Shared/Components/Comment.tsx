@@ -18,15 +18,17 @@ export default function Comment(props: { postId: string }) {
     const token = localStorage.getItem("token");
     const dataToSend = { postId, text: commentText };
     console.log(dataToSend);
-    // const x = await fetch("http://37.32.6.153:81/comment",
-    //    {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    //   body: JSON.stringify(dataToSend),
-    // });
+    const responsePostComment = await fetch("http://37.32.6.153:81/comment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(dataToSend),
+    });
+
+    const resultPostComment = await responsePostComment.json();
+    console.log("first", resultPostComment);
   };
 
   return (
