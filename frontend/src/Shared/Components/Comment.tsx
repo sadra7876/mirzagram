@@ -1,58 +1,73 @@
 import React, { useState, useRef } from "react";
 import { GrSend } from "react-icons/gr";
 
-interface CommentProps {
-  parentId?: string; // Optional parent ID for replies
-  onCommentSubmit: (comment: Comment) => void;
+export interface sendComment {
+  postId: "string";
+  text: "string";
+  parentCommentId?: "string";
 }
-
-interface Comment {
-  id: string;
-  parentId?: string;
-  text: string;
-  createdAt: Date;
-}
-
-const Comment: React.FC<CommentProps> = ({ parentId, onCommentSubmit }) => {
-  const [commentText, setCommentText] = useState("");
-  const commentRef = useRef<HTMLInputElement>(null);
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (commentText.trim() === "") {
-      return;
-    }
-
-    const newComment: Comment = {
-      id: Date.now().toString(),
-      parentId,
-      text: commentText,
-      createdAt: new Date(),
+export interface IGetCommentById {
+  isSuccess: boolean;
+  statusCode: number;
+  result?: {
+    page: number;
+    data: {
+      id: string;
+      text: string;
+      postId: string;
+      author: {
+        displayName: string;
+      };
+      likeCount: number;
+      replies: {
+        id: string;
+        text: string;
+        postId: string;
+        author: {
+          displayName: string;
+        };
+      }[];
     };
+  };
+}
+export default function Comment(postId: string) {
+  const [loading, setLoading] = useState(false);
+  const [comments, setComments] = useState<IGetCommentById | undefined>(
+    undefined,
+  );
+  const [commentText, setCommentText] = useState("");
+  function GetComment() {}
 
-    onCommentSubmit(newComment);
-    setCommentText("");
-    commentRef.current?.focus();
+  const sendComment = async (postId: string) => {
+    const token = localStorage.getItem("token");
+    const dataToSend = { postId, text: commentText };
+    console.log(dataToSend);
+    // const x = await fetch("http://37.32.6.153:81/comment",
+    //    {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    //   body: JSON.stringify(dataToSend),
+    // });
   };
 
   return (
     <form
       className="flex flex-row items-center gap-x-1"
-      onSubmit={handleSubmit}
+      // onSubmit={handleSubmit}
     >
       <input
         className="h-9 w-[423px] rounded-2xl border-[1px] border-mirza-gray-comment px-4 py-1"
         placeholder="نظر خود را بنویسید...  "
         type="text"
         value={commentText}
-        onChange={(event) => setCommentText(event.target.value)}
-        ref={commentRef}
+        onChange={(e) => setCommentText(e.target.value)}
       />
-      <button className="h-8 w-6">
+      <button className="h-8 w-6" onClick={() => sendComment(postId)}>
         {<GrSend className="size-5 text-mirza-red" />}{" "}
       </button>
     </form>
   );
-};
-
-export default Comment;
+}

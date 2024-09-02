@@ -20,14 +20,19 @@ import { FaRegBookmark } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa";
 import LikeComponent from "../../Shared/Components/Like";
 import SaveComponent from "../../Shared/Components/Save";
-import CommentComponent from "../../Shared/Components/Comment";
+import CommentComponent, {
+  IGetCommentById,
+} from "../../Shared/Components/Comment";
 
 import profilePicture from "../../assets/images/Icons/picture frame.svg";
+import Comment from "../../Shared/Components/Comment";
 
 export default function SinglePost() {
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [commsnts, setComments] = useState();
+  const [comments, setComments] = useState<IGetCommentById | undefined>(
+    undefined,
+  );
   const SavedButton = () => {
     setSaved(!saved);
   };
@@ -56,9 +61,10 @@ export default function SinglePost() {
         },
       },
     );
+
     const result = await response.json();
     if (result.isSuccess) {
-      setComments(result.result);
+      setComments(result.result as IGetCommentById);
     }
     // console.log("response", result);
     setLoading(false);
@@ -102,11 +108,12 @@ export default function SinglePost() {
         <div className="w-100 flex h-10 flex-row items-center gap-4">
           <img className="h-10 w-10" src={profilePicture} />
           <div>
-            <CommentComponent
+            {/* <CommentComponent
               onCommentSubmit={function (comment: CommentComponent): void {
                 throw new Error("Function not implemented.");
               }}
-            />
+            /> */}
+            <Comment postId="hi" />
           </div>
         </div>
         <div className="felx w-full flex-col">
@@ -116,7 +123,8 @@ export default function SinglePost() {
             <div className="flex flex-row justify-between">
               <div className="flex flex-row gap-x-1">
                 <p className="text-xs font-bold">
-                  {commsnts.data[0].author.displayName}
+                  {comments &&
+                    (comments.result?.data.author.displayName || "موجود نیست")}
                 </p>
                 <p className="text-[10px] font-normal text-gray-500">
                   ۵ هفته پیش
