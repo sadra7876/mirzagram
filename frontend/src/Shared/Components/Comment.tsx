@@ -1,40 +1,16 @@
 import React, { useState, useRef } from "react";
 import { GrSend } from "react-icons/gr";
+import { MirzaComment } from "../model/comment.interface";
 
 export interface sendComment {
   postId: "string";
   text: "string";
   parentCommentId?: "string";
 }
-export interface IGetCommentById {
-  isSuccess: boolean;
-  statusCode: number;
-  result?: {
-    page: number;
-    data: {
-      id: string;
-      text: string;
-      postId: string;
-      author: {
-        displayName: string;
-      };
-      likeCount: number;
-      replies: {
-        id: string;
-        text: string;
-        postId: string;
-        author: {
-          displayName: string;
-        };
-      }[];
-    };
-  };
-}
-export default function Comment(postId: string) {
+
+export default function Comment(props: { postId: string }) {
   const [loading, setLoading] = useState(false);
-  const [comments, setComments] = useState<IGetCommentById | undefined>(
-    undefined,
-  );
+  const [comments, setComments] = useState<MirzaComment | undefined>(undefined);
   const [commentText, setCommentText] = useState("");
   function GetComment() {}
 
@@ -65,7 +41,7 @@ export default function Comment(postId: string) {
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}
       />
-      <button className="h-8 w-6" onClick={() => sendComment(postId)}>
+      <button className="h-8 w-6" onClick={() => sendComment(props.postId)}>
         {<GrSend className="size-5 text-mirza-red" />}{" "}
       </button>
     </form>

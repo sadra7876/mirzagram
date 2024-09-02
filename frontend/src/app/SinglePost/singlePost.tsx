@@ -20,19 +20,25 @@ import { FaRegBookmark } from "react-icons/fa6";
 import { FaRegComment } from "react-icons/fa";
 import LikeComponent from "../../Shared/Components/Like";
 import SaveComponent from "../../Shared/Components/Save";
-import CommentComponent, {
-  IGetCommentById,
-} from "../../Shared/Components/Comment";
+import CommentComponent from "../../Shared/Components/Comment";
 
 import profilePicture from "../../assets/images/Icons/picture frame.svg";
 import Comment from "../../Shared/Components/Comment";
-
+import { PostDetails } from "../../Shared/model/postDetails.interface";
+import { MirzaComment } from "../../Shared/model/comment.interface";
+import { useLocation } from "react-router-dom";
 export default function SinglePost() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  // Extract the query parameters you need
+  const postId = queryParams.get("postId");
+
+  console.log("postId", postId);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [comments, setComments] = useState<IGetCommentById | undefined>(
-    undefined,
-  );
+  const [comments, setComments] = useState<MirzaComment | undefined>(undefined);
+  const [postDetails, setPostDetails] = useState<PostDetails | undefined>();
   const SavedButton = () => {
     setSaved(!saved);
   };
@@ -61,10 +67,22 @@ export default function SinglePost() {
         },
       },
     );
-
+    const responsePostDetails = await fetch(`http://37.32.6.153:81/post/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("responsePostDetails", responsePostDetails);
+    const resultPostDetails = await response.json();
+    if (resultPostDetails.isSuccess) {
+      // setComments(resultPostDetails.result as IGetCommentById);
+      setPostDetails(responsePostDetails.result as PostDetails);
+    }
     const result = await response.json();
     if (result.isSuccess) {
-      setComments(result.result as IGetCommentById);
+      setComments(result.result as MirzaComment);
     }
     // console.log("response", result);
     setLoading(false);
@@ -113,7 +131,7 @@ export default function SinglePost() {
                 throw new Error("Function not implemented.");
               }}
             /> */}
-            <Comment postId="hi" />
+            <Comment postId="" />
           </div>
         </div>
         <div className="felx w-full flex-col">
@@ -124,7 +142,7 @@ export default function SinglePost() {
               <div className="flex flex-row gap-x-1">
                 <p className="text-xs font-bold">
                   {comments &&
-                    (comments.result?.data.author.displayName || "موجود نیست")}
+                    (comments?.data.author.displayName || "موجود نیست")}
                 </p>
                 <p className="text-[10px] font-normal text-gray-500">
                   ۵ هفته پیش
