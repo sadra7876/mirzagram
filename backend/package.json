@@ -1,8 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "main": "main.js",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged --debug"
@@ -15,14 +14,15 @@
     ]
   },
   "scripts": {
-    "start": "nodemon src/main.ts",
+    "dev": "nodemon src/main.ts",
+    "build": "tsc --project tsconfig.json && tsc-alias --outDir dist/src yarn copy-docs",
     "prettier": "npx prettier --config .prettierrc **//*.{ts,js,mjs} --write",
     "lint": "npx eslint",
-    "lint:fix": "npx eslint --fix"
+    "lint:fix": "npx eslint --fix",
+    "clean-dist": "rm -rf ./dist",
+    "copy-docs": "cp -r src/docs dist/src/docs"
   },
   "dependencies": {
-    "@types/multer": "^1.4.11",
-    "@types/nodemailer": "^6.4.15",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv-flow": "^4.1.0",
@@ -36,7 +36,8 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20",
-    "yamljs": "^0.3.0"
+    "yamljs": "^0.3.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
@@ -45,7 +46,9 @@
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/multer": "^1.4.11",
     "@types/node": "^22.1.0",
+    "@types/nodemailer": "^6.4.15",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
     "@types/uuid": "^10.0.0",
@@ -60,10 +63,10 @@
     "lint-staged": "^15.2.9",
     "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
-    "tsc": "^2.0.4",
+    "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
+    "tslib": "^2.7.0",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.2.0",
-    "zod": "^3.23.8"
+    "typescript-eslint": "^8.2.0"
   }
 }

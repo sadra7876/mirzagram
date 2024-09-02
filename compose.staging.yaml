@@ -9,12 +9,22 @@ services:
       POSTGRES_USER: mirza
     networks:
       - mirza-net-staging
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "mirzagram-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
   api:
     container_name: mirzagram-api-staging
+    env_file:
+      - path: ./backend/.env
+        required: true
     environment:
       DB_HOST: db
       DB_PORT: 5432
+      APP_ENV: local
     ports:
       - 3000:3000
     build:
@@ -23,23 +33,25 @@ services:
     networks:
       - mirza-net-staging
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: always
     stdin_open: true
     tty: true
 
-  front:
-    container_name: mirzagram-front-staging
-    environment:
-      VITE_REACT_APP_BASE_URL: http://localhost:3000/
-    ports:
-      - 8000:8000
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    networks:
-      - mirza-net-staging
-    depends_on:
-      - api
+  # front:
+  #   container_name: mirzagram-front-staging
+  #   environment:
+  #     VITE_REACT_APP_BASE_URL: http://localhost:3000/
+  #   ports:
+  #     - 8000:8000
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   networks:
+  #     - mirza-net-staging
+  #   depends_on:
+  #     - api
 
 networks:
   mirza-net-staging:
