@@ -11,6 +11,6 @@ api-build-job:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
   script:
     - cd backend
-    - docker build -t ${API_IMAGE}:$CI_COMMIT_SHORT_SHA .
-    - docker push ${API_IMAGE}:$CI_COMMIT_SHORT_SHA
+    - sudo docker build -t ${API_IMAGE}:$CI_COMMIT_SHORT_SHA .
+    - sudo docker push ${API_IMAGE}:$CI_COMMIT_SHORT_SHA
 
