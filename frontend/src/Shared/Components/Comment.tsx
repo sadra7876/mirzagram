@@ -41,8 +41,15 @@ export default function Comment(props: { postId: string }) {
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}
       />
-      <button className="h-8 w-6" onClick={() => sendComment(props.postId)}>
-        {<GrSend className="size-5 text-mirza-red" />}{" "}
+      <button
+        className="h-8 w-6"
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          sendComment(props.postId);
+        }}
+      >
+        {<GrSend className="size-5 text-mirza-red" />}
       </button>
     </form>
   );

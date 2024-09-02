@@ -111,33 +111,37 @@ export default function SinglePost() {
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <div className="text-">{postDetails?.caption}</div>
-        )}
-        <div className="flex w-full flex-row gap-2 pt-4">
-          <div className="rounded-md bg-mirza-orange px-1">
-            <p className="text-white">جامعه</p>
-          </div>
-          <div className="rounded-md bg-mirza-orange px-1">
-            <p className="text-white">جامعه</p>
-          </div>
-        </div>
+          <>
+            <div className="text-">{postDetails?.caption}</div>
 
-        <div className="flex w-full flex-row justify-end">
-          <LikeComponent />
-          <SaveComponent />
-        </div>
+            <div className="flex w-full flex-row gap-2 pt-4">
+              <div className="rounded-md bg-mirza-orange px-1">
+                <p className="text-white">جامعه</p>
+              </div>
+              <div className="rounded-md bg-mirza-orange px-1">
+                <p className="text-white">جامعه</p>
+              </div>
+            </div>
 
-        <div className="w-100 flex h-10 flex-row items-center gap-4">
-          <img className="h-10 w-10" src={profilePicture} />
-          <div>
-            {/* <CommentComponent
+            <div className="flex w-full flex-row justify-end">
+              <LikeComponent />
+              <SaveComponent />
+            </div>
+
+            <div className="w-100 flex h-10 flex-row items-center gap-4">
+              <img className="h-10 w-10" src={profilePicture} />
+              <div>
+                {/* <CommentComponent
               onCommentSubmit={function (comment: CommentComponent): void {
                 throw new Error("Function not implemented.");
               }}
             /> */}
-            <Comment postId="" />
-          </div>
-        </div>
+                <Comment postId={postDetails?.id.toString() || ""} />
+              </div>
+            </div>
+          </>
+        )}
+
         <div className="felx w-full flex-col">
           {loading ? (
             <p>Loading...</p>
