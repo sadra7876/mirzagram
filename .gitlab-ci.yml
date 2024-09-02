@@ -8,6 +8,7 @@ variables:
 api-build-job:
   stage: build
   before_script:
+    - unset DOCKER_HOST
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
   script:
     - cd backend
