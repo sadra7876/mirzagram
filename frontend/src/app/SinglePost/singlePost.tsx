@@ -82,7 +82,7 @@ export default function SinglePost() {
     console.log("resultPostDetails", resultPostDetails);
     if (resultPostDetails.isSuccess) {
       // setComments(resultPostDetails.result as IGetCommentById);
-      setPostDetails(responsePostDetails.result as PostDetails);
+      setPostDetails(resultPostDetails.result as PostDetails);
     }
     const result = await response.json();
     console.log("result", result);
@@ -108,12 +108,11 @@ export default function SinglePost() {
           <div className="w-24 pb-4 text-xs">2 ماه پیش</div>
         </div>
 
-        <div className="text-">
-          ترس یکی از مهمترین عوامل #قدرت است؛ کسی که بتواند در #جامعه سمت و سوی
-          ترس را معین کند #قدرت زیادی بر آن جامعه پیدا می‌کند. شاید بتوان هم صدا
-          با جورجو آگامبنِ فیلسوف گفت که ما امروزه همیشه در یک حالت اضطراری
-          زندگی می‌کنیم
-        </div>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <div className="text-">{postDetails?.caption}</div>
+        )}
         <div className="flex w-full flex-row gap-2 pt-4">
           <div className="rounded-md bg-mirza-orange px-1">
             <p className="text-white">جامعه</p>
