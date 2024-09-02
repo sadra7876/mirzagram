@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MirzaInput from "../../Shared/Components/MirzaInput";
 import { Controller, useForm } from "react-hook-form";
 import UserIcon from "../../assets/images/Icons/user_icon.jpg";
@@ -10,15 +10,12 @@ import { UploadFile } from "../../Shared/model/responseUpload.interface";
 import { ImageFile } from "../../model/imageFile.interface";
 import { UserProfileModel } from "../../model/userProfile.interface";
 import { postUploadFile } from "./api/uploadFiles";
-import { getProfile } from "./api/getProfile";
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import { putProfile } from "./api/editProfile";
-const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 export default function UseProfileModal(props: {
   profile: UserProfileModel;
   onClose: () => void;
 }) {
-  const token = localStorage.getItem("token");
   const [loadingFile, setLoadingFile] = useState(false);
   const [fileNames, setFileNames] = useState<UploadFile[]>([]);
   const [profilePicFile, setProfilePicFile] = useState<ImageFile>();
