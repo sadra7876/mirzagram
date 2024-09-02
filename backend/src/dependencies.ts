@@ -1,12 +1,12 @@
 import { DataSource } from "typeorm";
 import nodemailer from "nodemailer";
-import { Profile } from "feature/profile/repository/profile.entity";
-import { AuthService } from "./feature/auth/service/auth.service";
-import { ProfileService } from "./feature/profile/service/profile.service";
-import { ProfileRepository } from "./feature/profile/repository/profile.repo";
+import { Profile } from "@feature/profile/repository/profile.entity";
+import { AuthService } from "@feature/auth/service/auth.service";
+import { ProfileService } from "@feature/profile/service/profile.service";
+import { ProfileRepository } from "@feature/profile/repository/profile.repo";
 import dotenv from "dotenv-flow";
-import { TokenRepository } from "./feature/auth/repository/token.repo";
-import { ForgetPasswordToken } from "feature/auth/repository/token.entity";
+import { TokenRepository } from "@feature/auth/repository/token.repo";
+import { ForgetPasswordToken } from "@feature/auth/repository/token.entity";
 import { StorageRepository } from "@feature/storage/repository/storage.repo";
 import { StorageService } from "@feature/storage/service/storage.service";
 import { Storage } from "@feature/storage/repository/storage.entity";

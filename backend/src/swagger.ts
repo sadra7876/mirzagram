@@ -1,9 +1,21 @@
 import swaggerUi from "swagger-ui-express";
 import { Express } from "express";
 import YAML from "yamljs";
+import path from "path";
 
-const specs = YAML.load("./src/docs/openapi.yaml");
+let setupSwagger: (app: Express) => void;
+try {
+  const specs = YAML.load(path.join(__dirname, "docs", "openapi.yaml"));
+  setupSwagger = (app: Express) => {
+    app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
+  };
+} catch (e) {
+  console.log(e);
+  setupSwagger = (app: Express) => {
+    app.use("/docs", (req, res) => {
+      res.send("Swagger UI is not available");
+    });
+  };
+}
 
-export const setupSwagger = (app: Express) => {
-  app.use("/docs", swaggerUi.serve, swaggerUi.setup(specs));
-};
+export default setupSwagger;
