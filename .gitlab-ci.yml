@@ -1,21 +1,18 @@
-# image: node:latest
 stages:
   - build
+  - deploy
+  
 build:
   stage: build
   image: node:21.1.0-alpine
-#   before_script:
-#     - corepack enable
-#     - corepack prepare pnpm@latest-9 --activate
-#     - pnpm config set store-dir .pnpm-store
+
+variables:
+  API_IMAGE: mirzagram1234/mirzagram
+
+api-build-job:
+  stage: build
   script:
-    - cd backend  
-    - yarn install
-    - yarn build
-    # - pnpm test
-#   cache:
-#     key:
-#       files:
-#         - pnpm-lock.yaml
-#     paths:
-#       - .pnpm-store
+    - cd backend
+    - docker build -t ${API_IMAGE}:$CI_COMMIT_SHORT_SHA .
+    - docker push ${API_IMAGE}:$CI_COMMIT_SHORT_SHA
+
