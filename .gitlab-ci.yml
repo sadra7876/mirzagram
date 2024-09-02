@@ -8,7 +8,7 @@ variables:
 api-build-job:
   stage: build
   before_script:
-    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_TOKEN
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - cd backend
     - docker build -t ${API_IMAGE}:$CI_COMMIT_SHORT_SHA .
