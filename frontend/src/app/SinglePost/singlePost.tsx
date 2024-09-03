@@ -1,33 +1,14 @@
 import { useEffect, useState } from "react";
-import picProfile from "../../assets/images/picture_profile.jpg";
-import MirzaButton from "../../Shared/Components/MirzaButton";
-import { Modal } from "flowbite-react";
-import MirzaInput from "../../Shared/Components/MirzaInput";
-import { Controller, useForm } from "react-hook-form";
-import UserIcon from "../../assets/images/Icons/user_icon.jpg";
-import EmailIcon from "../../assets/images/Icons/gmail.jpg";
-import KeyIcon from "../../assets/images/Icons/key.jpg";
-import { ToggleSwitch, Label, Textarea } from "flowbite-react";
-import Editicon from "../../assets/images/Icons/editIcon.svg";
 import siglepostImage from "../../assets/images/Singlepost-image.svg";
-import { GrSend } from "react-icons/gr";
 import { FaReply } from "react-icons/fa";
-
-import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
-import { FaRegHeart } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
-import { FaBookmark } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa6";
-import { FaRegComment } from "react-icons/fa";
 import LikeComponent from "../../Shared/Components/Like";
 import SaveComponent from "../../Shared/Components/Save";
-import CommentComponent from "../../Shared/Components/Comment";
-
 import profilePicture from "../../assets/images/Icons/picture frame.svg";
-import Comment from "../../Shared/Components/Comment";
 import { PostDetails } from "../../Shared/model/postDetails.interface";
 import { MirzaComment } from "../../Shared/model/comment.interface";
 import { useLocation } from "react-router-dom";
+import InputComment from "../../Shared/Components/InputComment";
+import CommentComponent from "../../Shared/Components/Comment";
 export default function SinglePost() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -38,7 +19,7 @@ export default function SinglePost() {
   console.log("postId", postId);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [comments, setComments] = useState<MirzaComment | undefined>(undefined);
+  const [comments, setComments] = useState<MirzaComment>({ data: [], page: 0 });
   const [postDetails, setPostDetails] = useState<PostDetails | undefined>();
   const SavedButton = () => {
     setSaved(!saved);
@@ -90,7 +71,6 @@ export default function SinglePost() {
     if (result.isSuccess) {
       setComments(result.result as MirzaComment);
     }
-    // console.log("response", result);
     setLoading(false);
   };
 
@@ -132,12 +112,7 @@ export default function SinglePost() {
             <div className="w-100 flex h-10 flex-row items-center gap-4">
               <img className="h-10 w-10" src={profilePicture} />
               <div>
-                {/* <CommentComponent
-              onCommentSubmit={function (comment: CommentComponent): void {
-                throw new Error("Function not implemented.");
-              }}
-            /> */}
-                <Comment postId={postDetails?.id.toString() || ""} />
+                <InputComment postId={postDetails?.id.toString() || ""} />
               </div>
             </div>
           </>
@@ -147,45 +122,7 @@ export default function SinglePost() {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <div className="flex flex-row flex-wrap justify-between px-8 pt-4">
-              <div className="flex w-full flex-row gap-x-20">
-                <div className="flex w-[299px] flex-row gap-2">
-                  <p className="text-xs font-bold">
-                    {comments &&
-                      (comments?.data[0].author.displayName || "موجود نیست")}
-                  </p>
-                  <p className="text-[10px] font-normal text-gray-500">
-                    ۵ هفته پیش
-                  </p>
-                </div>
-                <div className="flex flex-row justify-end gap-4">
-                  <LikeComponent />
-                  <p className="text-xs font-bold text-mirza-red">پاسخ</p>
-                  <FaReply className="font-bold text-mirza-red" />
-                </div>
-              </div>
-              <div className="gap-y-4 text-xs">متن کامنت</div>
-
-              {/* {reply} */}
-
-              <div className="flex w-full flex-row gap-x-20 pt-4">
-                <div className="flex w-[299px] flex-row gap-2 pr-12">
-                  <p className="text-xs font-bold">
-                    {comments &&
-                      (comments?.data[0].author.displayName || "موجود نیست")}
-                  </p>
-                  <p className="text-[10px] font-normal text-gray-500">
-                    ۵ هفته پیش
-                  </p>
-                </div>
-                <div className="flex flex-row justify-end gap-4">
-                  <LikeComponent />
-                  <p className="text-xs font-bold text-mirza-red">پاسخ</p>
-                  <FaReply className="font-bold text-mirza-red" />
-                </div>
-              </div>
-              <div className="gap-y-4 pr-12 text-xs">متن ریپلای</div>
-            </div>
+            <CommentComponent comments={comments} />
           )}
           <div></div>
         </div>
