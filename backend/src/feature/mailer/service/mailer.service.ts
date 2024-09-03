@@ -24,7 +24,7 @@ export class MailerService {
   ): Promise<void> {
     try {
       await this.transporter.sendMail({
-        from: "<lol@lol.com>",
+        from: "mirzagram0@gmail.com",
         to,
         subject,
         text,

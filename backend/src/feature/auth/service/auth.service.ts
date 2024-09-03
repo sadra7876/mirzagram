@@ -1,6 +1,6 @@
 import { Email, Username, isEmail } from "@CommonTypes/profile.type";
 import { isValidEmail } from "@utils/type-checking";
-import { HttpError } from "@utils/http-error";
+import { ClientError, ServerError } from "@utils/http-error";
 import { Profile } from "../../profile/repository/profile.entity";
 import { IProfileRepository } from "../../profile/repository/profile.repo";
 import {
@@ -18,18 +18,19 @@ import {
 } from "../utils/password.utils";
 import crypto from "crypto";
 import dotenv from "dotenv-flow";
-import { transporter } from "../../../dependencies";
 import { MailerService } from "feature/mailer/service/mailer.service";
 import { ForgetPasswordToken } from "../repository/token.entity";
 import { ITokenRepository } from "../repository/token.repo";
 import { generateAccessToken } from "../utils/jwt.utils";
 import { strings } from "resources/strings";
+import { env } from "process";
 
 dotenv.config();
 
 interface Dependencies {
   tokenRepo: ITokenRepository;
   profileRepo: IProfileRepository;
+  mailerService: MailerService;
 }
 
 export class AuthService {
@@ -39,7 +40,7 @@ export class AuthService {
     await this.handleUserCheck(signupDTO.email, signupDTO.username);
 
     if (!passwordMatch(signupDTO.password, signupDTO.confirmPassword)) {
-      throw new HttpError(400, strings.PASSWORDS_DO_NOT_MATCH_ERROR);
+      throw new ClientError(strings.PASSWORDS_DO_NOT_MATCH_ERROR);
     }
 
     try {
@@ -48,7 +49,7 @@ export class AuthService {
       return { accessToken: jwt };
     } catch (e) {
       console.error(e);
-      throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
+      throw new ServerError();
     }
   }
 
@@ -65,7 +66,7 @@ export class AuthService {
     }
 
     if (!user || !(await verifyPassword(signinDTO.password, user.password))) {
-      throw new HttpError(400, strings.INVALID_USERNAME_OR_PASSWORD_ERROR);
+      throw new ClientError(strings.INVALID_USERNAME_OR_PASSWORD_ERROR);
     }
 
     const jwt = generateAccessToken(user.id);
@@ -76,28 +77,25 @@ export class AuthService {
     forgotPasswordDTO: ForgotPassword
   ): Promise<void> {
     if (!isValidEmail(forgotPasswordDTO.email)) {
-      throw new HttpError(400, strings.INVALID_EMAIL_ERROR);
+      throw new ClientError(strings.INVALID_EMAIL_ERROR);
     }
 
     const user = await this.deps.profileRepo.getByEmail(
       forgotPasswordDTO.email
     );
     if (!user) {
-      throw new HttpError(404, strings.INVALID_USERNAME_ERROR);
+      throw new ClientError(strings.INVALID_USERNAME_ERROR);
     }
     try {
       const newAccessToken = await this.handleTokenCreation(user);
-      const mailer = new MailerService(transporter);
-
-      mailer.sendResetPasswordEmail(
+      this.deps.mailerService.sendResetPasswordEmail(
         user.email,
         user.username,
-        `yousef/${newAccessToken.resetPasswordToken}`
+        `${env.WEB_BASE_URL}/${env.RESET_PASSWORD_ROUTE}?token=${newAccessToken.resetPasswordToken}`
       );
       return;
-    } catch (e) {
-      console.error(e); //FIXME - add logging
-      throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
+    } catch {
+      throw new ServerError();
     }
   }
 
@@ -106,15 +104,15 @@ export class AuthService {
       resetPasswordDTO.token
     );
     if (!tokenData) {
-      throw new HttpError(404, strings.INVALID_USERNAME_ERROR);
+      throw new ClientError(strings.INVALID_USERNAME_ERROR);
     }
     if (tokenData.expired) {
-      throw new HttpError(400, strings.RESET_PASSWORD_TOKEN_EXPIRED_ERROR);
+      throw new ClientError(strings.RESET_PASSWORD_TOKEN_EXPIRED_ERROR);
     }
 
     if (tokenData.expirationDate < new Date()) {
       await this.deps.tokenRepo.expireToken(tokenData);
-      throw new HttpError(400, strings.RESET_PASSWORD_TOKEN_EXPIRED_ERROR);
+      throw new ClientError(strings.RESET_PASSWORD_TOKEN_EXPIRED_ERROR);
     }
 
     if (
@@ -123,7 +121,7 @@ export class AuthService {
         resetPasswordDTO.confirmPassword
       )
     ) {
-      throw new HttpError(400, strings.PASSWORDS_DO_NOT_MATCH_ERROR);
+      throw new ClientError(strings.PASSWORDS_DO_NOT_MATCH_ERROR);
     }
 
     try {
@@ -131,8 +129,7 @@ export class AuthService {
       const userToUpdate = await this.deps.profileRepo.getByEmail(
         tokenData.profileEmail
       );
-      if (!userToUpdate)
-        throw new HttpError(404, strings.INVALID_USERNAME_ERROR);
+      if (!userToUpdate) throw new ClientError(strings.INVALID_USERNAME_ERROR);
       await this.deps.profileRepo.createOrUpdate({
         ...userToUpdate,
         password: hashedPassword,
@@ -141,19 +138,19 @@ export class AuthService {
       return;
     } catch (e) {
       console.error(e); //FIXME - add logging
-      throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
+      throw new ServerError();
     }
   }
 
   private async handleUserCheck(email: Email, username: Username) {
     const emailExists = await this.deps.profileRepo.getByEmail(email);
     if (emailExists) {
-      throw new HttpError(400, strings.EMAIL_ALREADY_EXISTS_ERROR);
+      throw new ClientError(strings.EMAIL_ALREADY_EXISTS_ERROR);
     }
 
     const usernameExists = await this.deps.profileRepo.getByUsername(username);
     if (usernameExists) {
-      throw new HttpError(400, strings.USERNAME_ALREADY_EXISTS_ERROR);
+      throw new ClientError(strings.USERNAME_ALREADY_EXISTS_ERROR);
     }
   }
 

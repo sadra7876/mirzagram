@@ -1,6 +1,6 @@
 import { IStorageRepository } from "../repository/storage.repo";
 import { Storage } from "../repository/storage.entity";
-import { HttpError } from "@utils/http-error";
+import { ClientError } from "@utils/http-error";
 interface Dependencies {
   storageRepo: IStorageRepository;
 }
@@ -13,7 +13,7 @@ export class StorageService {
     fileType: "profile" | "post" | string
   ) {
     if (!files || files.length === 0) {
-      throw new HttpError(400, "No files uploaded");
+      throw new ClientError("No files uploaded");
     }
     const newFiles: Storage[] = [];
     for (const file of files) {

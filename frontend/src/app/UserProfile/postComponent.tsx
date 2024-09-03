@@ -4,23 +4,32 @@ import { Textarea, TextInput } from "flowbite-react";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbCameraPlus } from "react-icons/tb";
 
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { postUploadFile } from "./api/uploadFiles";
 import { UploadFile } from "../../Shared/model/responseUpload.interface";
 import { MirzaPost } from "../../Shared/model/post.interface";
 import { postCreatePost } from "./api/createPost";
 import { toast } from "../../Shared/Components/ToastComponent";
-
-interface ImageFile {
-  file: File;
-  previewUrl: string | null;
-}
+import { ImageFile } from "../../model/imageFile.interface";
 
 const steps = [
   { id: 0, label: "عکس", filds: ["fileNames"] },
   { id: 1, label: "متن", filds: ["caption"] },
   { id: 2, label: "تنظیمات", filds: ["mentions"] },
 ];
+interface PostValue {
+  fileNames: string[];
+  caption: string;
+  mention: string[];
+}
+// Define the correct type for filds
+type FieldType =
+  | "fileNames"
+  | "caption"
+  | "mention"
+  | `fileNames.${number}`
+  | `mention.${number}`;
+
 export default function PostComponent(props: { onClose: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [files, setFiles] = useState<ImageFile[]>([]);
@@ -34,11 +43,11 @@ export default function PostComponent(props: { onClose: () => void }) {
     trigger,
     formState: { errors },
     setValue,
-    reset,
-  } = useForm();
+  } = useForm<PostValue>();
 
   const next = async () => {
-    const filds = steps[currentStep].filds;
+    const filds: FieldType[] = ["fileNames", "caption", "mention"];
+    // const filds = steps[currentStep].filds;
     const output = await trigger(filds, { shouldFocus: true });
     if (!output) return;
     if (currentStep < steps.length - 1) {
@@ -50,6 +59,8 @@ export default function PostComponent(props: { onClose: () => void }) {
   const prev = () => {
     if (currentStep > 0) {
       setCurrentStep((step) => step - 1);
+    } else {
+      props.onClose();
     }
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,16 +102,16 @@ export default function PostComponent(props: { onClose: () => void }) {
     };
   }, [files]);
 
-  const onSubmitCreatePost = async (data) => {
+  const onSubmitCreatePost = async (data: PostValue) => {
     const dataToSend: MirzaPost = {
-      fileNames: [...fileNames?.map((item) => item.fileName)],
+      fileNames: fileNames ? fileNames.map((item) => item.fileName) : [],
       caption: data.caption,
       mentions: mentions,
     };
 
     const responseCreatePost = await postCreatePost(dataToSend);
     if (responseCreatePost.isSuccess) {
-      responseCreatePost.messages.map((item) => toast.success(item));
+      responseCreatePost.messages.map((item: string) => toast.success(item));
       props.onClose();
     }
   };
@@ -113,7 +124,7 @@ export default function PostComponent(props: { onClose: () => void }) {
       if (newMention) {
         setMentions((prevMentions) => [...prevMentions, newMention]);
         setMentionInput("");
-        setValue("mention", ""); // Clear the input field in the form
+        setValue("mention", [""]); // Clear the input field in the form
       }
     }
   };
@@ -163,20 +174,27 @@ export default function PostComponent(props: { onClose: () => void }) {
                 <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-mirza-orange">
                   <TbCameraPlus className="text-3xl text-mirza-orange" />
                 </div>
-                <p className="font-medium text-mirza-black">عکس پروفایل</p>
+                <p className="text-center font-medium text-mirza-black">عکس</p>
                 <input
                   id="fileNames"
-                  {...register("fileNames")}
+                  {...register("fileNames", {
+                    required: "شما باید حداقل یک عکس انتخاب کنید",
+                  })}
                   multiple
                   type="file"
                   onChange={handleChange}
                   className="hidden"
                 />
+                {errors.fileNames && fileNames.length === 0 && (
+                  <span className="w-48 text-center text-xs text-red-500">
+                    {errors.fileNames.message}
+                  </span>
+                )}
               </label>
 
               {isLoading ? (
                 <div className="flex h-28 w-28 items-center justify-center">
-                  <div className="loader"></div>{" "}
+                  <div className="loader"></div>
                   {/* Add your loading spinner here */}
                 </div>
               ) : (
@@ -204,7 +222,7 @@ export default function PostComponent(props: { onClose: () => void }) {
             </div>
 
             <Textarea
-              className="w-full"
+              className="w-full text-right"
               id="caption"
               {...register("caption", {
                 required: "کپشن وارد شود",
@@ -220,6 +238,7 @@ export default function PostComponent(props: { onClose: () => void }) {
         {currentStep === 2 && (
           <div className="flex w-full flex-col items-center gap-y-3">
             <p>اینجا میتونی دوستات رو منشن کنی</p>
+            <p className="text-xs">با یک فاصله ایدی دوستت اضافه میشه</p>
             <TextInput
               id="mention"
               className="w-full"
@@ -243,10 +262,13 @@ export default function PostComponent(props: { onClose: () => void }) {
       </form>
       <div className="mt-6 flex flex-row gap-x-3">
         <MirzaButton
+          onClick={() => prev()}
+          title={currentStep > 0 ? "قبلی" : "بستن"}
+        />
+        <MirzaButton
           onClick={() => next()}
           title={currentStep < steps.length - 1 ? "بعدی" : "ثبت و انتشار پست"}
         />
-        <button onClick={() => props.onClose()}>پشیمون شدم</button>
       </div>
     </div>
   );

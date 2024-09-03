@@ -1,10 +1,5 @@
-import React, {
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  ReactHTMLElement,
-} from "react";
+import React, { InputHTMLAttributes } from "react";
 import { RegisterOptions, UseFormRegisterReturn } from "react-hook-form";
-import { IconType } from "react-icons";
 
 interface MirzaInputProps extends InputHTMLAttributes<HTMLInputElement> {
   name?: string;

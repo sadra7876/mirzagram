@@ -1,0 +1,16 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  API_IMAGE: registry.hamdocker.ir/mirzap/mirzagram
+
+api-build-job:
+  stage: build
+  before_script:
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_TOKEN $DOCKER_REGISTRY
+  script:
+    - cd backend
+    - docker build -t ${API_IMAGE}:$CI_COMMIT_SHORT_SHA .
+    - docker push ${API_IMAGE}:$CI_COMMIT_SHORT_SHA
+

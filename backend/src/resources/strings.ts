@@ -1,4 +1,7 @@
+/* eslint @typescript-eslint/naming-convention: 0 */
+
 export const strings = {
+  BAD_REQUEST_ERROR: "درخواست نامعتبر است",
   INTERNAL_SERVER_ERROR: "خطای داخلی سرور",
   INVALID_EMAIL_ERROR: "ایمیل نامعتبر است",
   INVALID_PASSWORD_ERROR: "پسورد نامعتبر است",
@@ -32,4 +35,26 @@ export const strings = {
   USER_IS_NOT_FOLLOWED: "کاربر دنبال نشده است",
   USER_IS_ALREADY_FOLLOWED: "کاربر قبلا فالو شده است",
   FOLLOWER_AND_FOLLOWING_IS_SAME: "دنبال کننده و دنبال شونده برابر است",
+  COMMENT_ADDED_SUCCESSFULLY: "کامنت با موفقیت اضافه شد",
+  COMMENT_TEXT_CANNOT_BE_EMPTY_ERROR: "متن کامنت نمیتواند خالی باشد",
+  POST_ID_CANNOT_BE_EMPTY_ERROR: "آیدی پست نمیتواند خالی باشد",
+  PROFILE_NOT_FOUND_ERROR: "پروفایل پیدا نشد",
+  COMMENT_NOT_AVAILABLE_ERROR: "کامنت پیدا نشد",
+  POST_ID_NOT_PROVIDED: "آیدی پست باید ارسال شود",
+  HAVE_NOT_ANY_FOLLOWING: "شما کسی را فالو نکردید",
+  HAVE_NOT_ANY_FOLLOWER: "کسی شما را فالو نکرده است",
+  LIKE_ADDED_SUCCESSFULLY: "لایک با موفقیت اضافه شد",
+  LIKE_REMOVED_SUCCESSFULLY: "لایک با موفقیت حذف شد",
+  FOLLOW_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
+    `دنبالت کرد ${firstName} ${lastName}`,
+  LIKE_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
+    `این عکس رو لایک کرده ${firstName} ${lastName}`,
+  MENTION_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
+    `توی اون یکی  عکس تگت کرده ${firstName} ${lastName}`,
+  FOLLOW_REQUEST_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
+    `درخواست دوستی داده ${firstName} ${lastName}`,
+  FOLLOW_REQUEST_RESULT_NOTIFICATION_TITLE: (
+    firstName: string,
+    lastName: string
+  ) => `درخواست دوستی‌ات رو قبول کرد ${firstName} ${lastName}`,
 };

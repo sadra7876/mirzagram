@@ -3,10 +3,11 @@ import dotenv from "dotenv-flow";
 import { hashPassword, passwordMatch } from "feature/auth/utils/password.utils";
 import { ProfileId, Username } from "types/profile.type";
 import { ProfileRequestDTO, ProfileResponseDTO } from "../dto/profile.dto";
-import { HttpError } from "utils/http-error";
+import { ClientError, ServerError } from "utils/http-error";
 import { strings } from "resources/strings";
 import { IPostRepository } from "@feature/post/repository/post.repo";
 import { IFollowRepository } from "@feature/follow/repository/follow.repo";
+import { convertFileNameToURL } from "@utils/utils";
 dotenv.config();
 
 interface Dependencies {
@@ -26,7 +27,7 @@ export class ProfileService {
       user = await this.deps.profileRepo.getById(id);
     }
     if (!user) {
-      throw new HttpError(404, strings.USER_NOT_FOUND);
+      throw new ClientError(strings.USER_NOT_FOUND);
     }
     const postCount = await this.deps.postRepo.getPostCountByProfile(user.id);
     const followerCount =
@@ -41,7 +42,9 @@ export class ProfileService {
       email: user.email,
       isPrivate: user.isActive,
       bio: user.bio,
-      profilePicture: user.profilePicture,
+      profilePicture: user.profilePicture
+        ? convertFileNameToURL(user.profilePicture, "profile")
+        : undefined,
       createdAt: user.createdAt,
       postCount,
       followerCount,
@@ -54,12 +57,12 @@ export class ProfileService {
     const user = await this.deps.profileRepo.getById(id);
     if (profileDTO.password && profileDTO.confirmPassword) {
       if (!passwordMatch(profileDTO.password, profileDTO.confirmPassword)) {
-        throw new HttpError(400, strings.PASSWORDS_DO_NOT_MATCH_ERROR);
+        throw new ClientError(strings.PASSWORDS_DO_NOT_MATCH_ERROR);
       }
     }
 
     if (!user) {
-      throw new HttpError(404, strings.USER_NOT_FOUND);
+      throw new ClientError(strings.USER_NOT_FOUND);
     }
     try {
       user.firstName = profileDTO.firstName || user.firstName;
@@ -74,8 +77,7 @@ export class ProfileService {
 
       await this.deps.profileRepo.createOrUpdate(user);
     } catch (e) {
-      console.log(e);
-      throw new HttpError(500, strings.INTERNAL_SERVER_ERROR);
+      throw new ServerError();
     }
   }
 }

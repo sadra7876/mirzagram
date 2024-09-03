@@ -1,9 +1,41 @@
-FROM node:18.18.0
-WORKDIR /mirzagram-backend
-COPY package*.json .
-COPY .yarnrc* .
-COPY .pnp* .
-RUN yarn install
+FROM node:21.1.0-alpine AS alpine
+RUN apk update
+# RUN set -ex && apk --no-cache add sudo
+RUN apk --no-cache add libc6-compat curl nano
+
+# - - - - - -
+    
+FROM alpine AS base
+WORKDIR /app
+
+COPY package*.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
 COPY . .
+
+# - - - - - -
+    
+FROM base AS builder
+WORKDIR /app
+
+COPY --from=base /app/ .
+
+RUN yarn build 
+
+RUN rm -rf ./src
+RUN rm -rf ./__test__
+
+# - - - - - -
+
+FROM alpine AS runner
+WORKDIR /app
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nodejs
+USER nodejs
+
+COPY --from=builder --chown=nodejs:nodejs /app .
+
 EXPOSE 3000
-CMD [ "yarn" , "start" ]
+
+CMD node ./dist/src/main.js

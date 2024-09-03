@@ -1,13 +1,27 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// interface ErrorResponse {
+//   statusCode: number;
+//   isSuccess: boolean;
+//   result: any;
+//   messages: string[];
+// }
+
+// Define the interface for the success response
+interface SuccessResponse<T> {
+  statusCode: number;
+  isSuccess: boolean;
+  result: T;
+  messages?: string[];
+}
+
+// Define the interface for the error response
 interface ErrorResponse {
   statusCode: number;
   isSuccess: boolean;
-  result: any;
   messages: string[];
 }
-
 // Create an Axios instance
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_REACT_APP_BASE_URL, // Set your base URL here
@@ -32,7 +46,19 @@ axiosInstance.interceptors.request.use(
 // Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
-    return response;
+    const data = response.data as SuccessResponse<any>; // Type the response data as SuccessResponse
+    if (data.isSuccess) {
+      toast.success(data.messages?.join(", "));
+      if (data.result) {
+        return data.result; // Return the result if the response is successful
+      } else {
+        return true;
+      }
+    } else {
+      // Handle unexpected success response structure
+      toast.error("Unexpected response structure.");
+      return Promise.reject(new Error("Unexpected response structure."));
+    }
   },
   (error) => {
     if (error.response) {
@@ -42,22 +68,18 @@ axiosInstance.interceptors.response.use(
         // Handle unauthorized errors, e.g., redirect to login
         window.location.href = "/login";
       } else if (
-        status === 400 &&
+        (status === 400 || status === 404) &&
         errorData.messages &&
         errorData.messages.length > 0
       ) {
-        // Show the first error message from the messages array
-        errorData.messages.forEach((item) => toast.error(item));
+        toast.error(errorData.messages.join(", "));
       } else {
-        // Handle other errors
-        toast.error("An error occurred. Please try again.");
+        toast.error("An unexpected error occurred.");
       }
     } else {
-      // Handle network or other errors
-      toast.error("An error occurred. Please check your network connection.");
+      toast.error("Network error.");
     }
     return Promise.reject(error);
   },
 );
-
 export default axiosInstance;

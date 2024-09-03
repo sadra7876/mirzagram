@@ -6,31 +6,26 @@ import MirzaButton from "../../../Shared/Components/MirzaButton";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../../../Shared/Components/ToastComponent";
-import axiosInstance from "../../../api/axiosInstance";
-const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
-interface FormValues {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+import { SignUpValue } from "../../../model/signup.intreface";
+import { postSignUp } from "../api/signup";
+
 export default function RegisterComponent() {
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<FormValues>();
+  } = useForm<SignUpValue>();
   const navigate = useNavigate();
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const response = await axiosInstance.post("auth/sign-up", data);
+  const onSubmit: SubmitHandler<SignUpValue> = async (data) => {
+    const response = await postSignUp(data);
 
-    if (response.data.isSuccess) {
+    if (response.accessToken) {
       toast.success("حساب کاربری شما با موفقیت ایجاد شد");
       setTimeout(() => {
-        localStorage.setItem("token", response.data.result.accessToken);
+        localStorage.setItem("token", response.accessToken);
         navigate("/");
-      }, 2000);
+      }, 100);
     }
   };
 
@@ -57,28 +52,37 @@ export default function RegisterComponent() {
         <MirzaInput
           name="email"
           type="email"
-          register={register("email", { required: true })}
+          register={register("email", {
+            required: "ایمیل الزامی است",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "فرمت ایمیل نامعتبر است",
+            },
+          })}
           placeholder="ایمیل"
           inputIcon={GmailIcon}
         />
         {errors.email && (
-          <span className="text-xs text-red-500">ایمیل الزامی است</span>
+          <span className="text-xs text-red-500">{errors.email.message}</span>
         )}
         <MirzaInput
           type="password"
           name="password"
-          register={register("password", { required: true })}
+          register={register("password", { required: "رمز عبور الزامی است" })}
           placeholder="رمز عبور"
           inputIcon={keyIcon}
         />
         {errors.password && (
-          <span className="text-xs text-red-500">رمز عبور الزامی است</span>
+          <span className="text-xs text-red-500">
+            {errors.password.message}
+          </span>
         )}
+
         <MirzaInput
           type="password"
           name="confirmPassword"
           register={register("confirmPassword", {
-            required: true,
+            required: "تکرار رمز عبور الزامی است",
             validate: (value) =>
               value === watch("password") || "رمز عبور مطابقت ندارد",
           })}

@@ -3,45 +3,18 @@ import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 import unusedImports from "eslint-plugin-unused-imports";
-import * as imp from "eslint-plugin-import";
+import imp from "eslint-plugin-import";
 
-import path from "path";
-import { fileURLToPath } from "url";
-// quote
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 export default [
+  { files: ["src/**/*.{js,mjs,cjs,ts}"] },
+  { files: ["src/**/*.js"], languageOptions: { sourceType: "commonjs" } },
   {
-    files: ["**/*.{js,mjs,cjs,ts}"],
     plugins: {
       "unused-imports": unusedImports,
       import: imp,
     },
   },
-  {
-    ignores: [
-      "**/node_modules/**",
-      "!node_modules/",
-      "built/**",
-      "build/**",
-      "tests/**",
-      "lib/**",
-      "src/lib/*.generated.d.ts",
-      "scripts/**/*.js",
-      "scripts/**/*.d.*",
-      "internal/**",
-      "coverage/**",
-    ],
-  },
-  {
-    languageOptions: {
-      globals: globals.node,
-      parserOptions: {
-        project: true,
-        tsconfigRootDir: __dirname,
-      },
-    },
-  },
+  { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   ...tseslint.configs.stylistic,
@@ -62,7 +35,7 @@ export default [
 
       // by Microsoft
       "dot-notation": "error",
-      "eqeqeq": "error",
+      eqeqeq: "error",
       "no-caller": "error",
       "no-constant-condition": ["error", { checkLoops: false }],
       "no-eval": "error",
@@ -87,20 +60,60 @@ export default [
 
       "@typescript-eslint/naming-convention": [
         "error",
-        { selector: "typeLike", format: ["PascalCase"], filter: { regex: "^(__String|[A-Za-z]+_[A-Za-z]+)$", match: false } },
+        {
+          selector: "typeLike",
+          format: ["PascalCase"],
+          filter: { regex: "^(__String|[A-Za-z]+_[A-Za-z]+)$", match: false },
+        },
         // { selector: "interface", format: ["PascalCase"], custom: { regex: "^I[A-Z]", match: false }, filter: { regex: "^I(Arguments|TextWriter|O([A-Z][a-z]+[A-Za-z]*)?)$", match: false } },
-        { selector: "variable", format: ["camelCase", "PascalCase", "UPPER_CASE"], leadingUnderscore: "allow", filter: { regex: "^(_{1,2}filename|_{1,2}dirname|_+|[A-Za-z]+_[A-Za-z]+)$", match: false } },
-        { selector: "function", format: ["camelCase", "PascalCase"], leadingUnderscore: "allow", filter: { regex: "^[A-Za-z]+_[A-Za-z]+$", match: false } },
-        { selector: "parameter", format: ["camelCase"], leadingUnderscore: "allow", filter: { regex: "^(_+|[A-Za-z]+_[A-Z][a-z]+)$", match: false } },
-        { selector: "method", format: ["camelCase", "PascalCase"], leadingUnderscore: "allow", filter: { regex: "^([0-9]+|[A-Za-z]+_[A-Za-z]+)$", match: false } },
-        { selector: "memberLike", format: ["camelCase"], leadingUnderscore: "allow", filter: { regex: "^([0-9]+|[A-Za-z]+_[A-Za-z]+)$", match: false } },
-        { selector: "enumMember", format: ["camelCase", "PascalCase"], leadingUnderscore: "allow", filter: { regex: "^[A-Za-z]+_[A-Za-z]+$", match: false } },
-        // eslint-disable-next-line no-restricted-syntax
+        {
+          selector: "variable",
+          format: ["camelCase", "PascalCase", "UPPER_CASE"],
+          leadingUnderscore: "allow",
+          filter: {
+            regex: "^(_{1,2}filename|_{1,2}dirname|_+|[A-Za-z]+_[A-Za-z]+)$",
+            match: false,
+          },
+        },
+        {
+          selector: "function",
+          format: ["camelCase", "PascalCase"],
+          leadingUnderscore: "allow",
+          filter: { regex: "^[A-Za-z]+_[A-Za-z]+$", match: false },
+        },
+        {
+          selector: "parameter",
+          format: ["camelCase"],
+          leadingUnderscore: "allow",
+          filter: { regex: "^(_+|[A-Za-z]+_[A-Z][a-z]+)$", match: false },
+        },
+        {
+          selector: "method",
+          format: ["camelCase", "PascalCase"],
+          leadingUnderscore: "allow",
+          filter: { regex: "^([0-9]+|[A-Za-z]+_[A-Za-z]+)$", match: false },
+        },
+        {
+          selector: "memberLike",
+          format: ["camelCase"],
+          leadingUnderscore: "allow",
+          filter: { regex: "^([0-9]+|[A-Za-z]+_[A-Za-z]+)$", match: false },
+        },
+        {
+          selector: "enumMember",
+          format: ["camelCase", "PascalCase"],
+          leadingUnderscore: "allow",
+          filter: { regex: "^[A-Za-z]+_[A-Za-z]+$", match: false },
+        },
+
         { selector: "property", format: null },
       ],
       "@typescript-eslint/unified-signatures": "error",
       "no-unused-expressions": "off",
-      "@typescript-eslint/no-unused-expressions": ["error", { allowTernary: true }],
+      "@typescript-eslint/no-unused-expressions": [
+        "error",
+        { allowTernary: true },
+      ],
 
       // Rules enabled in typescript-eslint configs that are not applicable here
 

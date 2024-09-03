@@ -1,12 +1,12 @@
 import { DataSource } from "typeorm";
 import nodemailer from "nodemailer";
-import { Profile } from "feature/profile/repository/profile.entity";
-import { AuthService } from "./feature/auth/service/auth.service";
-import { ProfileService } from "./feature/profile/service/profile.service";
-import { ProfileRepository } from "./feature/profile/repository/profile.repo";
+import { Profile } from "@feature/profile/repository/profile.entity";
+import { AuthService } from "@feature/auth/service/auth.service";
+import { ProfileService } from "@feature/profile/service/profile.service";
+import { ProfileRepository } from "@feature/profile/repository/profile.repo";
 import dotenv from "dotenv-flow";
-import { TokenRepository } from "./feature/auth/repository/token.repo";
-import { ForgetPasswordToken } from "feature/auth/repository/token.entity";
+import { TokenRepository } from "@feature/auth/repository/token.repo";
+import { ForgetPasswordToken } from "@feature/auth/repository/token.entity";
 import { StorageRepository } from "@feature/storage/repository/storage.repo";
 import { StorageService } from "@feature/storage/service/storage.service";
 import { Storage } from "@feature/storage/repository/storage.entity";
@@ -19,6 +19,32 @@ import { Post } from "@feature/post/repository/entities/post.entity";
 import { FollowRepository } from "@feature/follow/repository/follow.repo";
 import { FollowService } from "@feature/follow/service/follow.service";
 import { Follow } from "@feature/follow/repository/follow.entity";
+import { CommentRepository } from "@feature/comment/repository/comment.repo";
+import { CommentService } from "@feature/comment/service/comment.service";
+import {
+  Comment,
+  CommentLike,
+} from "@feature/comment/repository/entity/comment.entity";
+import { CommentLikeRepository } from "@feature/comment/repository/comment-like.repo";
+import { BookmarkRepository } from "@feature/bookmark/repository/bookmark.repo";
+import { Bookmark } from "@feature/bookmark/repository/bookmark.entity";
+import { BookmarkService } from "@feature/bookmark/service/bookmark.service";
+import { PostLikeRepository } from "@feature/post/repository/post-like.repo";
+import { PostLike } from "@feature/post/repository/entities/post-like.entity";
+import { env } from "process";
+import { MailerService } from "@feature/mailer/service/mailer.service";
+import {
+  Notification,
+  LikeNotification,
+  FollowRequestNotification,
+  MentionNotification,
+  FollowNotification,
+  FollowRequestResultNotification,
+} from "@feature/notification/repository/entity/notification.entity";
+import { NotificationRepository } from "@feature/notification/repository/notification.repo";
+import { NotificationService } from "@feature/notification/service/notification.service";
+import { NotificationEventHandler } from "@feature/notification/event-handler/notification-event-handler";
+import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 dotenv.config();
 
 // DataSource
@@ -40,21 +66,32 @@ export const AppDataSource = new DataSource({
     Content,
     Mention,
     Follow,
+    Comment,
+    CommentLike,
+    Bookmark,
+    PostLike,
+    Notification,
+    LikeNotification,
+    MentionNotification,
+    FollowNotification,
+    FollowRequestNotification,
+    FollowRequestResultNotification,
   ],
   subscribers: [],
   migrations: [],
 });
 
 // Mailer service
-export const transporter = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+const transporter = nodemailer.createTransport({
+  host: env.SMTP_HOST,
+  port: parseInt(env.SMTP_PORT!),
   secure: false, // Set to true if using TLS
   auth: {
-    user: "e417952c53db95",
-    pass: "527a2f4dc9004d",
+    user: env.SMTP_USERNAME,
+    pass: env.SMTP_PASSWORD,
   },
 });
+const mailerService = new MailerService(transporter);
 
 // Repositories
 const profileRepository = new ProfileRepository(AppDataSource);
@@ -62,11 +99,50 @@ const tokenRepository = new TokenRepository(AppDataSource);
 const storageRepository = new StorageRepository(AppDataSource);
 const postRepository = new PostRepository(AppDataSource);
 const followRepository = new FollowRepository(AppDataSource);
+const commentRepository = new CommentRepository(
+  AppDataSource.getRepository<Comment>(Comment)
+);
+const commentLikeRepository = new CommentLikeRepository(
+  AppDataSource.getRepository<CommentLike>(CommentLike)
+);
+const bookmarkRepository = new BookmarkRepository(
+  AppDataSource.getRepository<Bookmark>(Bookmark)
+);
+const postLikeRepository = new PostLikeRepository(
+  AppDataSource.getRepository<PostLike>(PostLike)
+);
+const notificationRepository = new NotificationRepository({
+  repo: AppDataSource.getRepository<Notification>(Notification),
+  likeRepository:
+    AppDataSource.getRepository<LikeNotification>(LikeNotification),
+  followRequestRepository:
+    AppDataSource.getRepository<FollowRequestNotification>(
+      FollowRequestNotification
+    ),
+  mentionRepository:
+    AppDataSource.getRepository<MentionNotification>(MentionNotification),
+  followRepository:
+    AppDataSource.getRepository<FollowNotification>(FollowNotification),
+  acceptedFollowRequestRepository:
+    AppDataSource.getRepository<FollowRequestResultNotification>(
+      FollowRequestResultNotification
+    ),
+});
+
+// Event emitters
+export const notificationEventEmitter = new NotificationEventEmitter();
+new NotificationEventHandler({
+  notificationRepo: notificationRepository,
+  profileRepo: profileRepository,
+  followRepo: followRepository,
+  notificationEventEmitter,
+});
 
 // Services
 export const authService = new AuthService({
   profileRepo: profileRepository,
   tokenRepo: tokenRepository,
+  mailerService,
 });
 export const profileService = new ProfileService({
   profileRepo: profileRepository,
@@ -77,9 +153,34 @@ export const profileService = new ProfileService({
 export const storageService = new StorageService({
   storageRepo: storageRepository,
 });
-export const postService = new PostService(postRepository, profileRepository);
+export const postService = new PostService({
+  postLikeRepo: postLikeRepository,
+  postRepo: postRepository,
+  profileRepo: profileRepository,
+  postLikeNotificationRepo: notificationRepository,
+  notificationEventEmitter,
+});
 
 export const followService = new FollowService({
   followRepo: followRepository,
   profileRepo: profileRepository,
+  notificationRepo: notificationRepository,
+  notificationEventEmitter,
 });
+export const commentService = new CommentService({
+  commentRepo: commentRepository,
+  postRepo: postRepository,
+  profileRepo: profileRepository,
+  commentLikeRepo: commentLikeRepository,
+});
+export const bookmarkService = new BookmarkService({
+  bookmarkRepo: bookmarkRepository,
+  profileRepo: profileRepository,
+  postRepo: postRepository,
+});
+export const notificationService = new NotificationService({
+  notificationRepo: notificationRepository,
+});
+
+//TODO:
+namespace Services {}

@@ -4,39 +4,21 @@ import UserIcon from "../../assets/images/Icons/user_icon.jpg";
 import MirzaButton from "../../Shared/Components/MirzaButton";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { toast } from "../../Shared/Components/ToastComponent";
-const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+import { ResetPasswordValue } from "../../model/resetPsswrord.interface";
+import { postResetPassword } from "./api/postResetPassword";
 export default function PasswordRecovery() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<ResetPasswordValue>();
   const navigate = useNavigate();
-  const onSubmit = async (data: any) => {
-    try {
-      const response = await fetch(`${BASE_URL}auth/forgot-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (result.isSuccess) {
-        setTimeout(() => {
-          navigate("/resetPasswordLink");
-        }, 2000);
-      } else {
-        result.messages.map((message: string) => {
-          toast.error(message);
-        });
-      }
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      toast.error("There was a problem with the registration");
+  const onSubmit = async (data: ResetPasswordValue) => {
+    const response = await postResetPassword(data);
+    if (response) {
+      setTimeout(() => {
+        navigate("/resetPasswordLink");
+      }, 100);
     }
   };
   return (
@@ -62,14 +44,14 @@ export default function PasswordRecovery() {
 
           <MirzaInput
             name="email"
-            register={register("email", { required: true })}
+            register={register("email", {
+              required: "ایمیل یا نام کاربری الزامی است",
+            })}
             placeholder="نام کاربری یا ایمیل"
             inputIcon={UserIcon}
           />
           {errors.email && (
-            <span className="text-xs text-red-500">
-              ایمیل یا نام کاربری الزامی است
-            </span>
+            <span className="text-xs text-red-500">{errors.email.message}</span>
           )}
           <div className="flex flex-row items-center justify-end gap-x-2 py-8">
             <button

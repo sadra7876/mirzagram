@@ -12,6 +12,8 @@ import {
 import { Content } from "./content.entity";
 import { Hashtag } from "./hashtag.entity";
 import { Mention } from "./mention.entity";
+import { Comment } from "@feature/comment/repository/entity/comment.entity";
+import { PostLike } from "./post-like.entity";
 
 @Entity()
 export class Post {
@@ -44,4 +46,10 @@ export class Post {
 
   @OneToMany(() => Mention, (mention) => mention.post, { cascade: true })
   mentions: Mention[];
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
+
+  @OneToMany(() => PostLike, (like) => like.post)
+  likes: PostLike[];
 }

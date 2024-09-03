@@ -10,8 +10,18 @@ export interface IFollowRepository {
     followerProfile: Profile,
     followingProfile: Profile
   ): Promise<Follow | null>;
-  getFollowerByProfileId(id: ProfileId): Promise<Follow[] | null>;
-  getFollowingByProfileId(id: ProfileId): Promise<Follow[] | null>;
+  getFollowerByProfileId(
+    id: ProfileId,
+    page: number,
+    pagelimit: number
+  ): Promise<Follow[] | null>;
+  getFollowingByProfileId(
+    id: ProfileId,
+    page: number,
+    pagelimit: number
+  ): Promise<Follow[] | null>;
+  getAllFollowingByProfileId(id: ProfileId): Promise<Follow[] | null>;
+  getAllFollowerByProfileId(id: ProfileId): Promise<Follow[] | null>;
   getFollowerCountByProfileId(id: ProfileId): Promise<number>;
   getFollowingCountByProfileId(id: ProfileId): Promise<number>;
 }
@@ -42,17 +52,57 @@ export class FollowRepository implements IFollowRepository {
     });
   }
 
-  async getFollowerByProfileId(id: ProfileId): Promise<Follow[] | null> {
+  async getFollowerByProfileId(
+    id: ProfileId,
+    page: number,
+    pagelimit: number
+  ): Promise<Follow[] | null> {
+    const quryBuilder = this.repository
+      .createQueryBuilder("follow")
+      .leftJoinAndSelect("follow.follower", "profile")
+      .where("follow.followingId = :id", { id })
+      .orderBy("follow.createdAt", "DESC");
+
+    const follower = quryBuilder
+      .skip((page - 1) * pagelimit)
+      .take(pagelimit)
+      .getMany();
+
+    return follower;
+  }
+
+  async getFollowingByProfileId(
+    id: ProfileId,
+    page: number,
+    pagelimit: number
+  ): Promise<Follow[] | null> {
+    const quryBuilder = this.repository
+      .createQueryBuilder("follow")
+      .leftJoinAndSelect("follow.following", "profile")
+      .where("follow.followerId = :id", { id })
+      .orderBy("follow.createdAt", "DESC");
+
+    const following = quryBuilder
+      .skip((page - 1) * pagelimit)
+      .take(pagelimit)
+      .getMany();
+
+    return following;
+  }
+
+  getAllFollowingByProfileId(id: ProfileId): Promise<Follow[] | null> {
     return this.repository
       .createQueryBuilder("follow")
-      .where("follow.followingId = :id", { id })
+      .leftJoinAndSelect("follow.following", "profile")
+      .where("follow.followerId = :id", { id })
       .getMany();
   }
 
-  async getFollowingByProfileId(id: ProfileId): Promise<Follow[] | null> {
+  getAllFollowerByProfileId(id: ProfileId): Promise<Follow[] | null> {
     return this.repository
       .createQueryBuilder("follow")
-      .where("follow.followerId = :id", { id })
+      .leftJoinAndSelect("follow.follower", "profile")
+      .where("follow.followingId = :id", { id })
       .getMany();
   }
 
