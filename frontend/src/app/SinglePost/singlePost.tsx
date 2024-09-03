@@ -1,78 +1,130 @@
-import { useState } from "react";
-import MirzaButton from "../../Shared/Components/MirzaButton";
-import Editicon from "../../assets/images/Icons/editIcon.svg";
+import { useEffect, useState } from "react";
 import siglepostImage from "../../assets/images/Singlepost-image.svg";
-import { FaRegHeart } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
-import { FaBookmark } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa6";
-import { FaRegComment } from "react-icons/fa";
-
+import { FaReply } from "react-icons/fa";
+import LikeComponent from "../../Shared/Components/Like";
+import SaveComponent from "../../Shared/Components/Save";
 import profilePicture from "../../assets/images/Icons/picture frame.svg";
-
+import { PostDetails } from "../../Shared/model/postDetails.interface";
+import { MirzaComment } from "../../Shared/model/comment.interface";
+import { useLocation } from "react-router-dom";
+import InputComment from "../../Shared/Components/InputComment";
+import CommentComponent from "../../Shared/Components/Comment";
 export default function SinglePost() {
-  const [liked, setLiked] = useState(false);
-  // const LikeButton = () => {
-  //   setLiked(!liked);
-  // };
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  // Extract the query parameters you need
+  const postId = queryParams.get("postId");
+
+  console.log("postId", postId);
   const [saved, setSaved] = useState(false);
-  // const SavedButton = () => {
-  //   setSaved(!saved);
-  // };
-  const toggleLike = () => {
-    setLiked(!liked);
+  const [loading, setLoading] = useState(false);
+  const [comments, setComments] = useState<MirzaComment>({ data: [], page: 0 });
+  const [postDetails, setPostDetails] = useState<PostDetails | undefined>();
+  const SavedButton = () => {
+    setSaved(!saved);
   };
+
   const toggleSave = () => {
     setSaved(!saved);
   };
 
+  useEffect(() => {
+    init();
+
+    return () => {};
+  }, []);
+
+  const init = async () => {
+    setLoading(true);
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+      `http://37.32.6.153:81/comment?postId=${postId}&page=1&pageSize=10`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    const responsePostDetails = await fetch(
+      `http://37.32.6.153:81/post/${postId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const resultPostDetails = await responsePostDetails.json();
+    console.log("resultPostDetails", resultPostDetails);
+    if (resultPostDetails.isSuccess) {
+      // setComments(resultPostDetails.result as IGetCommentById);
+      setPostDetails(resultPostDetails.result as PostDetails);
+    }
+    const result = await response.json();
+    console.log("result", result);
+    if (result.isSuccess) {
+      setComments(result.result as MirzaComment);
+    }
+    setLoading(false);
+  };
+
   return (
-    <div className="h-full w-full px-216">
-      <div className="h-20 w-full py-4">
-        <div className="flex h-12 w-full flex-row gap-2">
+    <div className="flex h-full w-full flex-row px-6">
+      <div className="h-376 w-full items-center">
+        <img className="rounded-3xl" src={siglepostImage} />
+      </div>
+
+      <div className="w-full">
+        <div className="flex flex-col gap-y-3">
           <div className="flex w-385 flex-row gap-4">
             <img className="h-12 w-12 rounded-full" src={profilePicture} />
             <p className="py-3">mahmz</p>
           </div>
-          <MirzaButton
-            title="ویرایش پست"
-            icon={<img src={Editicon} alt="Edit Icon" />}
-          />
+          <div className="w-24 pb-4 text-xs">2 ماه پیش</div>
         </div>
-      </div>
-      <div className="h-376 w-full items-center">
-        <img src={siglepostImage} />
-      </div>
-      <div className="h-15 w-full"></div>
-      <div className="w-full">
-        <div className="w-24 pb-4 text-xs">2 ماه پیش</div>
-        <div className="">
-          ترس یکی از عوامل #قدرت است. کسی که بتواند در #جامعه سمت و سوی ترس را{" "}
-          معین کند
-        </div>
-        <div className="w-full pt-4">tags</div>
-        <div className="h-[335px] w-full">
-          <div className="flex w-full flex-row justify-end">
-            {" "}
-            <button className="p-1">
-              <span>{<FaRegComment />}</span>
-            </button>
-            <button className="p-1" onClick={toggleLike}>
-              <span>
-                {liked ? <FaHeart className="fill-red-600" /> : <FaRegHeart />}
-              </span>
-            </button>
-            <button className="p-1" onClick={toggleSave}>
-              <span>{saved ? <FaBookmark /> : <FaRegBookmark />}</span>
-            </button>
-          </div>
-        </div>
-        <div className="">
-          <input
-            className="w-[423px] rounded-2xl border-2 border-indigo-200"
-            placeholder="Add your Comment"
-          />{" "}
-          Comments
+
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <div className="text-">{postDetails?.caption}</div>
+
+            <div className="flex w-full flex-row gap-2 pt-4">
+              <div className="rounded-md bg-mirza-orange px-1">
+                <p className="text-white">جامعه</p>
+              </div>
+              <div className="rounded-md bg-mirza-orange px-1">
+                <p className="text-white">جامعه</p>
+              </div>
+            </div>
+
+            <div className="flex w-full flex-row justify-end">
+              <LikeComponent />
+              <SaveComponent />
+            </div>
+
+            <div className="w-100 flex h-10 flex-row items-center gap-4">
+              <img className="h-10 w-10" src={profilePicture} />
+              <div>
+                <InputComment postId={postDetails?.id.toString() || ""} />
+              </div>
+            </div>
+          </>
+        )}
+
+        <div className="felx w-full flex-col">
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <CommentComponent comments={comments} />
+          )}
+          <div></div>
         </div>
       </div>
     </div>
