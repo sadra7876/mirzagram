@@ -6,6 +6,7 @@ export interface sendComment {
   postId: "string";
   text: "string";
   parentCommentId?: "string";
+  isSuccess: boolean;
 }
 
 export default function Comment(props: { postId: string }) {
@@ -29,6 +30,9 @@ export default function Comment(props: { postId: string }) {
 
     const resultPostComment = await responsePostComment.json();
     console.log("first", resultPostComment);
+    if (resultPostComment.isSuccess) {
+      setCommentText("");
+    }
   };
 
   return (
