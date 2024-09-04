@@ -13,7 +13,7 @@ services:
       - 3000:3000
     build:
       context: ./backend
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
     networks:
       - mirza-net-local
     depends_on:
@@ -25,13 +25,13 @@ services:
 
   front:
     container_name: mirzagram-front-local
-    environment:
-      VITE_REACT_APP_BASE_URL: http://localhost:3000/
     ports:
-      - 8000:8000
+      - 80:80
     build:
       context: ./frontend
-      dockerfile: Dockerfile.local
+      dockerfile: Dockerfile
+      args:
+        - BUILD_MODE=dev
     networks:
       - mirza-net-local
     depends_on:

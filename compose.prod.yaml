@@ -2,13 +2,19 @@ name: mirzagram-prod
 services:
   db:
     container_name: mirzagram-db-prod
-    image: postgres
+    image: postgres:15-alpine
     environment:
       POSTGRES_DB: mirzagram-db
       POSTGRES_PASSWORD: pass
       POSTGRES_USER: mirza
     networks:
       - mirza-net-prod
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d mirzagram-db -U mirza"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
 
   api:
     container_name: mirzagram-api-prod
@@ -22,19 +28,21 @@ services:
     networks:
       - mirza-net-prod
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     stdin_open: true
     tty: true
 
   front:
     container_name: mirzagram-front-prod
-    environment:
-      VITE_REACT_APP_BASE_URL: http://37.32.6.153:81/
+
     ports:
       - 80:80
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - BUILD_MODE=prod
     networks:
       - mirza-net-prod
     depends_on:
