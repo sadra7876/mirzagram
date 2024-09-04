@@ -1,20 +1,35 @@
 import "reflect-metadata";
 import { api } from "./api";
 import { AppDataSource } from "./dependencies";
-import dotenv from "dotenv-flow";
-dotenv.config();
+import cors from "cors";
+import express from "express";
+import setupSwagger from "./swagger";
+// import dotenv from "dotenv-flow";
+// dotenv.config();
+
+import { appConfig } from "config";
+import path from "path";
 
 const MAX_RETRIES = 6; // Maximum number of retries
 const RETRY_DELAY = 10000; // Delay between retries in milliseconds
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+setupSwagger(app);
+app.use(appConfig.API_ROOT, api);
+
+app.use(
+  appConfig.CDN_ROOT,
+  express.static(path.resolve(process.cwd(), "uploads"))
+);
 
 async function initializeDatabaseWithRetry(
   retries = MAX_RETRIES,
   delay = RETRY_DELAY
 ): Promise<void> {
   try {
-    console.log(
-      `Listening DB on http://${process.env.DB_HOST}:${process.env.DB_PORT}`
-    );
+    console.log(`Listening DB on ${appConfig.DB_HOST}:${appConfig.DB_PORT}`);
     await AppDataSource.initialize();
     console.log("Data Source has been initialized!");
   } catch (err) {
@@ -34,6 +49,6 @@ async function initializeDatabaseWithRetry(
 
 initializeDatabaseWithRetry();
 
-api.listen(process.env.APP_PORT, () => {
-  console.log(`Listening on ${process.env.APP_PORT}`);
+app.listen(appConfig.API_PORT, () => {
+  console.log(`Listening on ${appConfig.API_PORT}`);
 });

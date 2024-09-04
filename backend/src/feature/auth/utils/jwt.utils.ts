@@ -1,4 +1,5 @@
 import { ProfileId } from "@CommonTypes/profile.type";
+import { appConfig } from "config";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 export function generateAccessToken(subject: ProfileId): string {
@@ -6,9 +7,9 @@ export function generateAccessToken(subject: ProfileId): string {
     sub: subject.toString(),
   };
   const options = {
-    expiresIn: process.env.JWT_ACCESS_TOKEN_TTL!,
+    expiresIn: appConfig.JWT_ACCESS_TOKEN_EXPIRATION,
   };
-  return jwt.sign(payload, process.env.JWT_SECRET!, options);
+  return jwt.sign(payload, appConfig.JWT_SECRET!, options);
 }
 
 export function verifyAccessToken(token: string): {
@@ -16,7 +17,7 @@ export function verifyAccessToken(token: string): {
   payload?: JwtPayload;
 } {
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const payload = jwt.verify(token, appConfig.JWT_SECRET!) as JwtPayload;
     return {
       valid: true,
       payload,

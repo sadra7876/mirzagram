@@ -1,5 +1,5 @@
 import { IProfileRepository } from "../repository/profile.repo";
-import dotenv from "dotenv-flow";
+// import dotenv from "dotenv-flow";
 import { hashPassword, passwordMatch } from "feature/auth/utils/password.utils";
 import { ProfileId, Username } from "types/profile.type";
 import { ProfileRequestDTO, ProfileResponseDTO } from "../dto/profile.dto";
@@ -8,7 +8,7 @@ import { strings } from "resources/strings";
 import { IPostRepository } from "@feature/post/repository/post.repo";
 import { IFollowRepository } from "@feature/follow/repository/follow.repo";
 import { convertFileNameToURL } from "@utils/utils";
-dotenv.config();
+// dotenv.config();
 
 interface Dependencies {
   profileRepo: IProfileRepository;

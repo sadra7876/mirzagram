@@ -4,7 +4,7 @@ import { Profile } from "@feature/profile/repository/profile.entity";
 import { AuthService } from "@feature/auth/service/auth.service";
 import { ProfileService } from "@feature/profile/service/profile.service";
 import { ProfileRepository } from "@feature/profile/repository/profile.repo";
-import dotenv from "dotenv-flow";
+// import dotenv from "dotenv-flow";
 import { TokenRepository } from "@feature/auth/repository/token.repo";
 import { ForgetPasswordToken } from "@feature/auth/repository/token.entity";
 import { StorageRepository } from "@feature/storage/repository/storage.repo";
@@ -45,18 +45,18 @@ import { NotificationRepository } from "@feature/notification/repository/notific
 import { NotificationService } from "@feature/notification/service/notification.service";
 import { NotificationEventHandler } from "@feature/notification/event-handler/notification-event-handler";
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
-dotenv.config();
+import { appConfig } from "config";
 
 // DataSource
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT as unknown as number,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: appConfig.DB_HOST,
+  port: appConfig.DB_PORT as unknown as number,
+  username: appConfig.DB_USERNAME,
+  password: appConfig.DB_PASSWORD,
+  database: appConfig.DB_NAME,
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: [
     Profile,
     ForgetPasswordToken,
@@ -82,13 +82,13 @@ export const AppDataSource = new DataSource({
 });
 
 // Mailer service
-const transporter = nodemailer.createTransport({
-  host: env.SMTP_HOST,
-  port: parseInt(env.SMTP_PORT!),
+export const transporter = nodemailer.createTransport({
+  host: appConfig.SMTP_HOST,
+  port: appConfig.SMTP_PORT,
   secure: false, // Set to true if using TLS
   auth: {
-    user: env.SMTP_USERNAME,
-    pass: env.SMTP_PASSWORD,
+    user: appConfig.SMTP_USERNAME,
+    pass: appConfig.SMTP_PASSWORD,
   },
 });
 const mailerService = new MailerService(transporter);

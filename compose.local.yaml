@@ -1,0 +1,58 @@
+name: mirzagram-local
+services:
+  api:
+    container_name: mirzagram-api-local
+    env_file:
+      - path: ./backend/.env.local
+        required: true
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      APP_ENV: local
+    ports:
+      - 3000:3000
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.local
+    networks:
+      - mirza-net-local
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    stdin_open: true
+    tty: true
+
+  front:
+    container_name: mirzagram-front-local
+    environment:
+      VITE_REACT_APP_BASE_URL: http://localhost:3000/
+    ports:
+      - 8000:8000
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.local
+    networks:
+      - mirza-net-local
+    depends_on:
+      - api
+
+  db:
+    container_name: mirzagram-db-local
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: mirzagram-db
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: mirza
+    networks:
+      - mirza-net-local
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d mirzagram-db -U mirza"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  mirza-net-local:
+    driver: bridge

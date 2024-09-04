@@ -1,7 +1,4 @@
 FROM node:21.1.0-alpine AS alpine
-RUN apk update
-# RUN set -ex && apk --no-cache add sudo
-RUN apk --no-cache add libc6-compat curl nano
 
 # - - - - - -
     
@@ -9,7 +6,7 @@ FROM alpine AS base
 WORKDIR /app
 
 COPY package*.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 COPY . .
 
@@ -22,6 +19,7 @@ COPY --from=base /app/ .
 
 RUN yarn build 
 
+RUN cp -r ./src/docs ./dist/src/docs
 RUN rm -rf ./src
 RUN rm -rf ./__test__
 
@@ -30,11 +28,7 @@ RUN rm -rf ./__test__
 FROM alpine AS runner
 WORKDIR /app
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nodejs
-USER nodejs
-
-COPY --from=builder --chown=nodejs:nodejs /app .
+COPY --from=builder /app .
 
 EXPOSE 3000
 
