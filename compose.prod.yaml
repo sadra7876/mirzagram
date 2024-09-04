@@ -12,10 +12,8 @@ services:
 
   api:
     container_name: mirzagram-api-prod
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      WEB_BASE_URL: http://37.32.6.153/
+    env_file:
+      - ./backend/.env.prod
     ports:
       - 81:3000
     build:
@@ -33,7 +31,7 @@ services:
     environment:
       VITE_REACT_APP_BASE_URL: http://37.32.6.153:81/
     ports:
-      - 80:8000
+      - 80:80
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -41,6 +39,20 @@ services:
       - mirza-net-prod
     depends_on:
       - api
+
+  nginx:
+    container_name: mirzagram-nginx-prod
+    ports:
+      - 443:443
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    networks:
+      - mirza-net-prod
+    volumes:
+      - /etc/letsencrypt/live/shapshoop.store
+    depends_on:
+      - front
 
 networks:
   mirza-net-prod:

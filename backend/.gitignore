@@ -1,9 +1,7 @@
 node_modules/
-yarn.lock
 package-lock.json
 .yarnrc.yml
 .yarn
-yarn.lock
 api.http
 .yarn-integrity
 .DS_Store

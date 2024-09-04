@@ -17,15 +17,17 @@ import {
   passwordMatch,
 } from "../utils/password.utils";
 import crypto from "crypto";
-import dotenv from "dotenv-flow";
+// import dotenv from "dotenv-flow";
+import { transporter } from "../../../dependencies";
 import { MailerService } from "feature/mailer/service/mailer.service";
 import { ForgetPasswordToken } from "../repository/token.entity";
 import { ITokenRepository } from "../repository/token.repo";
 import { generateAccessToken } from "../utils/jwt.utils";
 import { strings } from "resources/strings";
-import { env } from "process";
+// import { env } from "process";
+import { appConfig } from "config";
 
-dotenv.config();
+// dotenv.config();
 
 interface Dependencies {
   tokenRepo: ITokenRepository;
@@ -91,7 +93,7 @@ export class AuthService {
       this.deps.mailerService.sendResetPasswordEmail(
         user.email,
         user.username,
-        `${env.WEB_BASE_URL}/${env.RESET_PASSWORD_ROUTE}?token=${newAccessToken.resetPasswordToken}`
+        `${appConfig.CLIENT_BASE_URL}:${appConfig.CLIENT_PORT}${appConfig.CLIENT_ROOT}/${appConfig.RESET_PASSWORD_ROUTE}?token=${newAccessToken.resetPasswordToken}`
       );
       return;
     } catch {

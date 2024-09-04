@@ -613,7 +613,6 @@ paths:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
 
-
 components:
   securitySchemes:
     BearerAuth:
@@ -914,7 +913,7 @@ components:
           type: number
         createdAt:
           type: string
-        post: 
+        post:
           type: object
           properties:
             id:
@@ -940,19 +939,19 @@ components:
       properties:
         page:
           type: number
-        data: 
+        data:
           type: object
           properties:
             id:
               type: string
             likedAt:
               type: string
-            profile: 
+            profile:
               type: object
               properties:
                 username:
                   type: string
-                displayName: 
+                displayName:
                   type: string
                 profilePictureURL:
                   type: string

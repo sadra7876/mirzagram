@@ -14,18 +14,17 @@
     ]
   },
   "scripts": {
-    "dev": "nodemon src/main.ts",
-    "build": "tsc --project tsconfig.json && tsc-alias --outDir dist/src yarn copy-docs",
+    "dev": "dotenvx run -f .env.local -- nodemon src/main.ts",
+    "dev:staging": "dotenvx run -f .env.staging -- nodemon src/main.ts",
+    "build": "tsc --project tsconfig.json && tsc-alias --outDir dist/src",
     "prettier": "npx prettier --config .prettierrc **//*.{ts,js,mjs} --write",
     "lint": "npx eslint",
     "lint:fix": "npx eslint --fix",
-    "clean-dist": "rm -rf ./dist",
-    "copy-docs": "cp -r src/docs dist/src/docs"
+    "clean-dist": "rm -rf ./dist"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "dotenv-flow": "^4.1.0",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
@@ -40,6 +39,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^1.11.5",
     "@eslint/js": "^9.9.1",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
