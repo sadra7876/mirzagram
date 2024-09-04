@@ -31,7 +31,6 @@ import { Bookmark } from "@feature/bookmark/repository/bookmark.entity";
 import { BookmarkService } from "@feature/bookmark/service/bookmark.service";
 import { PostLikeRepository } from "@feature/post/repository/post-like.repo";
 import { PostLike } from "@feature/post/repository/entities/post-like.entity";
-import { env } from "process";
 import { MailerService } from "@feature/mailer/service/mailer.service";
 import {
   Notification,
