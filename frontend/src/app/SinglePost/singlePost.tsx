@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import siglepostImage from "../../assets/images/Singlepost-image.svg";
-import { FaReply } from "react-icons/fa";
 import LikeComponent from "../../Shared/Components/Like";
 import SaveComponent from "../../Shared/Components/Save";
 import profilePicture from "../../assets/images/Icons/picture frame.svg";
@@ -16,18 +15,17 @@ export default function SinglePost() {
   // Extract the query parameters you need
   const postId = queryParams.get("postId");
 
-  console.log("postId", postId);
-  const [saved, setSaved] = useState(false);
+  // const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState<MirzaComment>({ data: [], page: 0 });
   const [postDetails, setPostDetails] = useState<PostDetails | undefined>();
-  const SavedButton = () => {
-    setSaved(!saved);
-  };
+  // const SavedButton = () => {
+  //   setSaved(!saved);
+  // };
 
-  const toggleSave = () => {
-    setSaved(!saved);
-  };
+  // const toggleSave = () => {
+  //   setSaved(!saved);
+  // };
 
   useEffect(() => {
     init();
@@ -61,13 +59,10 @@ export default function SinglePost() {
     );
 
     const resultPostDetails = await responsePostDetails.json();
-    console.log("resultPostDetails", resultPostDetails);
     if (resultPostDetails.isSuccess) {
-      // setComments(resultPostDetails.result as IGetCommentById);
       setPostDetails(resultPostDetails.result as PostDetails);
     }
     const result = await response.json();
-    console.log("result", result);
     if (result.isSuccess) {
       setComments(result.result as MirzaComment);
     }
