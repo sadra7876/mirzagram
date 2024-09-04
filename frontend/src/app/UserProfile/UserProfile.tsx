@@ -5,11 +5,16 @@ import PostComponent from "./postComponent";
 import { UserProfileModel } from "../../model/userProfile.interface";
 import { getProfile } from "./api/getProfile";
 import UseProfileModal from "./useProfileModal";
+import FlowListComponent from "./flowListComponent";
+import { useUserProfile } from "../../context/UserProfileContext";
 
 export default function UserProfile() {
   const [openModal, setOpenModal] = useState(false);
   const [openModalPost, setOpenModalPost] = useState(false);
+  const [openModalFollowing, setOpenModalFollowing] = useState(false);
+  const [openModalFollowers, setOpenModalFollowers] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { setUserProfile } = useUserProfile();
   const [profile, setProfile] = useState<UserProfileModel>({
     firstName: "",
     lastName: "",
@@ -24,6 +29,7 @@ export default function UserProfile() {
     try {
       const userProfile = await getProfile();
       setProfile(userProfile);
+      setUserProfile(userProfile);
     } catch (error) {
       // toast.error('Failed to fetch user profile.');
     } finally {
@@ -59,13 +65,28 @@ export default function UserProfile() {
                   : ""}
               </p>
               <div className="flex flex-row gap-x-3">
-                <p className="text-sm font-normal text-mirza-orange">
-                  {profile.followerCount} دنبال کننده
-                </p>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => {
+                    if (profile.followerCount! > 0) setOpenModalFollowers(true);
+                  }}
+                >
+                  <p className="text-sm font-normal text-mirza-orange">
+                    {profile.followerCount} دنبال کننده
+                  </p>
+                </button>
                 <span className="text-gray-400">|</span>
-                <p className="text-mirza-orange">
-                  {profile.followingCount}دنبال شونده
-                </p>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => {
+                    if (profile.followingCount! > 0)
+                      setOpenModalFollowing(true);
+                  }}
+                >
+                  <p className="text-sm font-normal text-mirza-orange">
+                    {profile.followingCount}دنبال شونده
+                  </p>
+                </button>
                 <span className="text-gray-400">|</span>
                 <p>{profile.postCount} پست</p>
               </div>
@@ -103,6 +124,30 @@ export default function UserProfile() {
       <Modal show={openModalPost} onClose={() => setOpenModalPost(false)}>
         <Modal.Body>
           <PostComponent onClose={() => setOpenModalPost(false)} />
+        </Modal.Body>
+      </Modal>
+      <Modal
+        dismissible
+        show={openModalFollowing}
+        onClose={() => setOpenModalFollowing(false)}
+      >
+        <Modal.Body>
+          <FlowListComponent
+            isFollowing={true}
+            onClose={() => setOpenModalFollowing(false)}
+          />
+        </Modal.Body>
+      </Modal>
+      <Modal
+        dismissible
+        show={openModalFollowers}
+        onClose={() => setOpenModalFollowers(false)}
+      >
+        <Modal.Body>
+          <FlowListComponent
+            isFollowing={false}
+            onClose={() => setOpenModalFollowers(false)}
+          />
         </Modal.Body>
       </Modal>
     </div>
