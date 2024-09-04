@@ -15,11 +15,15 @@ export default function FlowListComponent(props: {
   const { userProfile } = useUserProfile();
 
   const fetchFlowingList = async () => {
+    if (!userProfile?.username) {
+      console.error("Username is not defined");
+      setLoading(false);
+      return;
+    }
     try {
       const followingList = await getFollowingList({
-        username: userProfile?.username!,
+        username: userProfile?.username,
       });
-      console.log("flowingList", followingList);
       setFlowList(followingList);
     } catch (error) {
       // toast.error('Failed to fetch user profile.');
@@ -29,11 +33,15 @@ export default function FlowListComponent(props: {
   };
 
   const fetchFollowersList = async () => {
+    if (!userProfile?.username) {
+      console.error("Username is not defined");
+      setLoading(false);
+      return;
+    }
     try {
       const followersList = await getFollowersList({
         username: userProfile?.username!,
       });
-      console.log("flowingList", followersList);
 
       setFlowList(followersList);
     } catch (error) {
@@ -43,12 +51,16 @@ export default function FlowListComponent(props: {
     }
   };
   useEffect(() => {
-    if (props.isFollowing) {
-      fetchFlowingList();
+    if (userProfile?.username) {
+      if (props.isFollowing) {
+        fetchFlowingList();
+      } else {
+        fetchFollowersList();
+      }
     } else {
-      fetchFollowersList();
+      setLoading(false);
     }
-  }, []);
+  }, [userProfile]);
 
   return (
     <>
@@ -91,25 +103,4 @@ export default function FlowListComponent(props: {
       )}
     </>
   );
-}
-{
-  /* <div className="mx-auto w-[] rounded-xl border border-gray-100 bg-slate-50 p-4">
-        <div className="flex items-center gap-4">
-          <span className="size-16 overflow-hidden rounded-full">
-            <img src={pic} alt="" className="h-full w-full object-cover" />
-          </span>
-          <div className="flex-1">
-            <strong className="block font-medium text-gray-900">
-              متین دهقان
-            </strong>
-            <p className="mt-1 text-sm text-gray-700">170 دنبال‌کننده</p>
-          </div>
-
-          <button className="text-gray-500 transition hover:text-gray-600">
-            <span className="sr-only">Dismiss popup</span>
-
-            <IoMdMore className="size-7 fill-red-600" />
-          </button>
-        </div>
-      </div> */
 }
