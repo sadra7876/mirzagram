@@ -65,6 +65,7 @@ deploy-job:
       cd ${SERVICE_PATH}
       # docker compose pull
       echo $VERSION
+      echo $CI_COMMIT_BRANCH
       sudo VERSION=$VERSION docker compose -f compose.prod.yaml up -d
       "
 
