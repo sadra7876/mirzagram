@@ -44,6 +44,7 @@ import { NotificationRepository } from "@feature/notification/repository/notific
 import { NotificationService } from "@feature/notification/service/notification.service";
 import { NotificationEventHandler } from "@feature/notification/event-handler/notification-event-handler";
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
+import { Explore } from "@feature/explore/service/explore.service";
 import { appConfig } from "config";
 
 // DataSource
@@ -179,6 +180,13 @@ export const bookmarkService = new BookmarkService({
 });
 export const notificationService = new NotificationService({
   notificationRepo: notificationRepository,
+});
+export const exploreService = new Explore({
+  followRepo: followRepository,
+  postRepo: postRepository,
+  likeRepo: postLikeRepository,
+  bookmarkRepo: bookmarkRepository,
+  commentRepo: commentRepository,
 });
 
 //TODO:
