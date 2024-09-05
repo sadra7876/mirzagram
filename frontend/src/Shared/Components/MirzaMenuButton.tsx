@@ -8,9 +8,9 @@ export default function MirzaMenuButton(props: {
   return (
     <div
       onClick={() => props.onClick()}
-      className="flex h-14 w-full flex-row items-center gap-x-4 text-nowrap rounded-3xl px-4 hover:bg-gray-400"
+      className="flex size-6 h-14 w-full flex-row items-center gap-x-4 text-nowrap rounded-3xl px-4 py-4 hover:bg-gray-200"
     >
-      {props.icon && <div className="icon-container">{props.icon}</div>}
+      {props.icon && <div className="icon-container size-6">{props.icon}</div>}
       <p className="text-base text-neutral-800">{props.title}</p>
     </div>
   );

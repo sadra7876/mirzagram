@@ -71,11 +71,11 @@ export default function UserProfile() {
                     if (profile.followerCount! > 0) setOpenModalFollowers(true);
                   }}
                 >
-                  <p className="text-sm font-normal text-mirza-orange">
+                  <p className="pt-4 text-sm font-normal text-mirza-orange">
                     {profile.followerCount} دنبال کننده
                   </p>
                 </button>
-                <span className="text-gray-400">|</span>
+                <span className="pt-4 text-gray-400">|</span>
                 <button
                   className="cursor-pointer"
                   onClick={() => {
@@ -83,12 +83,12 @@ export default function UserProfile() {
                       setOpenModalFollowing(true);
                   }}
                 >
-                  <p className="text-sm font-normal text-mirza-orange">
+                  <p className="pt-4 text-sm font-normal text-mirza-orange">
                     {profile.followingCount}دنبال شونده
                   </p>
                 </button>
-                <span className="text-gray-400">|</span>
-                <p>{profile.postCount} پست</p>
+                <span className="pt-4 text-gray-400">|</span>
+                <p className="pt-4">{profile.postCount} پست</p>
               </div>
               <div dir="ltr">{profile.bio}</div>
             </div>
@@ -101,8 +101,8 @@ export default function UserProfile() {
       </div>
 
       <div className="h-full w-full flex-col gap-8 rounded-3xl border-2 text-sm font-normal">
-        <div className="flex flex-col items-center gap-y-8 px-[298px] py-[222px] text-center">
-          هنوز هیچ پستی توی صفحه‌ات نذاشتی! بجنب تا دیر نشده
+        <div className="flex flex-col items-center gap-y-8 px-[298px] py-[222px] text-center text-xl font-bold">
+          هنوز هیچ پستی توی صفحه‌ات نذاشتی! <br /> بجنب تا دیر نشده
           <MirzaButton
             onClick={() => setOpenModalPost(true)}
             className="gap-y-8"

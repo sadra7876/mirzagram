@@ -3,11 +3,14 @@ import MirzaMenuButton from "../../Shared/Components/MirzaMenuButton";
 import PlusIcon from "../../assets/images/Icons/plus.svg";
 import { useNavigate, Outlet } from "react-router-dom";
 import PinIcon from "../../assets/images/Icons/pin.svg";
-import { FaRegBookmark } from "react-icons/fa6";
+
+import Saved from "../../assets/images/Icons/saved.svg";
+import explore from "../../assets/images/Icons/explore.svg";
 import SpeachIcon from "../../assets/images/Icons/speech.svg";
 import BellIcon from "../../assets/images/Icons/bell.svg";
 import TagIcon from "../../assets/images/Icons/Tag.svg";
 import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
+import More from "../../assets/images/Icons/more.svg";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -33,7 +36,7 @@ const DashboardLayout = () => {
           />
           <MirzaMenuButton
             title="ذخیره‌‌ها"
-            icon={<FaRegBookmark />}
+            icon={<img src={Saved} alt="save icon" />}
             onClick={() => navigate("/messages")}
           />
 
@@ -57,7 +60,7 @@ const DashboardLayout = () => {
             <div>
               <MirzaMenuButton
                 title="اکسپلور"
-                icon={<img src={TagIcon} alt="pin icon" />}
+                icon={<img src={explore} alt="explore icon" />}
                 onClick={() => {}}
               />
               <MirzaMenuButton
@@ -68,7 +71,7 @@ const DashboardLayout = () => {
             </div>
             <MirzaMenuButton
               title="بیشتر"
-              icon={<img src={TagIcon} alt="pin icon" />}
+              icon={<img src={More} alt="pin icon" />}
               onClick={() => {}}
             />
           </div>

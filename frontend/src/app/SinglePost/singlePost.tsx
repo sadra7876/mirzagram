@@ -8,6 +8,8 @@ import { MirzaComment } from "../../Shared/model/comment.interface";
 import { useLocation } from "react-router-dom";
 import InputComment from "../../Shared/Components/InputComment";
 import CommentComponent from "../../Shared/Components/Comment";
+// import { FaRegComment } from "react-icons/fa";
+
 export default function SinglePost() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -102,6 +104,7 @@ export default function SinglePost() {
             <div className="flex w-full flex-row justify-end">
               <LikeComponent />
               <SaveComponent />
+              {/* <FaRegComment /> */}
             </div>
 
             <div className="w-100 flex h-10 flex-row items-center gap-4">
