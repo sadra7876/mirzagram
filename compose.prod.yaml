@@ -2,7 +2,7 @@ name: mirzagram-prod
 services:
   db:
     container_name: mirzagram-db-prod
-    image: postgres:15-alpine
+    image: postgres
     environment:
       POSTGRES_DB: mirzagram-db
       POSTGRES_PASSWORD: pass
