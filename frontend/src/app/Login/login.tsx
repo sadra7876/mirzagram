@@ -7,8 +7,8 @@ type LoginRegistState = "LOGIN" | "REGISTER";
 export default function LoginPage() {
   const [state, setState] = useState<LoginRegistState>("LOGIN");
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center md:bg-background-auth md:bg-cover">
-      <div className="flex h-full w-full flex-col items-center rounded-3xl bg-neutral-100 px-20 py-16 md:h-[688px] md:w-1/3">
+    <div className="flex h-screen w-full flex-col items-center justify-center md:bg-background-auth md:bg-cover md:bg-center">
+      <div className="flex h-full w-full flex-col items-center rounded-3xl bg-neutral-100 px-20 py-16 md:h-[680px] md:w-1/3 md:overflow-scroll">
         <img src={rahnamaLogo} className="h-15 w-28" />
 
         <div className="my-6 flex flex-row divide-black">
