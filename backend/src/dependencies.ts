@@ -188,7 +188,6 @@ export const exploreService = new Explore({
   likeRepo: postLikeRepository,
   bookmarkRepo: bookmarkRepository,
   commentRepo: commentRepository,
-  profileRepo: profileRepository,
 });
 
 //TODO:

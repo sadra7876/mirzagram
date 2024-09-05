@@ -9,7 +9,6 @@ import { strings } from "resources/strings";
 import { ICommentRepository } from "@feature/comment/repository/comment.repo";
 import { convertFileNameToURL } from "@utils/utils";
 import { ContentDTO } from "@feature/post/dto/content.dto";
-import { IProfileRepository } from "@feature/profile/repository/profile.repo";
 
 interface Dependencies {
   followRepo: IFollowRepository;
@@ -17,7 +16,6 @@ interface Dependencies {
   likeRepo: IPostLikeRepository;
   bookmarkRepo: IBookmarkRepository;
   commentRepo: ICommentRepository;
-  profileRepo: IProfileRepository;
 }
 
 export class Explore {
