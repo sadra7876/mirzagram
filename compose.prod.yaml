@@ -32,7 +32,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./storage:/backend/uploads
+      - ./storage:/app/uploads
 
   front:
     image: registry.hamdocker.ir/mirzap/mirzagram-front:${VERSION}
