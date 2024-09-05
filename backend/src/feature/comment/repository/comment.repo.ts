@@ -4,6 +4,7 @@ import { Comment } from "./entity/comment.entity";
 export interface ICommentRepository {
   createComment(comment: Comment): Promise<Comment>;
   getComment(id: string): Promise<Comment | null>;
+  getCommentCountByPostId(postId: string): Promise<number>;
   getPaginatedTopLevelCommentsForPost(
     postId: string,
     page: number,
@@ -28,6 +29,14 @@ export class CommentRepository implements ICommentRepository {
       },
       relations: ["post"],
     });
+  }
+
+  async getCommentCountByPostId(postId: string): Promise<number> {
+    return this.repo
+      .createQueryBuilder("comment")
+      .leftJoinAndSelect("comment.post", "post")
+      .where("comment.postId = :postId", { postId })
+      .getCount();
   }
 
   async createComment(comment: Comment): Promise<Comment> {

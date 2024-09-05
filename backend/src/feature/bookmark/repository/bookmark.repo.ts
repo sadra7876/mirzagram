@@ -7,6 +7,7 @@ export interface IBookmarkRepository {
   getBookmarksByProfileId(id: ProfileId): Promise<Bookmark[]>;
   createBookmark(bookmark: Bookmark): Promise<Bookmark>;
   removeBookmark(profileId: ProfileId, postId: string): Promise<boolean>;
+  getBookmarkCountByPostId(postId: string): Promise<number>;
 }
 
 export class BookmarkRepository implements IBookmarkRepository {
@@ -58,5 +59,13 @@ export class BookmarkRepository implements IBookmarkRepository {
 
   async createBookmark(bookmark: Bookmark): Promise<Bookmark> {
     return this.repo.save(bookmark);
+  }
+
+  async getBookmarkCountByPostId(postId: string): Promise<number> {
+    return this.repo
+      .createQueryBuilder("bookmark")
+      .leftJoinAndSelect("bookmark.post", "post")
+      .where("bookmark.postId = :postId", { postId })
+      .getCount();
   }
 }
