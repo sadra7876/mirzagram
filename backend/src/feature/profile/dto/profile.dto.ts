@@ -1,4 +1,9 @@
-import { isEmail, isPassword, isUsername } from "@CommonTypes/profile.type";
+import {
+  ProfileId,
+  isEmail,
+  isPassword,
+  isUsername,
+} from "@CommonTypes/profile.type";
 import { strings } from "resources/strings";
 import { z } from "zod";
 import { Username, Email } from "../../../types/profile.type";
@@ -37,6 +42,7 @@ export const profileRequestDTO = z
   );
 
 export type ProfileResponseDTO = {
+  id: ProfileId;
   username: Username;
   firstName?: string;
   lastName?: string;

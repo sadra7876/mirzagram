@@ -17,8 +17,9 @@ api-build-job:
     - docker build -t ${API_IMAGE}:$CI_COMMIT_SHORT_SHA .
     - docker push ${API_IMAGE}:$CI_COMMIT_SHORT_SHA
   rules:
-    - changes: 
-      - backend/*
+    - if: '$CI_COMMIT_BRANCH != "develop"'
+      changes: 
+        - backend/*
 
 front-build-job:
   stage: build
@@ -29,8 +30,9 @@ front-build-job:
     - docker build -t ${FRONT_IMAGE}:$CI_COMMIT_SHORT_SHA .
     - docker push ${FRONT_IMAGE}:$CI_COMMIT_SHORT_SHA
   rules:
-    - changes: 
-      - frontend/*
+    - if: '$CI_COMMIT_BRANCH != "develop"'
+      changes: 
+        - frontend/*
 
 deploy-job:
   stage: deploy

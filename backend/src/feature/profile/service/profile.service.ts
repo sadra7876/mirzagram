@@ -36,6 +36,7 @@ export class ProfileService {
       await this.deps.followRepo.getFollowingCountByProfileId(user.id);
 
     const result: ProfileResponseDTO = {
+      id: user.id,
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
