@@ -250,6 +250,32 @@ paths:
                   - type: array
                     items:
                       $ref: "#/components/schemas/FollowResponseDTO"
+  /explore:
+    get:
+      summary: get explore posts
+      tags: [Explore]
+      parameters:
+        - name: page
+          in: query
+          description: The number of page
+          schema:
+            type: string
+        - name: pagelimit
+          in: query
+          description: The array length
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/ExploreResponseDTO"
   # add jwt auth for this please
   /upload:
     post:
@@ -613,7 +639,6 @@ paths:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
 
-
 components:
   securitySchemes:
     BearerAuth:
@@ -776,7 +801,30 @@ components:
       type: array
       items:
         type: object
-
+    ExploreResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        contents:
+          type: array
+        likeCount:
+          type: number
+        bookmarkCount:
+          type: number
+        commentCount:
+          type: number
+        ownerProfilePicture:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        followerCount:
+          type: number
     FollowRequestDTO:
       type: object
       properties:
@@ -914,7 +962,7 @@ components:
           type: number
         createdAt:
           type: string
-        post: 
+        post:
           type: object
           properties:
             id:
@@ -940,19 +988,19 @@ components:
       properties:
         page:
           type: number
-        data: 
+        data:
           type: object
           properties:
             id:
               type: string
             likedAt:
               type: string
-            profile: 
+            profile:
               type: object
               properties:
                 username:
                   type: string
-                displayName: 
+                displayName:
                   type: string
                 profilePictureURL:
                   type: string

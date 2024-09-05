@@ -7,6 +7,11 @@ export interface IPostRepository {
   getPost(id: string): Promise<Post | null>;
   getPostsByProfile(id: ProfileId): Promise<Post[] | null>;
   getPostCountByProfile(profileId: ProfileId): Promise<number>;
+  getPostsByProfileIds(
+    ids: ProfileId[],
+    page: number,
+    pagelimit: number
+  ): Promise<Post[] | null>;
 }
 
 export class PostRepository implements IPostRepository {
@@ -50,5 +55,23 @@ export class PostRepository implements IPostRepository {
       .createQueryBuilder("post")
       .where("post.ownerId = :id", { id })
       .getCount();
+  }
+
+  async getPostsByProfileIds(
+    ids: ProfileId[],
+    page: number,
+    pagelimit: number
+  ): Promise<Post[] | null> {
+    const quryBuilder = this.repository
+      .createQueryBuilder("post")
+      .leftJoinAndSelect("post.contents", "content")
+      .leftJoinAndSelect("post.owner", "profile")
+      .where("post.ownerId IN (:...ids)", { ids })
+      .orderBy("post.createdAt", "DESC");
+
+    return quryBuilder
+      .skip((page - 1) * pagelimit)
+      .take(pagelimit)
+      .getMany();
   }
 }
