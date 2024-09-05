@@ -28,8 +28,7 @@ services:
     networks:
       - mirza-net-prod
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     stdin_open: true
     tty: true
     volumes:
