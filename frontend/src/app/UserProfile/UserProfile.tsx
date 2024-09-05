@@ -111,7 +111,7 @@ export default function UserProfile() {
         </div>
       </div>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Body className="bg-neutral-100 px-[90px]">
+        <Modal.Body className="bg-neutral-100">
           <UseProfileModal
             onClose={() => {
               setOpenModal(false);

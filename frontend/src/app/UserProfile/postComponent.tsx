@@ -3,7 +3,7 @@ import MirzaButton from "../../Shared/Components/MirzaButton";
 import { Textarea, TextInput } from "flowbite-react";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbCameraPlus } from "react-icons/tb";
-
+import { FaRegDotCircle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { postUploadFile } from "./api/uploadFiles";
 import { UploadFile } from "../../Shared/model/responseUpload.interface";
@@ -11,6 +11,9 @@ import { MirzaPost } from "../../Shared/model/post.interface";
 import { postCreatePost } from "./api/createPost";
 import { toast } from "../../Shared/Components/ToastComponent";
 import { ImageFile } from "../../model/imageFile.interface";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import { MdOutlineAddReaction } from "react-icons/md";
 
 const steps = [
   { id: 0, label: "عکس", filds: ["fileNames"] },
@@ -31,7 +34,8 @@ type FieldType =
   | `mention.${number}`;
 
 export default function PostComponent(props: { onClose: () => void }) {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [openEmoji, setOpenEmoji] = useState(false);
   const [files, setFiles] = useState<ImageFile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [fileNames, setFileNames] = useState<UploadFile[]>([]);
@@ -43,6 +47,7 @@ export default function PostComponent(props: { onClose: () => void }) {
     trigger,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm<PostValue>();
 
   const next = async () => {
@@ -133,6 +138,13 @@ export default function PostComponent(props: { onClose: () => void }) {
       prevMentions.filter((mention) => mention !== mentionToRemove),
     );
   };
+  const onEmojiClick = (emojiData: any) => {
+    const currentCaption = getValues("caption") || "";
+    setValue("caption", currentCaption + emojiData.native, {
+      shouldValidate: true,
+    });
+    setOpenEmoji(false);
+  };
   return (
     <div className="flex w-full flex-col justify-center px-[90px]">
       <ul className="relative flex flex-row gap-x-2">
@@ -141,10 +153,10 @@ export default function PostComponent(props: { onClose: () => void }) {
             <li key={item.id} className="group flex-1 shrink basis-0">
               <div className="inline-flex min-h-7 w-full min-w-7 items-center align-middle text-xs">
                 <span
-                  className={`flex size-7 shrink-0 items-center justify-center rounded-full border ${currentStep === item.id ? "border-black" : "border-mirza-dsiable"} bg-gray-100 font-medium text-gray-800 dark:bg-neutral-700 dark:text-white`}
+                  className={`flex size-7 shrink-0 items-center justify-center rounded-full ${currentStep === item.id ? "border-black" : "border-mirza-dsiable"} bg-gray-100 font-medium text-gray-800 dark:bg-neutral-700 dark:text-white`}
                 >
                   {currentStep <= item.id ? (
-                    "."
+                    <FaRegDotCircle className="size-7" />
                   ) : (
                     <FaCheckCircle className="size-7" />
                   )}
@@ -168,7 +180,9 @@ export default function PostComponent(props: { onClose: () => void }) {
       <form onSubmit={handleSubmit(onSubmitCreatePost)} className="mt-9">
         {currentStep === 0 && (
           <div className="flex flex-col items-center">
-            <p> عکس هاس مورد نظرت رو آپلود کن:</p>
+            <p className="pb-2 text-center text-base font-normal">
+              :عکس هاس مورد نظرت رو آپلود کن
+            </p>
             <div className="flex flex-wrap gap-2">
               <label className="flex w-24 flex-col gap-y-2">
                 <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-mirza-orange">
@@ -217,7 +231,14 @@ export default function PostComponent(props: { onClose: () => void }) {
           <div className="flex w-full flex-col items-center gap-y-3">
             <p>کپشن مورد نظرت روبنویس</p>
             <div className="flex w-full flex-row justify-between">
-              <p>aa</p>
+              <div
+                className={`absolute mt-3 h-52 w-72 ${openEmoji ? "visible" : "invisible"}`}
+              >
+                <Picker data={data} onEmojiSelect={onEmojiClick} />
+              </div>
+              <button type="button" onClick={() => setOpenEmoji(!openEmoji)}>
+                <MdOutlineAddReaction />
+              </button>
               <p>توضیحات</p>
             </div>
 

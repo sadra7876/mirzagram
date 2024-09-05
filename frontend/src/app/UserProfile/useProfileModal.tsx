@@ -39,10 +39,29 @@ export default function UseProfileModal(props: {
       fileNames.length > 0 && fileNames[0].fileName
         ? fileNames[0].fileName
         : props.profile.profilePicture;
-    const dataToSend: UserProfileModel = {
-      ...value,
-      profilePicture,
-    };
+    let dataToSend: UserProfileModel = {};
+    if (value.password && value.confirmPassword) {
+      dataToSend = {
+        bio: value.bio,
+        email: value.email,
+        username: value.username,
+        firstName: value.firstName,
+        lastName: value.lastName,
+        profilePicture,
+        confirmPassword: value.confirmPassword,
+        password: value.password,
+      };
+    } else {
+      dataToSend = {
+        bio: value.bio,
+        email: value.email,
+        username: value.username,
+        firstName: value.firstName,
+        lastName: value.lastName,
+        profilePicture,
+      };
+    }
+
     const responseEditProfile = await putProfile(dataToSend);
     if (responseEditProfile) {
       props.onClose();
@@ -90,7 +109,7 @@ export default function UseProfileModal(props: {
             <p>loading..</p>
           ) : profilePicFile?.file ? (
             <img
-              className="flex h-24 w-24 flex-col items-center justify-center rounded"
+              className="flex h-24 w-24 flex-col items-center justify-center rounded-full"
               src={profilePicFile.previewUrl ?? ""}
             />
           ) : (
