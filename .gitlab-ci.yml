@@ -1,9 +1,12 @@
 stages:
   - build
   - deploy
+  - release
 
 variables:
-  API_IMAGE: registry.hamdocker.ir/mirzap/mirzagram
+  API_IMAGE: registry.hamdocker.ir/mirzap/mirzagram-api
+  FRONT_IMAGE: registry.hamdocker.ir/mirzap/mirzagram-front
+  VERSION: $CI_COMMIT_SHORT_SHA
 
 api-build-job:
   stage: build
@@ -13,4 +16,65 @@ api-build-job:
     - cd backend
     - docker build -t ${API_IMAGE}:$CI_COMMIT_SHORT_SHA .
     - docker push ${API_IMAGE}:$CI_COMMIT_SHORT_SHA
+  rules:
+    - changes: 
+      - backend/*
 
+front-build-job:
+  stage: build
+  before_script:
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_TOKEN $DOCKER_REGISTRY
+  script:
+    - cd frontend
+    - docker build -t ${FRONT_IMAGE}:$CI_COMMIT_SHORT_SHA .
+    - docker push ${FRONT_IMAGE}:$CI_COMMIT_SHORT_SHA
+  rules:
+    - changes: 
+      - frontend/*
+
+deploy-job:
+  stage: deploy
+  only:
+    - develop
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )'
+    - eval $(ssh-agent -s)
+    - chmod 400 "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+  script:
+    - |
+      # Create directory if not exist
+      ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SERVER_NAME} "
+      [ -d ${SERVICE_PATH} ] || sudo mkdir -p ${SERVICE_PATH} || sudo mkdir -p ${SERVICE_PATH}/backend
+      "
+      # change env file
+      # sed -i "s/FQDN/${DOMAIN}/g" .env
+      # sed -i "s/SERVER_NAME/${HOSTNAME}/g" .env
+      # sed -i "s/PIPELINE_ID/${VERSION}/g" .env
+      # move compose and env file to server
+      # scp -o StrictHostKeyChecking=no -P${SSH_PORT} .env ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/backend
+      scp -o StrictHostKeyChecking=no -P${SSH_PORT} ./backend/.env.prod ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/backend
+      scp -o StrictHostKeyChecking=no -P${SSH_PORT} compose.prod.yaml ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/
+      # deploy service on server
+      ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SERVER_NAME} "
+      docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_TOKEN $DOCKER_REGISTRY
+      cd ${SERVICE_PATH}
+      # docker compose pull
+      echo $VERSION
+      sudo VERSION=$VERSION docker compose -f compose.prod.yaml up -d
+      "
+
+release_job:
+  # image: registry.gitlab.com/gitlab-org/release-cli:latest
+  stage: release
+  rules:
+    - if: $CI_COMMIT_TAG
+  inherit:
+    default: false
+  script:
+    - echo "running release_job"
+  release:
+    tag_name: '$CI_COMMIT_TAG'
+    description: '$CI_COMMIT_TAG'
