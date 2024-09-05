@@ -17,14 +17,12 @@ services:
     restart: on-failure
 
   api:
+    image: registry.hamdocker.ir/mirzap/mirzagram-api:${VERSION}
     container_name: mirzagram-api-prod
     env_file:
       - ./backend/.env.prod
     ports:
       - 81:3000
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
     networks:
       - mirza-net-prod
     depends_on:
@@ -34,15 +32,12 @@ services:
     tty: true
 
   front:
+    image: registry.hamdocker.ir/mirzap/mirzagram-front:${VERSION}
     container_name: mirzagram-front-prod
-
+    # environment:
+      # VITE_REACT_APP_BASE_URL: http://37.32.6.153:81/
     ports:
       - 80:80
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        - BUILD_MODE=prod
     networks:
       - mirza-net-prod
     depends_on:
@@ -58,7 +53,8 @@ services:
     networks:
       - mirza-net-prod
     volumes:
-      - /etc/letsencrypt/live/shapshoop.store
+      - /etc/letsencrypt/live/shapshoop.store/fullchain.pem:/etc/letsencrypt/live/shapshoop.store/fullchain.pem
+      - /etc/letsencrypt/live/shapshoop.store/privkey.pem:/etc/letsencrypt/live/shapshoop.store/privkey.pem
     depends_on:
       - front
 
