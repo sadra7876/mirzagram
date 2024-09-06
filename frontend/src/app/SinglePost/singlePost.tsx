@@ -72,9 +72,17 @@ export default function SinglePost() {
   };
 
   return (
-    <div className="flex h-full w-full flex-row px-6">
-      <div className="h-376 w-full items-center">
-        <img className="rounded-3xl" src={siglepostImage} />
+    <div className="flex h-full w-full flex-row gap-x-2 px-6">
+      <div className="flex w-96 flex-col items-center">
+        {postDetails?.contents.map((item, index) => {
+          return (
+            <img
+              key={index}
+              className="h-full w-full rounded-3xl object-cover"
+              src={item.url}
+            />
+          );
+        })}
       </div>
 
       <div className="w-full">
