@@ -2,6 +2,7 @@ import { Post } from "@feature/post/repository/entities/post.entity";
 import { Profile } from "@feature/profile/repository/profile.entity";
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -14,6 +15,9 @@ import { CommentLike } from "./comment-like.entity";
 export class Comment {
   @PrimaryGeneratedColumn()
   id: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @Column()
   text: string;

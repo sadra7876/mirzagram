@@ -93,6 +93,7 @@ export class CommentService {
         displayName: `${c.author.firstName} ${c.author.lastName}`,
       },
       likeCount: c.likes.length,
+      createdAt: c.createdAt,
     };
   }
 
