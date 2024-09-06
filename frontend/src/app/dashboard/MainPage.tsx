@@ -11,9 +11,11 @@ import BellIcon from "../../assets/images/Icons/bell.svg";
 import TagIcon from "../../assets/images/Icons/Tag.svg";
 import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
 import More from "../../assets/images/Icons/more.svg";
+import { useUserProfile } from "../../context/UserProfileContext";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
+  const { userProfile } = useUserProfile();
   return (
     <div className="grid h-full grid-cols-[310px_1fr] bg-neutral-100 pr-14 pt-10">
       {/* right sidebar */}
@@ -25,9 +27,13 @@ const DashboardLayout = () => {
         />
 
         <div className="mt-8 flex h-full w-full flex-col items-center rounded-t-2xl border bg-white py-10">
-          <div className="flex flex-row">
-            <div className="rounded-full bg-neutral-400 shadow-md">aa</div>
-            <p>mahnaz</p>
+          <div className="flex flex-row items-center gap-x-2">
+            <img
+              className="flex h-24 w-24 flex-col items-center justify-center rounded-full"
+              src={userProfile?.profilePicture || "path/to/default/image.jpg"}
+              alt="User Profile"
+            />
+            <p>{userProfile && userProfile.username}</p>
           </div>
           <MirzaMenuButton
             title="صفحه من"
