@@ -34,7 +34,7 @@ type FieldType =
   | `mention.${number}`;
 
 export default function PostComponent(props: { onClose: () => void }) {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
   const [openEmoji, setOpenEmoji] = useState(false);
   const [files, setFiles] = useState<ImageFile[]>([]);
   const [isLoading, setIsLoading] = useState(false);

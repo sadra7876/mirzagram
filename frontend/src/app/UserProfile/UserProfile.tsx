@@ -7,13 +7,18 @@ import { getProfile } from "./api/getProfile";
 import UseProfileModal from "./useProfileModal";
 import FlowListComponent from "./flowListComponent";
 import { useUserProfile } from "../../context/UserProfileContext";
-
+import { ResponsePosts } from "../../model/post.interface";
+import { getUserPosts } from "./api/getPost";
+import { IoImagesOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 export default function UserProfile() {
+  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [openModalPost, setOpenModalPost] = useState(false);
   const [openModalFollowing, setOpenModalFollowing] = useState(false);
   const [openModalFollowers, setOpenModalFollowers] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [posts, setPosts] = useState<ResponsePosts[]>();
   const { setUserProfile } = useUserProfile();
   const [profile, setProfile] = useState<UserProfileModel>({
     firstName: "",
@@ -28,6 +33,8 @@ export default function UserProfile() {
   const fetchProfile = async () => {
     try {
       const userProfile = await getProfile();
+      const userPosts = await getUserPosts();
+      setPosts(userPosts);
       setProfile(userProfile);
       setUserProfile(userProfile);
     } catch (error) {
@@ -99,16 +106,37 @@ export default function UserProfile() {
           </div>
         )}
       </div>
+      <hr />
+      <div className="h-full w-full flex-col gap-8 rounded-3xl text-sm font-normal">
+        {posts && posts?.length === 0 ? (
+          <div className="flex flex-col items-center gap-y-8 px-[298px] py-[222px] text-center text-xl font-bold">
+            هنوز هیچ پستی توی صفحه‌ات نذاشتی! <br /> بجنب تا دیر نشده
+            <MirzaButton
+              onClick={() => setOpenModalPost(true)}
+              className="gap-y-8"
+              title="ایجاد پست جدید"
+            ></MirzaButton>
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-1">
+            {posts?.map((post, index) => (
+              <div
+                onClick={() => navigate(`/singlePost?postId=${post.id}`)}
+                className="group relative block size-60 cursor-pointer overflow-hidden rounded-3xl bg-black md:size-60"
+              >
+                <img
+                  alt=""
+                  src={post.thumbnail.url}
+                  className="absolute inset-0 h-full w-full object-cover opacity-75"
+                />
 
-      <div className="h-full w-full flex-col gap-8 rounded-3xl border-2 text-sm font-normal">
-        <div className="flex flex-col items-center gap-y-8 px-[298px] py-[222px] text-center text-xl font-bold">
-          هنوز هیچ پستی توی صفحه‌ات نذاشتی! <br /> بجنب تا دیر نشده
-          <MirzaButton
-            onClick={() => setOpenModalPost(true)}
-            className="gap-y-8"
-            title="ایجاد پست جدید"
-          ></MirzaButton>
-        </div>
+                <div className="absolute left-0 p-5 sm:p-6 lg:p-8">
+                  <IoImagesOutline className="size-6 text-slate-300" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Body className="bg-neutral-100">
