@@ -16,8 +16,8 @@ export const strings = {
   PASSWORDS_DO_NOT_MATCH_ERROR: "رمزعبور و تکرار آن یکسان نیست",
   INVALID_USERNAME_OR_PASSWORD_ERROR: "نام کاربری یا رمزعبور اشتباه است",
   RESET_PASSWORD_TOKEN_EXPIRED_ERROR: "توکن منقضی شده است",
-  EMAIL_ALREADY_EXISTS_ERROR: "نام کاربری نامعتبر است",
-  USERNAME_ALREADY_EXISTS_ERROR: "نام کاربری نامعتبر است",
+  EMAIL_ALREADY_EXISTS_ERROR: "ایمیل تکراری است",
+  USERNAME_ALREADY_EXISTS_ERROR: "نام کاربری تکراری است",
   USER_NOT_FOUND: "کاربر یافت نشد",
   FILE_NOT_FOUND: "فایل یافت نشد",
   FILE_UPLOAD_SUCCESSFUL: "فایل با موفقیت آپلود شد",
@@ -46,15 +46,15 @@ export const strings = {
   LIKE_ADDED_SUCCESSFULLY: "لایک با موفقیت اضافه شد",
   LIKE_REMOVED_SUCCESSFULLY: "لایک با موفقیت حذف شد",
   FOLLOW_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
-    `دنبالت کرد ${firstName} ${lastName}`,
+    `${firstName} ${lastName} دنبالت کرد`,
   LIKE_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
-    `این عکس رو لایک کرده ${firstName} ${lastName}`,
+    `${firstName} ${lastName} این عکس رو لایک کرده`,
   MENTION_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
-    `توی اون یکی  عکس تگت کرده ${firstName} ${lastName}`,
+    `${firstName} ${lastName} توی اون یکی عکس تگت کرده`,
   FOLLOW_REQUEST_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
-    `درخواست دوستی داده ${firstName} ${lastName}`,
+    `${firstName} ${lastName} درخواست دوستی داده`,
   FOLLOW_REQUEST_RESULT_NOTIFICATION_TITLE: (
     firstName: string,
     lastName: string
-  ) => `درخواست دوستی‌ات رو قبول کرد ${firstName} ${lastName}`,
+  ) => `${firstName} ${lastName} درخواست دوستی‌ات رو قبول کرد`,
 };

@@ -10,6 +10,7 @@ export abstract class HttpError extends Error {
     result: object | undefined = undefined
   ) {
     super(message);
+    Object.setPrototypeOf(this, HttpError.prototype);
     this.statusCode = statusCode;
     this.result = result;
   }
@@ -18,6 +19,7 @@ export abstract class HttpError extends Error {
 export class ServerError extends HttpError {
   constructor(message: string = strings.INTERNAL_SERVER_ERROR) {
     super(500, message);
+    Object.setPrototypeOf(this, ServerError.prototype);
   }
 }
 
@@ -27,5 +29,6 @@ export class ClientError extends HttpError {
     statusCode: number = 400
   ) {
     super(statusCode, message);
+    Object.setPrototypeOf(this, ClientError.prototype);
   }
 }
