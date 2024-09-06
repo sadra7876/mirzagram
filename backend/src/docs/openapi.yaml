@@ -638,6 +638,22 @@ paths:
                 allOf:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
+  /notification:
+    get:
+      summary: Get notifications for profile
+      tags: [Notification]
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#components/schemas/NotificationDTO"
 
 components:
   securitySchemes:
@@ -986,7 +1002,7 @@ components:
         postId:
           type: string
     PostLikesResponseDTO:
-      type: object
+      type: array
       properties:
         page:
           type: number
@@ -1007,3 +1023,20 @@ components:
                 profilePictureURL:
                   type: string
                   nullable: true
+    NotificationDTO:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          thumbnail:
+            type: string
+          title:
+            type: string
+          subtitle:
+            type: string
+          isSeen:
+            type: boolean
+          type:
+            type: string

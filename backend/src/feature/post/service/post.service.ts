@@ -22,7 +22,7 @@ import { PostLikeRequestDTO } from "../dto/post-like-request.dto";
 import { INotificationRepository } from "@feature/notification/repository/notification.repo";
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 
-const EMAIL_REGEX = /#[a-z0-9_]+/g;
+const HASHTAG_REGEX = /#[\u0600-\u06FF\sa-z0-9_]+/g;
 
 interface Dependencies {
   postRepo: IPostRepository;
@@ -245,7 +245,7 @@ export class PostService {
 
     if (data.caption) {
       newPost.caption = data.caption || undefined;
-      newPost.hashtags = data.caption.match(EMAIL_REGEX)?.map((h) => {
+      newPost.hashtags = data.caption.match(HASHTAG_REGEX)?.map((h) => {
         const hastag = new Hashtag();
         hastag.tag = h.replace("#", "");
         return hastag;
@@ -317,7 +317,7 @@ export class PostService {
       );
     }
 
-    post.hashtags = modifiedPost.caption?.match(EMAIL_REGEX)?.map((h) => {
+    post.hashtags = modifiedPost.caption?.match(HASHTAG_REGEX)?.map((h) => {
       const hastag = new Hashtag();
       hastag.tag = h;
       return hastag;

@@ -7,4 +7,5 @@ export type CommentDTO = {
     displayName: string;
   };
   likeCount: number;
+  createdAt: Date;
 };
