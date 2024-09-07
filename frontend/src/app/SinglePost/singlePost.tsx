@@ -72,8 +72,8 @@ export default function SinglePost() {
   };
 
   return (
-    <div className="grid grid-cols-2 px-6">
-      <div className="flex w-96 flex-col items-center">
+    <div className="grid grid-cols-[396px_1fr] px-6">
+      <div className="flex h-96 w-96 flex-col items-center">
         {postDetails?.contents.map((item, index) => {
           return (
             <img
@@ -88,8 +88,11 @@ export default function SinglePost() {
       <div className="w-full">
         <div className="flex flex-col gap-y-3">
           <div className="flex w-385 flex-row gap-4">
-            <img className="h-12 w-12 rounded-full" src={profilePicture} />
-            <p className="py-3">mahmz</p>
+            <img
+              className="h-12 w-12 rounded-full"
+              src={postDetails?.owner.profilePicture}
+            />
+            <p className="py-3">{postDetails?.owner.username}</p>
           </div>
           <div className="w-24 pb-4 text-xs">2 ماه پیش</div>
         </div>
@@ -97,7 +100,7 @@ export default function SinglePost() {
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <>
+          <div className="">
             <div className="text-">{postDetails?.caption}</div>
 
             <div className="flex w-full flex-row gap-2 pt-4">
@@ -112,10 +115,6 @@ export default function SinglePost() {
                     </div>
                   );
                 })}
-
-              {/* <div className="rounded-md bg-mirza-orange px-1">
-                <p className="text-white">جامعه</p>
-              </div> */}
             </div>
 
             <div className="flex w-full flex-row justify-end">
@@ -123,13 +122,13 @@ export default function SinglePost() {
               <SaveComponent />
             </div>
 
-            <div className="w-100 flex h-10 flex-row items-center gap-4">
+            <div className="flex h-10 w-full flex-row items-center gap-4">
               <img className="h-10 w-10" src={profilePicture} />
-              <div className="w-10/12">
+              <div className="">
                 <InputComment postId={postDetails?.id.toString() || ""} />
               </div>
             </div>
-          </>
+          </div>
         )}
 
         <div className="felx w-full flex-col">

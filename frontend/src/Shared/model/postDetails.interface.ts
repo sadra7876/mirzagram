@@ -9,6 +9,12 @@ export interface PostDetails {
     url: string;
   }[];
   likeCount: number;
+  owner: {
+    firstName?: string;
+    lastName?: string;
+    username: string;
+    profilePicture: string;
+  };
 }
 export interface HashTag {
   tag: string;
