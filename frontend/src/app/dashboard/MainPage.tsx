@@ -3,7 +3,7 @@ import MirzaMenuButton from "../../Shared/Components/MirzaMenuButton";
 import PlusIcon from "../../assets/images/Icons/plus.svg";
 import { useNavigate, Outlet } from "react-router-dom";
 import PinIcon from "../../assets/images/Icons/pin.svg";
-
+import { Modal } from "flowbite-react";
 import Saved from "../../assets/images/Icons/saved.svg";
 import explore from "../../assets/images/Icons/explore.svg";
 import SpeachIcon from "../../assets/images/Icons/speech.svg";
@@ -12,17 +12,40 @@ import TagIcon from "../../assets/images/Icons/Tag.svg";
 import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
 import More from "../../assets/images/Icons/more.svg";
 import { useUserProfile } from "../../context/UserProfileContext";
+import { useEffect, useState } from "react";
+import UseProfileModal from "../UserProfile/useProfileModal";
+import { getProfile } from "../UserProfile/api/getProfile";
+import PostComponent from "../UserProfile/postComponent";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const { userProfile } = useUserProfile();
+  const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const { setUserProfile } = useUserProfile();
+  const fetchProfile = async () => {
+    try {
+      const userProfile = await getProfile();
+
+      setUserProfile(userProfile);
+    } catch (error) {
+      // toast.error('Failed to fetch user profile.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
   return (
     <div className="grid h-full grid-cols-[310px_1fr] bg-neutral-100 pr-14 pt-10">
       {/* right sidebar */}
       <div className="flex flex-col items-center pt-10">
         <MirzaButton
           title="ایجاد پست جدید"
-          // onClick={() => console.log("new post")}
+          onClick={() => setOpenModal(true)}
           icon={<img src={PlusIcon} alt="Plus Icon" />}
         />
 
@@ -92,6 +115,19 @@ const DashboardLayout = () => {
         <Outlet />
         {/* <DashboardPages /> */}
       </div>
+      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Body className="bg-neutral-100">
+          <PostComponent onClose={() => setOpenModal(false)} />
+
+          {/* <UseProfileModal
+            onClose={() => {
+              setOpenModal(false);
+              fetchProfile();
+            }}
+            profile={userProfile!}
+          /> */}
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

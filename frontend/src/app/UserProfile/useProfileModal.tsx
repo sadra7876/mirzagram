@@ -38,7 +38,7 @@ export default function UseProfileModal(props: {
     const profilePicture =
       fileNames.length > 0 && fileNames[0].fileName
         ? fileNames[0].fileName
-        : props.profile.profilePicture;
+        : null;
     let dataToSend: UserProfileModel = {};
     if (value.password && value.confirmPassword) {
       dataToSend = {
