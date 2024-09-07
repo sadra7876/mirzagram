@@ -159,6 +159,7 @@ export const postService = new PostService({
   profileRepo: profileRepository,
   postLikeNotificationRepo: notificationRepository,
   notificationEventEmitter,
+  bookmarkRepo: bookmarkRepository,
 });
 
 export const followService = new FollowService({

@@ -18,4 +18,7 @@ export type PostDTO = {
   mentions?: MentionDTO[];
   contents: ContentDTO[];
   likeCount: number;
+  bookmarkCount: number;
+  isLiked: boolean;
+  isBookmarked: boolean;
 };
