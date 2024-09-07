@@ -85,7 +85,11 @@ export default function FlowListComponent(props: {
               <div className="flex flex-row-reverse items-center gap-x-2">
                 <span className="size-16 overflow-hidden rounded-full">
                   <img
-                    src={pic}
+                    src={
+                      item.profilePicture && item.profilePicture
+                        ? item.profilePicture
+                        : ""
+                    }
                     alt=""
                     className="h-full w-full object-cover"
                   />
@@ -94,7 +98,7 @@ export default function FlowListComponent(props: {
                   <strong className="block font-medium text-gray-900">
                     {item.username}
                   </strong>
-                  <p className="mt-1 text-sm text-gray-700">170 دنبال‌کننده</p>
+                  {/* <p className="mt-1 text-sm text-gray-700">170 دنبال‌کننده</p> */}
                 </div>
               </div>
             </div>
