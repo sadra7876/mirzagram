@@ -3,10 +3,13 @@ export interface PostDetails {
   ownerProfileId: string;
   createdAt: string;
   caption: string;
-  hashtags: never[];
+  hashtags: HashTag[];
   mentions: never[];
   contents: {
     url: string;
   }[];
   likeCount: number;
+}
+export interface HashTag {
+  tag: string;
 }

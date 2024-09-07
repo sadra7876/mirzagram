@@ -7,7 +7,7 @@ export interface UserProfileModel {
   isPrivate?: boolean;
   bio?: string;
   username?: string;
-  profilePicture?: string;
+  profilePicture?: string | null;
   postCount?: number;
   followerCount?: number;
   followingCount?: number;

@@ -72,7 +72,7 @@ export default function SinglePost() {
   };
 
   return (
-    <div className="flex h-full w-full flex-row gap-x-2 px-6">
+    <div className="grid grid-cols-2 px-6">
       <div className="flex w-96 flex-col items-center">
         {postDetails?.contents.map((item, index) => {
           return (
@@ -101,23 +101,31 @@ export default function SinglePost() {
             <div className="text-">{postDetails?.caption}</div>
 
             <div className="flex w-full flex-row gap-2 pt-4">
-              <div className="rounded-md bg-mirza-orange px-1">
+              {postDetails?.hashtags &&
+                postDetails.hashtags.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="rounded-md bg-mirza-orange px-1"
+                    >
+                      <p className="text-white">{item.tag}</p>
+                    </div>
+                  );
+                })}
+
+              {/* <div className="rounded-md bg-mirza-orange px-1">
                 <p className="text-white">جامعه</p>
-              </div>
-              <div className="rounded-md bg-mirza-orange px-1">
-                <p className="text-white">جامعه</p>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex w-full flex-row justify-end">
               <LikeComponent />
               <SaveComponent />
-              {/* <FaRegComment /> */}
             </div>
 
             <div className="w-100 flex h-10 flex-row items-center gap-4">
               <img className="h-10 w-10" src={profilePicture} />
-              <div>
+              <div className="w-10/12">
                 <InputComment postId={postDetails?.id.toString() || ""} />
               </div>
             </div>
