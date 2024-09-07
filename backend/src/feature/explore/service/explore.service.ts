@@ -23,49 +23,49 @@ export class Explore {
 
   async getPosts(id: ProfileId, page: number, pagelimit: number) {
     const following = await this.deps.followRepo.getAllFollowingByProfileId(id);
-    if (!following) {
-      throw new ClientError(strings.HAVE_NOT_ANY_FOLLOWING);
+    let result: (ExploreResponseDTO | null)[] = [];
+    if (following && following[0]) {
+      const followingIds = following?.map((i) => {
+        return i.following.id;
+      });
+      const contents = await this.deps.postRepo.getPostsByProfileIds(
+        followingIds,
+        page,
+        pagelimit
+      );
+      if (!contents) {
+        throw new ClientError(strings.POST_NOT_FOUND_ERROR);
+      }
+      result = await Promise.all(
+        contents.map(async (i) => {
+          const likeCount = await this.deps.likeRepo.getLikeCountForPost(i.id);
+          const bookmarkCount =
+            await this.deps.bookmarkRepo.getBookmarkCountByPostId(i.id);
+          const commentCount =
+            await this.deps.commentRepo.getCommentCountByPostId(i.id);
+          const followerCount =
+            await this.deps.followRepo.getFollowerCountByProfileId(i.owner.id);
+          const response: ExploreResponseDTO = {
+            id: i.id,
+            likeCount,
+            contents: i.contents
+              .sort((i) => i.order)
+              .map<ContentDTO>((i) => {
+                return { url: convertFileNameToURL(i.fileName, "post") };
+              }),
+            bookmarkCount,
+            commentCount,
+            ownerProfilePicture: i.owner.profilePicture
+              ? convertFileNameToURL(i.owner.profilePicture, "profile")
+              : undefined,
+            firstName: i.owner.firstName,
+            lastName: i.owner.lastName,
+            followerCount,
+          };
+          return response;
+        })
+      );
     }
-    const followingIds = following?.map((i) => {
-      return i.following.id;
-    });
-    const contents = await this.deps.postRepo.getPostsByProfileIds(
-      followingIds,
-      page,
-      pagelimit
-    );
-    if (!contents) {
-      throw new ClientError(strings.POST_NOT_FOUND_ERROR);
-    }
-    const result: ExploreResponseDTO[] = await Promise.all(
-      contents.map(async (i) => {
-        const likeCount = await this.deps.likeRepo.getLikeCountForPost(i.id);
-        const bookmarkCount =
-          await this.deps.bookmarkRepo.getBookmarkCountByPostId(i.id);
-        const commentCount =
-          await this.deps.commentRepo.getCommentCountByPostId(i.id);
-        const followerCount =
-          await this.deps.followRepo.getFollowerCountByProfileId(i.owner.id);
-        const response: ExploreResponseDTO = {
-          id: i.id,
-          likeCount,
-          contents: i.contents
-            .sort((i) => i.order)
-            .map<ContentDTO>((i) => {
-              return { url: convertFileNameToURL(i.fileName, "post") };
-            }),
-          bookmarkCount,
-          commentCount,
-          ownerProfilePicture: i.owner.profilePicture
-            ? convertFileNameToURL(i.owner.profilePicture, "profile")
-            : undefined,
-          firstName: i.owner.firstName,
-          lastName: i.owner.lastName,
-          followerCount,
-        };
-        return response;
-      })
-    );
     return result;
   }
 }
