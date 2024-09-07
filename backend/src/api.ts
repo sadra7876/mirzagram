@@ -23,4 +23,3 @@ api.use("/explore", exploreRoutes);
 api.get("/health", (req, res) => {
   res.status(200).send("OK");
 });
-
