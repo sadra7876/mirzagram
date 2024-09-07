@@ -1,14 +1,28 @@
 import React, { useState } from "react";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
+import { Postlikepost } from "../api/postlikePost";
+import { PostlikeComment } from "../api/postlikeComment";
+
 interface LikeComponentProps {
   initialCount?: number;
+  postId?: string;
+  commentId?: string;
 }
 
-const LikeComponent: React.FC<LikeComponentProps> = ({ initialCount = 0 }) => {
+const LikeComponent: React.FC<LikeComponentProps> = ({
+  initialCount = 0,
+  postId,
+  commentId,
+}) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(initialCount);
-  const toggleLike = () => {
+  const toggleLike = async () => {
+    if (postId != undefined) {
+      const res = await Postlikepost(postId!);
+    } else {
+      const res = await PostlikeComment(commentId!);
+    }
     setIsLiked(!isLiked);
     setLikeCount(likeCount + (isLiked ? -1 : 1));
   };

@@ -118,7 +118,10 @@ export default function SinglePost() {
             </div>
 
             <div className="flex w-full flex-row justify-end">
-              <LikeComponent />
+              <LikeComponent
+                initialCount={postDetails?.likeCount}
+                postId={postDetails?.id.toString()}
+              />
               <SaveComponent />
             </div>
 

@@ -6,12 +6,12 @@ export default function CommentComponent(props: { comments: MirzaComment }) {
   const { comments } = props;
   console.log("comments", comments);
   return (
-    <div className="flex flex-row flex-wrap justify-between px-8 pt-4">
+    <div className="flex w-full flex-row flex-wrap justify-between px-8 pt-4">
       {comments.data.map((item, index) => {
         return (
-          <>
-            <div key={index} className="gap-y-4 py-4">
-              <div className="flex w-full flex-row gap-x-20">
+          <div className="">
+            <div key={index} className="flex w-full flex-col gap-y-4 py-4">
+              <div className="flex w-full flex-row">
                 <div className="flex w-[299px] flex-row gap-x-2 font-bold">
                   <p className="text-xs font-bold">
                     {item.author.displayName || "موجود نیست"}
@@ -20,7 +20,7 @@ export default function CommentComponent(props: { comments: MirzaComment }) {
                     ۵ هفته پیش
                   </p>
                 </div>
-                <div className="flex flex-row justify-end gap-4">
+                <div className="flex flex-row justify-between gap-4">
                   <LikeComponent initialCount={item.likeCount} />
                   <p className="text-xs font-bold text-mirza-red">پاسخ</p>
                   <FaReply className="font-bold text-mirza-red" />
@@ -56,7 +56,7 @@ export default function CommentComponent(props: { comments: MirzaComment }) {
             ) : (
               <></>
             )}
-          </>
+          </div>
         );
       })}
 
