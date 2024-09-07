@@ -56,8 +56,8 @@ services:
     networks:
       - mirza-net-prod
     volumes:
-      - /etc/letsencrypt/live/shapshoop.store/fullchain.pem:/etc/letsencrypt/live/shapshoop.store/fullchain.pem
-      - /etc/letsencrypt/live/shapshoop.store/privkey.pem:/etc/letsencrypt/live/shapshoop.store/privkey.pem
+      - /etc/letsencrypt/live/mirza-penguin.dev1403.rahnemacollege.ir/fullchain.pem:/etc/letsencrypt/live/mirza-penguin.dev1403.rahnemacollege.ir/fullchain.pem
+      - /etc/letsencrypt/live/mirza-penguin.dev1403.rahnemacollege.ir/privkey.pem:/etc/letsencrypt/live/mirza-penguin.dev1403.rahnemacollege.ir/privkey.pem
     depends_on:
       - front
 
