@@ -2,16 +2,18 @@ import MirzaButton from "../../Shared/Components/MirzaButton";
 import MirzaMenuButton from "../../Shared/Components/MirzaMenuButton";
 import PlusIcon from "../../assets/images/Icons/plus.svg";
 import { useNavigate, Outlet } from "react-router-dom";
-import PinIcon from "../../assets/images/Icons/pin.svg";
 import { Modal } from "flowbite-react";
-import Saved from "../../assets/images/Icons/saved.svg";
-import explore from "../../assets/images/Icons/explore.svg";
-import SpeachIcon from "../../assets/images/Icons/speech.svg";
-import BellIcon from "../../assets/images/Icons/bell.svg";
-import TagIcon from "../../assets/images/Icons/Tag.svg";
+
 import { FaSearch } from "react-icons/fa";
+import { GiPin } from "react-icons/gi";
+import { IoMdBookmark } from "react-icons/io";
+import { BiSolidMessageRoundedDots } from "react-icons/bi";
+import { IoNotifications } from "react-icons/io5";
+import { FaTag } from "react-icons/fa6";
+import { TfiMenuAlt } from "react-icons/tfi";
+import { MdDashboard } from "react-icons/md";
+
 import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
-import More from "../../assets/images/Icons/more.svg";
 import { useUserProfile } from "../../context/UserProfileContext";
 import { useEffect, useState } from "react";
 import UseProfileModal from "../UserProfile/useProfileModal";
@@ -61,28 +63,28 @@ const DashboardLayout = () => {
           </div>
           <MirzaMenuButton
             title="صفحه من"
-            icon={<img src={PinIcon} alt="pin icon" />}
+            icon={<GiPin className="text-xl" />}
             onClick={() => navigate("/profile")}
           />
           <MirzaMenuButton
             title="ذخیره‌‌ها"
-            icon={<img src={Saved} alt="save icon" />}
+            icon={<IoMdBookmark className="text-xl" />}
             onClick={() => navigate("/messages")}
           />
 
           <MirzaMenuButton
             title="پیام‌ها"
-            icon={<img src={SpeachIcon} alt="pin icon" />}
+            icon={<BiSolidMessageRoundedDots className="text-xl" />}
             onClick={() => {}}
           />
           <MirzaMenuButton
             title="اعلانات"
-            icon={<img src={BellIcon} alt="pin icon" />}
+            icon={<IoNotifications className="text-xl" />}
             onClick={() => {}}
           />
           <MirzaMenuButton
             title="تگ‌ شده‌ها"
-            icon={<img src={TagIcon} alt="pin icon" />}
+            icon={<FaTag className="text-xl" />}
             onClick={() => {}}
           />
           <hr className="my-8 h-px w-full border-0 bg-gray-300" />
@@ -90,7 +92,7 @@ const DashboardLayout = () => {
             <div>
               <MirzaMenuButton
                 title="اکسپلور"
-                icon={<img src={explore} alt="explore icon" />}
+                icon={<MdDashboard className="text-2xl" />}
                 onClick={() => {}}
               />
               <MirzaMenuButton
@@ -101,7 +103,7 @@ const DashboardLayout = () => {
             </div>
             <MirzaMenuButton
               title="بیشتر"
-              icon={<img src={More} alt="pin icon" />}
+              icon={<TfiMenuAlt className="rotate-180 text-2xl" />}
               onClick={() => {}}
             />
           </div>
