@@ -7,6 +7,7 @@ import { FollowRequestDTO, FollowResponseDTO } from "../dto/follow.dto";
 import { Follow } from "../repository/follow.entity";
 import { INotificationRepository } from "@feature/notification/repository/notification.repo";
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
+import { convertFileNameToURL } from "@utils/utils";
 
 interface Dependencies {
   followRepo: IFollowRepository;
@@ -113,7 +114,7 @@ export class FollowService {
         isActive: i.isActive,
         isPrivate: i.isPrivate,
         bio: i.bio,
-        profilePicture: i.profilePicture,
+        profilePicture: convertFileNameToURL(i.profilePicture || "", "profile"),
         createdAt: i.createdAt,
       };
       return result;
@@ -161,7 +162,7 @@ export class FollowService {
         isActive: i.isActive,
         isPrivate: i.isPrivate,
         bio: i.bio,
-        profilePicture: i.profilePicture,
+        profilePicture: convertFileNameToURL(i.profilePicture || "", "profile"),
         createdAt: i.createdAt,
       };
       return result;

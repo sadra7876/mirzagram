@@ -77,6 +77,15 @@ export class PostService {
     return {
       id: post?.id,
       ownerProfileId: profileId,
+      owner: {
+        username: post.owner.username,
+        firstName: post.owner.firstName,
+        lastName: post.owner.lastName,
+        profilePicture: convertFileNameToURL(
+          post.owner.profilePicture || "",
+          "profile"
+        ),
+      },
       createdAt: post.createdAt,
       caption: post.caption,
       hashtags: post.hashtags?.map<HashtagDTO>((h) => {
