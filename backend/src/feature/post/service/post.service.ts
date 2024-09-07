@@ -22,7 +22,7 @@ import { PostLikeRequestDTO } from "../dto/post-like-request.dto";
 import { INotificationRepository } from "@feature/notification/repository/notification.repo";
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 
-const HASHTAG_REGEX = /#[\u0600-\u06FF\sa-z0-9_]+/g;
+const HASHTAG_REGEX = /#(?!.*\s)[\u0600-\u06FF\sa-z0-9_]+/g;
 
 interface Dependencies {
   postRepo: IPostRepository;
