@@ -9,6 +9,7 @@ import explore from "../../assets/images/Icons/explore.svg";
 import SpeachIcon from "../../assets/images/Icons/speech.svg";
 import BellIcon from "../../assets/images/Icons/bell.svg";
 import TagIcon from "../../assets/images/Icons/Tag.svg";
+import { FaSearch } from "react-icons/fa";
 import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
 import More from "../../assets/images/Icons/more.svg";
 import { useUserProfile } from "../../context/UserProfileContext";
@@ -94,7 +95,7 @@ const DashboardLayout = () => {
               />
               <MirzaMenuButton
                 title="جستجو"
-                icon={<img src={TagIcon} alt="pin icon" />}
+                icon={<FaSearch className="text-xl" />}
                 onClick={() => {}}
               />
             </div>
