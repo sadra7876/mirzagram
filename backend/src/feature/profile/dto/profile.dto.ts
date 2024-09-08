@@ -48,6 +48,7 @@ export type ProfileResponseDTO = {
   lastName?: string;
   email: Email;
   isPrivate: boolean;
+  isFollowed: boolean;
   bio?: string;
   profilePicture?: string;
   createdAt: Date;

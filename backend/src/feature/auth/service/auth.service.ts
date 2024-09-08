@@ -18,7 +18,6 @@ import {
 } from "../utils/password.utils";
 import crypto from "crypto";
 // import dotenv from "dotenv-flow";
-import { transporter } from "../../../dependencies";
 import { MailerService } from "feature/mailer/service/mailer.service";
 import { ForgetPasswordToken } from "../repository/token.entity";
 import { ITokenRepository } from "../repository/token.repo";

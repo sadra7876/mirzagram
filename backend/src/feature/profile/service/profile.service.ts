@@ -21,8 +21,17 @@ export class ProfileService {
 
   async getUserProfile(id: ProfileId, username: Username | null) {
     let user;
+    let isFollowed: boolean = false;
     if (username) {
       user = await this.deps.profileRepo.getByUsername(username);
+      const activeUser = await this.deps.profileRepo.getById(id);
+      if (activeUser && user) {
+        const followed = await this.deps.followRepo.getFollowByTwoProfile(
+          activeUser,
+          user
+        );
+        isFollowed = followed ? true : false;
+      }
     } else {
       user = await this.deps.profileRepo.getById(id);
     }
@@ -42,6 +51,7 @@ export class ProfileService {
       lastName: user.lastName,
       email: user.email,
       isPrivate: user.isActive,
+      isFollowed,
       bio: user.bio,
       profilePicture: user.profilePicture
         ? convertFileNameToURL(user.profilePicture, "profile")
