@@ -21,6 +21,7 @@ import { PostLike } from "../repository/entities/post-like.entity";
 import { PostLikeRequestDTO } from "../dto/post-like-request.dto";
 import { INotificationRepository } from "@feature/notification/repository/notification.repo";
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
+import { IBookmarkRepository } from "@feature/bookmark/repository/bookmark.repo";
 
 const HASHTAG_REGEX = /#(?!.*\s)[\u0600-\u06FF\sa-z0-9_]+/g;
 
@@ -30,6 +31,7 @@ interface Dependencies {
   postLikeRepo: IPostLikeRepository;
   postLikeNotificationRepo: INotificationRepository;
   notificationEventEmitter: NotificationEventEmitter;
+  bookmarkRepo: IBookmarkRepository;
 }
 
 export class PostService {
@@ -73,10 +75,20 @@ export class PostService {
     // }
 
     const likeCount = await this.deps.postLikeRepo.getLikeCountForPost(post.id);
+    const bookmarkCount = await this.deps.bookmarkRepo.getBookmarkCountByPostId(
+      post.id
+    );
+    const bookmark = await this.deps.bookmarkRepo.getBookmark(
+      profileId,
+      post.id
+    );
+    const isBookmarked: boolean = bookmark ? true : false;
+    const liked = await this.deps.postLikeRepo.getLike(profileId, post.id);
+    const isLiked: boolean = liked ? true : false;
 
     return {
       id: post?.id,
-      ownerProfileId: profileId,
+      ownerProfileId: post.owner.id,
       owner: {
         username: post.owner.username,
         firstName: post.owner.firstName,
@@ -106,6 +118,9 @@ export class PostService {
           };
         }),
       likeCount,
+      bookmarkCount,
+      isBookmarked,
+      isLiked,
     };
   }
 
