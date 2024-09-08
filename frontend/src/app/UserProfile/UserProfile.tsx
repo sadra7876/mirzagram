@@ -11,6 +11,7 @@ import { ResponsePosts } from "../../model/post.interface";
 import { getUserPosts } from "./api/getPost";
 import { IoImagesOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import DefaultProfilePic from "../../assets/images/defaultProfilePic.png";
 export default function UserProfile() {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
@@ -60,7 +61,7 @@ export default function UserProfile() {
                 src={
                   profile.profilePicture && profile.profilePicture
                     ? profile.profilePicture
-                    : ""
+                    : DefaultProfilePic
                 }
                 className="rounded-full"
               ></img>

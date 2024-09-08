@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import UseProfileModal from "../UserProfile/useProfileModal";
 import { getProfile } from "../UserProfile/api/getProfile";
 import PostComponent from "../UserProfile/postComponent";
+import DefaultProfilePic from "../../assets/images/defaultProfilePic.png";
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const DashboardLayout = () => {
           <div className="flex flex-row items-center gap-x-2">
             <img
               className="flex h-24 w-24 flex-col items-center justify-center rounded-full"
-              src={userProfile?.profilePicture || "path/to/default/image.jpg"}
+              src={userProfile?.profilePicture || DefaultProfilePic}
               alt="User Profile"
             />
             <p>{userProfile && userProfile.username}</p>

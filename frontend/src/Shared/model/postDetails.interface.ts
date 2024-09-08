@@ -9,6 +9,8 @@ export interface PostDetails {
     url: string;
   }[];
   likeCount: number;
+  bookmarkCount: number;
+
   owner: {
     firstName?: string;
     lastName?: string;

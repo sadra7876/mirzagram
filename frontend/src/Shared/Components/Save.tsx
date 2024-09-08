@@ -3,12 +3,16 @@ import { FaBookmark } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa6";
 interface SaveComponentProps {
   initialCount?: number;
+  postId?: string;
 }
 
-const SaveComponent: React.FC<SaveComponentProps> = ({ initialCount = 0 }) => {
+const SaveComponent: React.FC<SaveComponentProps> = ({
+  initialCount = 0,
+  postId,
+}) => {
   const [isSaved, setIsSaved] = useState(false);
   const [SaveCount, setSaveCount] = useState(initialCount);
-  const toggleSave = () => {
+  const toggleSave = async () => {
     setIsSaved(!isSaved);
     setSaveCount(SaveCount + (isSaved ? -1 : 1));
   };

@@ -122,7 +122,10 @@ export default function SinglePost() {
                 initialCount={postDetails?.likeCount}
                 postId={postDetails?.id.toString()}
               />
-              <SaveComponent />
+              <SaveComponent
+                initialCount={postDetails?.bookmarkCount}
+                postId={postDetails?.id.toString()}
+              />
             </div>
 
             <div className="flex h-10 w-full flex-row items-center gap-4">
