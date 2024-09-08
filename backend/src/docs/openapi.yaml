@@ -17,6 +17,8 @@ security:
   - BearerAuth:
       - read
       - write
+servers:
+  - url: /api   
 paths:
   /auth/sign-up:
     post:
