@@ -40,7 +40,7 @@ export default function SinglePost() {
     const token = localStorage.getItem("token");
 
     const response = await fetch(
-      `http://37.32.6.153:81/comment?postId=${postId}&page=1&pageSize=10`,
+      `http://mirza-penguin.dev1403.rahnemacollege.ir:81/api/comment?postId=${postId}&page=1&pageSize=10`,
       {
         method: "GET",
         headers: {
@@ -50,7 +50,7 @@ export default function SinglePost() {
       },
     );
     const responsePostDetails = await fetch(
-      `http://37.32.6.153:81/post/${postId}`,
+      `http://mirza-penguin.dev1403.rahnemacollege.ir:81/api/post/${postId}`,
       {
         method: "GET",
         headers: {

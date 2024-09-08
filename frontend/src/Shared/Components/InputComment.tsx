@@ -15,7 +15,7 @@ export default function InputComment(props: { postId: string }) {
   const sendComment = async (postId: string) => {
     const token = localStorage.getItem("token");
     const dataToSend = { postId, text: commentText };
-    const responsePostComment = await fetch("http://37.32.6.153:81/comment", {
+    const responsePostComment = await fetch("http://mirza-penguin.dev1403.rahnemacollege.ir:81/api/comment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
