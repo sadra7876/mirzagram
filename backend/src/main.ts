@@ -16,9 +16,8 @@ const RETRY_DELAY = 10000; // Delay between retries in milliseconds
 const app = express();
 app.use(cors());
 app.use(express.json());
-setupSwagger(app);
 app.use(appConfig.API_ROOT, api);
-
+setupSwagger(app);
 app.use(
   appConfig.CDN_ROOT,
   express.static(path.resolve(process.cwd(), "uploads"))
