@@ -3,7 +3,11 @@ import { isEmail, isPassword } from "@CommonTypes/profile.type";
 import { strings } from "resources/strings";
 
 export const forgotPasswordDTO = z.object({
-  email: z.string().refine(isEmail, strings.INVALID_EMAIL_ERROR),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .refine(isEmail, strings.INVALID_EMAIL_ERROR),
 });
 
 export const resetPasswordDTO = z.object({

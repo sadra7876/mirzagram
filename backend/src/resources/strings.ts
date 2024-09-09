@@ -45,6 +45,9 @@ export const strings = {
   HAVE_NOT_ANY_FOLLOWER: "کسی شما را فالو نکرده است",
   LIKE_ADDED_SUCCESSFULLY: "لایک با موفقیت اضافه شد",
   LIKE_REMOVED_SUCCESSFULLY: "لایک با موفقیت حذف شد",
+  CAPTION: "کپشن",
+  NAME: "نام",
+  COMMENT: "کامنت",
   FOLLOW_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
     `${firstName} ${lastName} دنبالت کرد`,
   LIKE_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
@@ -57,4 +60,6 @@ export const strings = {
     firstName: string,
     lastName: string
   ) => `${firstName} ${lastName} درخواست دوستی‌ات رو قبول کرد`,
+  INPUT_TOO_LONG_ERROR: (inputName: string, max: number) =>
+    `${inputName} نمیتواند بیشتر از ${max} کاراکتر باشد`,
 };
