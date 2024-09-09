@@ -4,7 +4,10 @@ import LikeComponent from "../../Shared/Components/Like";
 import SaveComponent from "../../Shared/Components/Save";
 import profilePicture from "../../assets/images/Icons/picture frame.svg";
 import { PostDetails } from "../../Shared/model/postDetails.interface";
-import { MirzaComment } from "../../Shared/model/comment.interface";
+import {
+  CommentBody,
+  MirzaComment,
+} from "../../Shared/model/comment.interface";
 import { useLocation } from "react-router-dom";
 import InputComment from "../../Shared/Components/InputComment";
 import CommentComponent from "../../Shared/Components/Comment";
@@ -21,6 +24,7 @@ export default function SinglePost() {
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState<MirzaComment>({ data: [], page: 0 });
   const [postDetails, setPostDetails] = useState<PostDetails | undefined>();
+  const [reply, setReply] = useState<CommentBody>();
   // const SavedButton = () => {
   //   setSaved(!saved);
   // };
@@ -128,7 +132,10 @@ export default function SinglePost() {
             <div className="flex h-10 w-full flex-row items-center gap-4">
               <img className="h-10 w-10" src={profilePicture} />
               <div className="">
-                <InputComment postId={postDetails?.id.toString() || ""} />
+                <InputComment
+                  parentCommentId={reply?.id}
+                  postId={postDetails?.id.toString() || ""}
+                />
               </div>
             </div>
           </div>
@@ -138,7 +145,10 @@ export default function SinglePost() {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <CommentComponent comments={comments} />
+            <CommentComponent
+              onReply={(value) => setReply(value)}
+              comments={comments}
+            />
           )}
           <div></div>
         </div>

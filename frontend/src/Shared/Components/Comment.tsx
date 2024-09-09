@@ -1,12 +1,16 @@
 import React from "react";
-import { MirzaComment } from "../model/comment.interface";
+import { CommentBody, MirzaComment } from "../model/comment.interface";
 import LikeComponent from "./Like";
 import { FaReply } from "react-icons/fa";
-export default function CommentComponent(props: { comments: MirzaComment }) {
-  const { comments } = props;
+import InputComment from "./InputComment";
+export default function CommentComponent(props: {
+  comments: MirzaComment;
+  onReply: (value: CommentBody) => void;
+}) {
+  const { comments, onReply } = props;
   console.log("comments", comments);
   return (
-    <div className="flex w-full flex-row flex-wrap justify-between px-8 pt-4">
+    <div className="flex w-full flex-col justify-between px-8 pt-4">
       {comments.data.map((item, index) => {
         return (
           <div className="">
@@ -23,7 +27,10 @@ export default function CommentComponent(props: { comments: MirzaComment }) {
                 <div className="flex flex-row justify-between gap-4">
                   <LikeComponent initialCount={item.likeCount} />
                   <p className="text-xs font-bold text-mirza-red">پاسخ</p>
-                  <FaReply className="font-bold text-mirza-red" />
+                  <FaReply
+                    onClick={() => onReply(item)}
+                    className="font-bold text-mirza-red"
+                  />
                 </div>
               </div>
               <div className="text-xs">{item.text}</div>
@@ -32,7 +39,7 @@ export default function CommentComponent(props: { comments: MirzaComment }) {
               item.replies.map((replie, index) => (
                 <>
                   <div key={index} className="gap-y-4 py-4">
-                    <div className="flex w-full flex-row flex-wrap gap-x-20">
+                    <div className="flex w-full flex-row gap-x-20">
                       <div className="flex w-[299px] flex-row gap-2 pr-12">
                         <p className="text-xs font-bold">
                           {replie.author.displayName || "موجود نیست"}
@@ -43,8 +50,11 @@ export default function CommentComponent(props: { comments: MirzaComment }) {
                       </div>
                       <div className="flex flex-row justify-end gap-4">
                         <LikeComponent initialCount={replie.likeCount} />
-                        <p className="text-xs font-bold text-mirza-red">پاسخ</p>
-                        <FaReply className="font-bold text-mirza-red" />
+                        {/* <p className="text-xs font-bold text-mirza-red">پاسخ</p>
+                        <FaReply
+                          onClick={() => onReply(replie)}
+                          className="font-bold text-mirza-red"
+                        /> */}
                       </div>
                     </div>
                     <div className="w-full pb-4 pr-12 text-xs">
