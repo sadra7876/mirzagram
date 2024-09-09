@@ -44,7 +44,7 @@ const DashboardLayout = () => {
   }, []);
 
   return (
-    <div className="grid h-full grid-cols-[310px_1fr] bg-neutral-100 pr-14 pt-10">
+    <div className="grid min-h-screen grid-cols-[310px_1fr] bg-neutral-100 pr-14 pt-10">
       {/* right sidebar */}
       <div className="flex flex-col items-center pt-10">
         <MirzaButton
@@ -70,7 +70,7 @@ const DashboardLayout = () => {
           <MirzaMenuButton
             title="ذخیره‌‌ها"
             icon={<IoMdBookmark className="text-xl" />}
-            onClick={() => navigate("/messages")}
+            onClick={() => navigate("/bookmarks")}
           />
 
           <MirzaMenuButton
@@ -122,14 +122,6 @@ const DashboardLayout = () => {
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Body className="bg-neutral-100">
           <PostComponent onClose={() => setOpenModal(false)} />
-
-          {/* <UseProfileModal
-            onClose={() => {
-              setOpenModal(false);
-              fetchProfile();
-            }}
-            profile={userProfile!}
-          /> */}
         </Modal.Body>
       </Modal>
     </div>
