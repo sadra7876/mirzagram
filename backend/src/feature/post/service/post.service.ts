@@ -22,6 +22,7 @@ import { PostLikeRequestDTO } from "../dto/post-like-request.dto";
 import { INotificationRepository } from "@feature/notification/repository/notification.repo";
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 import { IBookmarkRepository } from "@feature/bookmark/repository/bookmark.repo";
+import { ICommentRepository } from "@feature/comment/repository/comment.repo";
 
 const HASHTAG_REGEX = /#(?!.*\s)[\u0600-\u06FF\sa-z0-9_]+/g;
 
@@ -32,6 +33,7 @@ interface Dependencies {
   postLikeNotificationRepo: INotificationRepository;
   notificationEventEmitter: NotificationEventEmitter;
   bookmarkRepo: IBookmarkRepository;
+  commentRepo: ICommentRepository;
 }
 
 export class PostService {
@@ -78,6 +80,9 @@ export class PostService {
     const bookmarkCount = await this.deps.bookmarkRepo.getBookmarkCountByPostId(
       post.id
     );
+    const commentCount = await this.deps.commentRepo.getCommentCountByPostId(
+      post.id
+    );
     const bookmark = await this.deps.bookmarkRepo.getBookmark(
       profileId,
       post.id
@@ -119,6 +124,7 @@ export class PostService {
         }),
       likeCount,
       bookmarkCount,
+      commentCount,
       isBookmarked,
       isLiked,
     };

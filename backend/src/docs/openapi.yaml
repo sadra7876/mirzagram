@@ -18,7 +18,7 @@ security:
       - read
       - write
 servers:
-  - url: /api   
+  - url: /api
 paths:
   /auth/sign-up:
     post:
@@ -780,6 +780,8 @@ components:
           type: string
         isPrivate:
           type: boolean
+        isFollowed:
+          type: boolean
         bio:
           type: string
           nullable: true
@@ -903,6 +905,14 @@ components:
           type: string
         likeCount:
           type: number
+        bookmarkCount:
+          type: number
+        commentCount:
+          type: number
+        isLiked:
+          type: boolean
+        isBookmarked:
+          type: boolean
         hashtags:
           type: array
           items:
