@@ -19,6 +19,7 @@ export type PostDTO = {
   contents: ContentDTO[];
   likeCount: number;
   bookmarkCount: number;
+  commentCount: number;
   isLiked: boolean;
   isBookmarked: boolean;
 };
