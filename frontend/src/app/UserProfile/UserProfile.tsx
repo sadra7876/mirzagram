@@ -126,6 +126,7 @@ export default function UserProfile() {
           <div className="flex flex-wrap gap-1">
             {posts?.map((post, index) => (
               <div
+                key={index}
                 onClick={() => navigate(`/singlePost?postId=${post.id}`)}
                 className="group relative block size-60 cursor-pointer overflow-hidden rounded-3xl bg-black md:size-60"
               >

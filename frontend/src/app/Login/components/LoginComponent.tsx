@@ -21,7 +21,7 @@ export default function LoginComponent(props: { onClick: () => void }) {
     if (responseSignin) {
       setTimeout(() => {
         localStorage.setItem("token", responseSignin.accessToken);
-        navigate("/");
+        navigate("/profile");
       }, 100);
     }
   };
