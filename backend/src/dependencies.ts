@@ -160,6 +160,7 @@ export const postService = new PostService({
   postLikeNotificationRepo: notificationRepository,
   notificationEventEmitter,
   bookmarkRepo: bookmarkRepository,
+  commentRepo: commentRepository,
 });
 
 export const followService = new FollowService({
