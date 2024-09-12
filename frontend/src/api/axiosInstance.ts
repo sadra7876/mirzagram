@@ -48,12 +48,12 @@ axiosInstance.interceptors.response.use(
   (response) => {
     const data = response.data as SuccessResponse<any>; // Type the response data as SuccessResponse
     if (data.isSuccess) {
-      toast.success(data.messages?.join(", "));
-      if (data.result) {
-        return data.result; // Return the result if the response is successful
-      } else {
-        return true;
+      if (typeof data.result === "string") {
+        toast.success(data.result); // Display the result message in a toast
+      } else if (data.messages) {
+        toast.success(data.messages.join(", "));
       }
+      return data.result || true; // Return the result if the response is successful
     } else {
       // Handle unexpected success response structure
       toast.error("Unexpected response structure.");

@@ -3,7 +3,6 @@ import MirzaMenuButton from "../../Shared/Components/MirzaMenuButton";
 import PlusIcon from "../../assets/images/Icons/plus.svg";
 import { useNavigate, Outlet } from "react-router-dom";
 import { Modal } from "flowbite-react";
-
 import { FaSearch } from "react-icons/fa";
 import { GiPin } from "react-icons/gi";
 import { IoMdBookmark } from "react-icons/io";
@@ -12,11 +11,9 @@ import { IoNotifications } from "react-icons/io5";
 import { FaTag } from "react-icons/fa6";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { MdDashboard } from "react-icons/md";
-
 import rahnemaLogo from "../../assets/images/rahnema-college-logo-fars1.png";
 import { useUserProfile } from "../../context/UserProfileContext";
 import { useEffect, useState } from "react";
-import UseProfileModal from "../UserProfile/useProfileModal";
 import { getProfile } from "../UserProfile/api/getProfile";
 import PostComponent from "../UserProfile/postComponent";
 import DefaultProfilePic from "../../assets/images/defaultProfilePic.png";
@@ -55,12 +52,18 @@ const DashboardLayout = () => {
 
         <div className="mt-8 flex h-full w-full flex-col items-center rounded-t-2xl border bg-white py-10">
           <div className="flex flex-row items-center gap-x-2">
-            <img
-              className="flex h-24 w-24 flex-col items-center justify-center rounded-full"
-              src={userProfile?.profilePicture || DefaultProfilePic}
-              alt="User Profile"
-            />
-            <p>{userProfile && userProfile.username}</p>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <>
+                <img
+                  className="flex h-24 w-24 flex-col items-center justify-center rounded-full"
+                  src={userProfile?.profilePicture || DefaultProfilePic}
+                  alt="User Profile"
+                />
+                <p>{userProfile && userProfile.username}</p>
+              </>
+            )}
           </div>
           <MirzaMenuButton
             title="صفحه من"

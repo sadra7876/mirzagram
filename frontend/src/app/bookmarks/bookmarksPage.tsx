@@ -36,7 +36,7 @@ export default function BookmarksPage() {
           {bookmarks.map((bookmark) => (
             <div
               key={bookmark.id}
-              onClick={() => navigate(`/singlePost?postId=${bookmark.id}`)}
+              onClick={() => navigate(`/singlePost?postId=${bookmark.post.id}`)}
               className="group relative block size-60 cursor-pointer overflow-hidden rounded-3xl bg-black md:size-60"
             >
               <img
