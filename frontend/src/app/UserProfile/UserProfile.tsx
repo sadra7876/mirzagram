@@ -10,10 +10,19 @@ import { useUserProfile } from "../../context/UserProfileContext";
 import { ResponsePosts } from "../../model/post.interface";
 import { getUserPosts } from "./api/getPost";
 import { IoImagesOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import DefaultProfilePic from "../../assets/images/defaultProfilePic.png";
+import { jwtDecode } from "jwt-decode";
+import { postFollowUser } from "./api/followUser";
+import { postUnFollowUser } from "./api/unFollowUser";
 export default function UserProfile() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  // Extract the query parameters you need
+  const username = queryParams.get("username");
+
   const [openModal, setOpenModal] = useState(false);
   const [openModalPost, setOpenModalPost] = useState(false);
   const [openModalFollowing, setOpenModalFollowing] = useState(false);
@@ -30,14 +39,34 @@ export default function UserProfile() {
     isPrivate: false,
     bio: "",
     username: "",
+    id: 0,
   });
+  const [isOtehrProfile, setIsOtherProfile] = useState(false);
   const fetchProfile = async () => {
     try {
-      const userProfile = await getProfile();
-      const userPosts = await getUserPosts();
-      setPosts(userPosts);
-      setProfile(userProfile);
-      setUserProfile(userProfile);
+      const reponseUserProfile = await getProfile(username ?? "");
+      console.log("reponseUserProfile", reponseUserProfile);
+      const responseUserPosts = await getUserPosts();
+      setPosts(responseUserPosts);
+      setProfile(reponseUserProfile);
+      setUserProfile(reponseUserProfile);
+    } catch (error) {
+      // toast.error('Failed to fetch user profile.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchOtherProfile = async () => {
+    const decoded = jwtDecode(localStorage.getItem("token")!);
+    try {
+      const reponseUserProfile = await getProfile(username ?? "");
+      console.log("reponseUserProfile", reponseUserProfile);
+      if (decoded.sub != (reponseUserProfile.id ?? "").toString()) {
+        setIsOtherProfile(true);
+      }
+      // const responseUserPosts = await getUserPosts();
+      // setPosts(responseUserPosts);
+      setProfile(reponseUserProfile);
     } catch (error) {
       // toast.error('Failed to fetch user profile.');
     } finally {
@@ -45,9 +74,41 @@ export default function UserProfile() {
     }
   };
   useEffect(() => {
-    fetchProfile();
+    if (username) {
+      fetchOtherProfile();
+    } else {
+      fetchProfile();
+    }
   }, []);
 
+  const followUser = async () => {
+    // Call the followUser API
+    try {
+      const response = await postFollowUser({ username: profile.username! });
+      console.log("followUser response", response);
+      // Update the profile state
+      setProfile((prevProfile) => ({
+        ...prevProfile,
+        isFollowed: true,
+      }));
+    } catch (error) {
+      // toast.error('Failed to follow
+    }
+  };
+  const unFollowUser = async () => {
+    // Call the followUser API
+    try {
+      const response = await postUnFollowUser({ username: profile.username! });
+      console.log("followUser response", response);
+      // Update the profile state
+      setProfile((prevProfile) => ({
+        ...prevProfile,
+        isFollowed: false,
+      }));
+    } catch (error) {
+      // toast.error('Failed to follow
+    }
+  };
   return (
     <div className="flex h-full w-full flex-col gap-6 px-78">
       <div>
@@ -104,10 +165,21 @@ export default function UserProfile() {
               </div>
               <div dir="ltr">{profile.bio}</div>
             </div>
-            <MirzaButton
-              title="ویرایش پروفایل"
-              onClick={() => setOpenModal(true)}
-            />
+            {isOtehrProfile ? (
+              profile.isFollowed ? (
+                <MirzaButton title="دنبال شده" onClick={() => unFollowUser()} />
+              ) : (
+                <MirzaButton
+                  title="دنبال کردن" // Follow
+                  onClick={() => followUser()}
+                />
+              )
+            ) : (
+              <MirzaButton
+                title="ویرایش پروفایل"
+                onClick={() => setOpenModal(true)}
+              />
+            )}
           </div>
         )}
       </div>

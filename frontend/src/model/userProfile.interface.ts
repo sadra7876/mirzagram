@@ -11,4 +11,6 @@ export interface UserProfileModel {
   postCount?: number;
   followerCount?: number;
   followingCount?: number;
+  id?: number;
+  isFollowed?: boolean;
 }

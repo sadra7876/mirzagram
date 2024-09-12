@@ -1,8 +1,6 @@
-import React from "react";
 import { CommentBody, MirzaComment } from "../model/comment.interface";
 import LikeComponent from "./Like";
 import { FaReply } from "react-icons/fa";
-import InputComment from "./InputComment";
 export default function CommentComponent(props: {
   comments: MirzaComment;
   onReply: (value: CommentBody) => void;

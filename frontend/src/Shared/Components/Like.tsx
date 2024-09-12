@@ -19,9 +19,9 @@ const LikeComponent: React.FC<LikeComponentProps> = ({
   const [likeCount, setLikeCount] = useState(initialCount);
   const toggleLike = async () => {
     if (postId != undefined) {
-      const res = await Postlikepost(postId!);
+      await Postlikepost(postId!);
     } else {
-      const res = await PostlikeComment(commentId!);
+      await PostlikeComment(commentId!);
     }
     setIsLiked(!isLiked);
     setLikeCount(likeCount + (isLiked ? -1 : 1));
