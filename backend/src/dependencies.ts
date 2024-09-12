@@ -197,6 +197,3 @@ export const searchService = new SearchService({
   followRepo: followRepository,
   postLikeRepo: postLikeRepository,
 });
-
-//TODO:
-namespace Services {}
