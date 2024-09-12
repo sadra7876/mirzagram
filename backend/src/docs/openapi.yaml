@@ -348,6 +348,13 @@ paths:
     get:
       summary: Get all posts for user
       tags: [Post]
+      parameters:
+        - name: username
+          in: query
+          description: The username of the user
+          schema:
+            type: string
+            nullable: true
       responses:
         200:
           description: "OK"
