@@ -150,9 +150,12 @@ export class PostService {
   }
 
   async getPostsByProfileId(
-    profileId: ProfileId
+    profileId: ProfileId,
+    username: Username | null
   ): Promise<PostSummaryDTO[] | undefined> {
-    const posts = await this.deps.postRepo.getPostsByProfile(profileId);
+    const posts = username
+      ? await this.deps.postRepo.getPostsByUsername(username)
+      : await this.deps.postRepo.getPostsByProfile(profileId);
 
     if (!posts) {
       return undefined;

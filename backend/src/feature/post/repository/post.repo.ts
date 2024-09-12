@@ -1,11 +1,12 @@
 import { DataSource, Repository } from "typeorm";
 import { Post } from "./entities/post.entity";
-import { ProfileId } from "@CommonTypes/profile.type";
+import { ProfileId, Username } from "@CommonTypes/profile.type";
 
 export interface IPostRepository {
   createOrUpdatePost(post: Post): Promise<string>;
   getPost(id: string): Promise<Post | null>;
   getPostsByProfile(id: ProfileId): Promise<Post[] | null>;
+  getPostsByUsername(username: Username): Promise<Post[] | null>;
   getPostCountByProfile(profileId: ProfileId): Promise<number>;
   getPostsByProfileIds(
     ids: ProfileId[],
@@ -47,6 +48,15 @@ export class PostRepository implements IPostRepository {
       .createQueryBuilder("post")
       .leftJoinAndSelect("post.contents", "content")
       .where("post.ownerId = :id", { id })
+      .getMany();
+  }
+
+  getPostsByUsername(username: Username): Promise<Post[] | null> {
+    return this.repository
+      .createQueryBuilder("post")
+      .leftJoinAndSelect("post.contents", "content")
+      .leftJoinAndSelect("post.owner", "profile")
+      .where("profile.username = :username", { username })
       .getMany();
   }
 

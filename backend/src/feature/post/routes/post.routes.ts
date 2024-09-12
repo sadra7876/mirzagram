@@ -1,4 +1,4 @@
-import { ProfileId } from "@CommonTypes/profile.type";
+import { ProfileId, Username } from "@CommonTypes/profile.type";
 import { handleRequest } from "@utils/handle-request";
 import { ApiSuccess } from "@utils/http-response";
 import { postService } from "dependencies";
@@ -14,8 +14,10 @@ postRoutes.use(authMiddleware);
 
 postRoutes.get("/", (req, res) => {
   handleRequest(res, async () => {
+    const username = req.query.username as Username;
     const result = await postService.getPostsByProfileId(
-      req.subject as unknown as ProfileId
+      req.subject as unknown as ProfileId,
+      username
     );
     return new ApiSuccess(result);
   });
