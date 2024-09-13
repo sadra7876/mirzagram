@@ -12,6 +12,7 @@ export interface IPostRepository {
     page: number,
     pagelimit: number
   ): Promise<Post[] | null>;
+  search(searchTerm: string, page: number, pagelimit: number): Promise<Post[]>;
 }
 
 export class PostRepository implements IPostRepository {
@@ -19,6 +20,25 @@ export class PostRepository implements IPostRepository {
 
   constructor(ds: DataSource) {
     this.repository = ds.getRepository(Post);
+  }
+
+  async search(
+    searchTerm: string,
+    page: number,
+    pagelimit: number
+  ): Promise<Post[]> {
+    return this.repository
+      .createQueryBuilder("post")
+      .leftJoinAndSelect("post.hashtags", "hashtag")
+      .leftJoin("post.likes", "like")
+      .leftJoinAndSelect("post.contents", "content")
+      .where("hashtag.tag LIKE :searchTerm", { searchTerm: `%${searchTerm}%` })
+      .groupBy("post.id")
+      .addGroupBy("content.id")
+      .orderBy("COUNT(like.id)", "DESC")
+      .skip((page - 1) * pagelimit)
+      .take(pagelimit)
+      .getMany();
   }
 
   async createOrUpdatePost(post: Post): Promise<string> {

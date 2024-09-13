@@ -39,4 +39,21 @@ export class SearchService {
       })
     );
   }
+
+  async searchPost(searchTerm: string, page: number, pagelimit: number) {
+    const posts = await this.deps.postRepo.search(searchTerm, page, pagelimit);
+
+    return posts.map((i) => {
+      return {
+        id: i.id,
+        contents: i.contents
+          .sort((c) => c.order)
+          .map((c) => {
+            return {
+              url: convertFileNameToURL(c.fileName, "post"),
+            };
+          }),
+      };
+    });
+  }
 }
