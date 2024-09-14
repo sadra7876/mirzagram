@@ -10,6 +10,8 @@ export interface PostDetails {
   }[];
   likeCount: number;
   bookmarkCount: number;
+  isLiked: boolean;
+  isBookmarked: boolean;
 
   owner: {
     firstName?: string;

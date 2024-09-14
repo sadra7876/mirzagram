@@ -125,10 +125,12 @@ export default function SinglePost() {
               <LikeComponent
                 initialCount={postDetails?.likeCount}
                 postId={postDetails?.id.toString()}
+                isLiked={postDetails?.isLiked}
               />
               <SaveComponent
                 initialCount={postDetails?.bookmarkCount}
                 postId={postDetails?.id.toString()}
+                isBookmarked={postDetails?.isBookmarked}
               />
             </div>
 

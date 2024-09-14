@@ -65,7 +65,10 @@ axiosInstance.interceptors.response.use(
       const { status, data } = error.response;
       const errorData = data as ErrorResponse;
       if (status === 401) {
-        // Handle unauthorized errors, e.g., redirect to login
+        // 1. Remove token from localStorage (assuming token is a string):
+        localStorage.removeItem("token"); // Replace 'your_token_key' with actual key
+
+        // 2. Redirect to login page:
         window.location.href = "/login";
       } else if (
         (status === 400 || status === 404) &&

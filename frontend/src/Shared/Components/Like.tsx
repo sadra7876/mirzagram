@@ -8,14 +8,16 @@ interface LikeComponentProps {
   initialCount?: number;
   postId?: string;
   commentId?: string;
+  isLiked?: boolean;
 }
 
 const LikeComponent: React.FC<LikeComponentProps> = ({
   initialCount = 0,
   postId,
   commentId,
+  isLiked,
 }) => {
-  const [isLiked, setIsLiked] = useState(false);
+  const [liked, setLiked] = useState(isLiked);
   const [likeCount, setLikeCount] = useState(initialCount);
   const toggleLike = async () => {
     if (postId != undefined) {
@@ -23,13 +25,13 @@ const LikeComponent: React.FC<LikeComponentProps> = ({
     } else {
       await PostlikeComment(commentId!);
     }
-    setIsLiked(!isLiked);
-    setLikeCount(likeCount + (isLiked ? -1 : 1));
+    setLiked(!isLiked);
+    setLikeCount(likeCount + (liked ? -1 : 1));
   };
   return (
     <button className="p-1" onClick={toggleLike}>
       <span>
-        {isLiked ? (
+        {liked ? (
           <FaHeart className="fill-mirza-red text-mirza-red" />
         ) : (
           <FaRegHeart className="text-mirza-red" />
