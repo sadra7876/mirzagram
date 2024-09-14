@@ -1,6 +1,7 @@
 import { DataSource, Repository } from "typeorm";
 import { Post } from "./entities/post.entity";
 import { ProfileId } from "@CommonTypes/profile.type";
+import { PostLike } from "./entities/post-like.entity";
 
 export interface IPostRepository {
   createOrUpdatePost(post: Post): Promise<string>;
@@ -29,13 +30,20 @@ export class PostRepository implements IPostRepository {
   ): Promise<Post[]> {
     return this.repository
       .createQueryBuilder("post")
-      .leftJoinAndSelect("post.hashtags", "hashtag")
+      .leftJoin("post.hashtags", "hashtag")
       .leftJoin("post.likes", "like")
       .leftJoinAndSelect("post.contents", "content")
       .where("hashtag.tag LIKE :searchTerm", { searchTerm: `%${searchTerm}%` })
+      .addSelect((subQuery) => {
+        return subQuery
+          .select("COUNT(like.id)", "count")
+          .from(PostLike, "like")
+          .where("like.post.id = post.id");
+      }, "lcount")
       .groupBy("post.id")
       .addGroupBy("content.id")
-      .orderBy("COUNT(like.id)", "DESC")
+      .addGroupBy("hashtag.tag")
+      .orderBy("lcount", "DESC")
       .skip((page - 1) * pagelimit)
       .take(pagelimit)
       .getMany();
