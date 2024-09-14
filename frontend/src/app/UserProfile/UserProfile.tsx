@@ -45,7 +45,7 @@ export default function UserProfile() {
   const fetchProfile = async () => {
     try {
       const reponseUserProfile = await getProfile(username ?? "");
-      console.log("reponseUserProfile", reponseUserProfile);
+
       const responseUserPosts = await getUserPosts();
       setPosts(responseUserPosts);
       setProfile(reponseUserProfile);
@@ -60,12 +60,12 @@ export default function UserProfile() {
     const decoded = jwtDecode(localStorage.getItem("token")!);
     try {
       const reponseUserProfile = await getProfile(username ?? "");
-      console.log("reponseUserProfile", reponseUserProfile);
+
       if (decoded.sub != (reponseUserProfile.id ?? "").toString()) {
         setIsOtherProfile(true);
       }
-      // const responseUserPosts = await getUserPosts();
-      // setPosts(responseUserPosts);
+      const responseUserPosts = await getUserPosts(username ?? "");
+      setPosts(responseUserPosts);
       setProfile(reponseUserProfile);
     } catch (error) {
       // toast.error('Failed to fetch user profile.');
@@ -85,7 +85,7 @@ export default function UserProfile() {
     // Call the followUser API
     try {
       const response = await postFollowUser({ username: profile.username! });
-      console.log("followUser response", response);
+
       // Update the profile state
       setProfile((prevProfile) => ({
         ...prevProfile,
@@ -99,7 +99,7 @@ export default function UserProfile() {
     // Call the followUser API
     try {
       const response = await postUnFollowUser({ username: profile.username! });
-      console.log("followUser response", response);
+
       // Update the profile state
       setProfile((prevProfile) => ({
         ...prevProfile,
