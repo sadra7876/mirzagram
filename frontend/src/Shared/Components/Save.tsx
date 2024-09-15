@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaBookmark } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa6";
 import { postSavePost } from "../api/postSavePost";
@@ -21,6 +21,7 @@ const SaveComponent: React.FC<SaveComponentProps> = ({
     setSaveCount(SaveCount + (isSaved ? -1 : 1));
     console.log(isBookmarked);
   };
+
   return (
     <button className="p-1" onClick={toggleSave}>
       <span>
@@ -30,7 +31,7 @@ const SaveComponent: React.FC<SaveComponentProps> = ({
           <FaRegBookmark className="text-mirza-red" />
         )}
       </span>
-      <p className="text-mirza-red">{initialCount}</p>
+      <p className="text-mirza-red">{SaveCount}</p>
     </button>
   );
 };

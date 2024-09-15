@@ -25,7 +25,7 @@ const LikeComponent: React.FC<LikeComponentProps> = ({
     } else {
       await PostlikeComment(commentId!);
     }
-    setLiked(!isLiked);
+    setLiked(!liked);
     setLikeCount(likeCount + (liked ? -1 : 1));
   };
   return (
@@ -37,7 +37,7 @@ const LikeComponent: React.FC<LikeComponentProps> = ({
           <FaRegHeart className="text-mirza-red" />
         )}
       </span>
-      <p className="text-mirza-red">{initialCount}</p>
+      <p className="text-mirza-red">{likeCount}</p>
     </button>
   );
 };
