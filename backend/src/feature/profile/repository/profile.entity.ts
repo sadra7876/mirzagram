@@ -1,10 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import {
   Password,
   Username,
   Email,
   ProfileId,
 } from "../../../types/profile.type";
+import { Follow } from "@feature/follow/repository/follow.entity";
 
 @Entity()
 export class Profile {
@@ -55,4 +56,10 @@ export class Profile {
     type: "timestamptz",
   })
   createdAt: Date;
+
+  @OneToMany(() => Follow, (f) => f.following)
+  followers: Follow[];
+
+  @OneToMany(() => Follow, (f) => f.follower)
+  followings: Follow[];
 }
