@@ -1,5 +1,6 @@
 import { DataSource, Repository } from "typeorm";
 import { Post } from "./entities/post.entity";
+import { PostLike } from "./entities/post-like.entity";
 import { ProfileId, Username } from "@CommonTypes/profile.type";
 
 export interface IPostRepository {
@@ -13,6 +14,7 @@ export interface IPostRepository {
     page: number,
     pagelimit: number
   ): Promise<Post[] | null>;
+  search(searchTerm: string, page: number, pagelimit: number): Promise<Post[]>;
 }
 
 export class PostRepository implements IPostRepository {
@@ -20,6 +22,32 @@ export class PostRepository implements IPostRepository {
 
   constructor(ds: DataSource) {
     this.repository = ds.getRepository(Post);
+  }
+
+  async search(
+    searchTerm: string,
+    page: number,
+    pagelimit: number
+  ): Promise<Post[]> {
+    return this.repository
+      .createQueryBuilder("post")
+      .leftJoin("post.hashtags", "hashtag")
+      .leftJoin("post.likes", "like")
+      .leftJoinAndSelect("post.contents", "content")
+      .where("hashtag.tag LIKE :searchTerm", { searchTerm: `%${searchTerm}%` })
+      .addSelect((subQuery) => {
+        return subQuery
+          .select("COUNT(like.id)", "count")
+          .from(PostLike, "like")
+          .where("like.post.id = post.id");
+      }, "lcount")
+      .groupBy("post.id")
+      .addGroupBy("content.id")
+      .addGroupBy("hashtag.tag")
+      .orderBy("lcount", "DESC")
+      .skip((page - 1) * pagelimit)
+      .take(pagelimit)
+      .getMany();
   }
 
   async createOrUpdatePost(post: Post): Promise<string> {

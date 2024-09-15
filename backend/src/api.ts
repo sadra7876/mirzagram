@@ -8,6 +8,7 @@ import { commentRoutes } from "@feature/comment/routes/comment.routes";
 import { bookmarkRoutes } from "@feature/bookmark/routes/bookmark.routes";
 import { notificationRoutes } from "@feature/notification/routes/notification.routes";
 import { exploreRoutes } from "@feature/explore/routes/explore.routes";
+import { searchRoutes } from "@feature/search/routes/search.routes";
 
 export const api = Router();
 
@@ -20,6 +21,7 @@ api.use("/comment", commentRoutes);
 api.use("/bookmark", bookmarkRoutes);
 api.use("/notification", notificationRoutes);
 api.use("/explore", exploreRoutes);
+api.use("/search", searchRoutes);
 api.get("/health", (req, res) => {
   res.status(200).send("OK");
 });

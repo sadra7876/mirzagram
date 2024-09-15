@@ -12,11 +12,15 @@ export class Follow {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @ManyToOne(() => Profile, { onDelete: "CASCADE" })
+  @ManyToOne(() => Profile, (follower) => follower.followings, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "followerId" })
   follower: Profile;
 
-  @ManyToOne(() => Profile, { onDelete: "CASCADE" })
+  @ManyToOne(() => Profile, (following) => following.followers, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "followingId" })
   following: Profile;
 

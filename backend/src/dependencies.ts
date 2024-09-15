@@ -46,6 +46,7 @@ import { NotificationEventHandler } from "@feature/notification/event-handler/no
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 import { Explore } from "@feature/explore/service/explore.service";
 import { appConfig } from "config";
+import { SearchService } from "@feature/search/service/search.service";
 
 // DataSource
 export const AppDataSource = new DataSource({
@@ -190,6 +191,9 @@ export const exploreService = new Explore({
   bookmarkRepo: bookmarkRepository,
   commentRepo: commentRepository,
 });
-
-//TODO:
-namespace Services {}
+export const searchService = new SearchService({
+  profileRepo: profileRepository,
+  postRepo: postRepository,
+  followRepo: followRepository,
+  postLikeRepo: postLikeRepository,
+});
