@@ -50,7 +50,7 @@ export class ProfileService {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      isPrivate: user.isActive,
+      isPrivate: user.isPrivate,
       isFollowed,
       bio: user.bio,
       profilePicture: user.profilePicture

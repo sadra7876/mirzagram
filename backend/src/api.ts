@@ -8,12 +8,14 @@ import { commentRoutes } from "@feature/comment/routes/comment.routes";
 import { bookmarkRoutes } from "@feature/bookmark/routes/bookmark.routes";
 import { notificationRoutes } from "@feature/notification/routes/notification.routes";
 import { exploreRoutes } from "@feature/explore/routes/explore.routes";
+import { profileManagerRoutes } from "@feature/profile-manager/routes/profile-manager.routes";
 import { searchRoutes } from "@feature/search/routes/search.routes";
 
 export const api = Router();
 
 api.use("/auth", authRoutes);
 api.use("/profile", profileRoutes);
+api.use("/profile", profileManagerRoutes);
 api.use("/upload", storageRouter);
 api.use("/post", postRoutes);
 api.use("/follow", followRoutes);

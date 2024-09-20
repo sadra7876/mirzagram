@@ -21,3 +21,15 @@ export type FollowResponseDTO = {
   profilePicture?: string;
   createdAt: Date;
 };
+
+export type FollowRequestResponseDTO = {
+  username: Username;
+  // email: Email;
+  // firstName?: string;
+  // lastName?: string;
+  // isActive: boolean;
+  // isPrivate: boolean;
+  // bio?: string;
+  // profilePicture?: string;
+  // createdAt: Date;
+};
