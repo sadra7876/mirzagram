@@ -97,7 +97,7 @@ const DashboardLayout = () => {
               <MirzaMenuButton
                 title="اکسپلور"
                 icon={<MdDashboard className="text-2xl" />}
-                onClick={() => {}}
+                onClick={() => navigate("/explore")}
               />
               <MirzaMenuButton
                 title="جستجو"
