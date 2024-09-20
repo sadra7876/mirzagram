@@ -1,5 +1,5 @@
 import { DataSource, Repository } from "typeorm";
-import { Follow } from "./follow.entity";
+import { Follow } from "./entities/follow.entity";
 import { ProfileId } from "@CommonTypes/profile.type";
 import { Profile } from "@feature/profile/repository/profile.entity";
 

@@ -150,6 +150,177 @@ paths:
                 allOf:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
+  /profile/close-friends:
+    get:
+      summary: get close friend list
+      tags: [Profile]
+      parameters:
+        - name: page
+          in: query
+          description: The number of page
+          schema:
+            type: string
+        - name: pagelimit
+          in: query
+          description: The array length
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/FollowResponseDTO"
+  /profile/is-close-friend:
+    get:
+      summary: get close friend list
+      tags: [Profile]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileManagerRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/IscloseFriendDTO"
+  /profile/add-close-friend:
+    post:
+      summary: add close friend
+      tags: [Profile]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileManagerRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+  /profile/remove-close-friend:
+    post:
+      summary: remove close friend
+      tags: [Profile]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileManagerRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+
+  /profile/blocked-profile:
+    get:
+      summary: get close friend list
+      tags: [Profile]
+      parameters:
+        - name: page
+          in: query
+          description: The number of page
+          schema:
+            type: string
+        - name: pagelimit
+          in: query
+          description: The array length
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/FollowResponseDTO"
+  /profile/is-profile-blocked":
+    get:
+      summary: get close friend list
+      tags: [Profile]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileManagerRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/IscloseFriendDTO"
+  /profile/block-profile:
+    post:
+      summary: add close friend
+      tags: [Profile]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileManagerRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+  /profile/unblock-profile:
+    post:
+      summary: remove close friend
+      tags: [Profile]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileManagerRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
   /follow/follow:
     post:
       summary: follow user
@@ -252,6 +423,113 @@ paths:
                   - type: array
                     items:
                       $ref: "#/components/schemas/FollowResponseDTO"
+
+  /follow/recived-requests:
+    get:
+      summary: get recived follow request from user
+      tags: [Follow]
+      parameters:
+        - name: page
+          in: query
+          description: The number of page
+          schema:
+            type: string
+        - name: pagelimit
+          in: query
+          description: The array length
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+  /follow/sent-request:
+    get:
+      summary: get sent follow request from user
+      tags: [Follow]
+      parameters:
+        - name: page
+          in: query
+          description: The number of page
+          schema:
+            type: string
+        - name: pagelimit
+          in: query
+          description: The array length
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+  /follow/cancel:
+    post:
+      summary: cancle follow request sent by user
+      tags: [Follow]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+  /follow/reject:
+    post:
+      summary: reject follow request sent from follower by user
+      tags: [Follow]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+  /follow/accept:
+    post:
+      summary: accept follow request sent from follower by user
+      tags: [Follow]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowRequestDTO"
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+
   /explore:
     get:
       summary: get explore posts
@@ -803,6 +1081,11 @@ components:
           type: number
         followingCount:
           type: number
+    IscloseFriendDTO:
+      type: boolean
+      # properties:
+      #   id:
+      #     type: string
     FollowResponseDTO:
       type: object
       properties:
@@ -858,6 +1141,11 @@ components:
       type: object
       properties:
         followingUserName:
+          type: string
+    ProfileManagerRequestDTO:
+      type: object
+      properties:
+        username:
           type: string
     UploadDTO:
       type: object

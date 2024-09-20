@@ -14,12 +14,11 @@ followRoutes.post("/follow", (req, res) => {
   handleRequest(res, async () => {
     const followerId: ProfileId = Number(req.subject) as ProfileId;
 
-    await followService.followUser(
+    const result = await followService.followUser(
       followerId,
       followRequestDTO.parse(req.body)
     );
-
-    return new ApiSuccess(strings.FOLLOWED_SUCCESSFULLY);
+    return new ApiSuccess(result.message);
   });
 });
 
@@ -33,6 +32,75 @@ followRoutes.post("/unfollow", (req, res) => {
     );
 
     return new ApiSuccess(strings.UNFOLLOWED_SUCCESSFULLY);
+  });
+});
+
+followRoutes.post("/cancel", (req, res) => {
+  handleRequest(res, async () => {
+    const followerId: ProfileId = Number(req.subject) as ProfileId;
+
+    await followService.cancelFollowRequest(
+      followerId,
+      followRequestDTO.parse(req.body)
+    );
+
+    return new ApiSuccess(strings.FOLLOW_REQUEST_CANCELED);
+  });
+});
+
+followRoutes.post("/reject", (req, res) => {
+  handleRequest(res, async () => {
+    const followerId: ProfileId = Number(req.subject) as ProfileId;
+
+    await followService.rejectFollowRequest(
+      followerId,
+      followRequestDTO.parse(req.body)
+    );
+
+    return new ApiSuccess(strings.FOLLOW_REQUEST_REJECTED);
+  });
+});
+
+followRoutes.post("/accept", (req, res) => {
+  handleRequest(res, async () => {
+    const followerId: ProfileId = Number(req.subject) as ProfileId;
+
+    await followService.acceptFollowRequest(
+      followerId,
+      followRequestDTO.parse(req.body)
+    );
+
+    return new ApiSuccess(strings.FOLLOW_REQUEST_ACCEPTED);
+  });
+});
+
+followRoutes.get("/recived-requests", (req, res) => {
+  handleRequest(res, async () => {
+    const profileId: ProfileId = Number(req.subject) as ProfileId;
+    const page = parseInt(req.query.page as string) || 1;
+    const pagelimit = parseInt(req.query.pagelimit as string) || 10;
+
+    const result = await followService.getRecivedRequests(
+      profileId,
+      page,
+      pagelimit
+    );
+    return new ApiSuccess(result);
+  });
+});
+
+followRoutes.get("/sent-requests", (req, res) => {
+  handleRequest(res, async () => {
+    const profileId: ProfileId = Number(req.subject) as ProfileId;
+    const page = parseInt(req.query.page as string) || 1;
+    const pagelimit = parseInt(req.query.pagelimit as string) || 10;
+
+    const result = await followService.getSentRequest(
+      profileId,
+      page,
+      pagelimit
+    );
+    return new ApiSuccess(result);
   });
 });
 

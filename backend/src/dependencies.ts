@@ -18,7 +18,7 @@ import { Mention } from "@feature/post/repository/entities/mention.entity";
 import { Post } from "@feature/post/repository/entities/post.entity";
 import { FollowRepository } from "@feature/follow/repository/follow.repo";
 import { FollowService } from "@feature/follow/service/follow.service";
-import { Follow } from "@feature/follow/repository/follow.entity";
+import { Follow } from "@feature/follow/repository/entities/follow.entity";
 import { CommentRepository } from "@feature/comment/repository/comment.repo";
 import { CommentService } from "@feature/comment/service/comment.service";
 import {
@@ -46,7 +46,15 @@ import { NotificationEventHandler } from "@feature/notification/event-handler/no
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 import { Explore } from "@feature/explore/service/explore.service";
 import { appConfig } from "config";
+import { ProfileManagerService } from "@feature/profile-manager/service/profile-manager.service";
+import { CloseFriendRepository } from "@feature/profile-manager/repository/close-friends.repo";
+import { BlockProfilesRepository } from "@feature/profile-manager/repository/blocked-profiles.repo";
+import { FollowRequestRepository } from "@feature/follow/repository/follow-request.repo";
+import { FollowRequest } from "@feature/follow/repository/entities/follow-request.entity";
+import { CloseFriend } from "@feature/profile-manager/repository/entities/close-friends.entity";
+import { BlockedProfile } from "@feature/profile-manager/repository/entities/blocked-profiles.entity";
 import { SearchService } from "@feature/search/service/search.service";
+
 
 // DataSource
 export const AppDataSource = new DataSource({
@@ -67,6 +75,9 @@ export const AppDataSource = new DataSource({
     Content,
     Mention,
     Follow,
+    FollowRequest,
+    CloseFriend,
+    BlockedProfile,
     Comment,
     CommentLike,
     Bookmark,
@@ -96,10 +107,13 @@ const mailerService = new MailerService(transporter);
 
 // Repositories
 const profileRepository = new ProfileRepository(AppDataSource);
+const closeFriendRepository = new CloseFriendRepository(AppDataSource);
+const blockProfilesRepository = new BlockProfilesRepository(AppDataSource);
 const tokenRepository = new TokenRepository(AppDataSource);
 const storageRepository = new StorageRepository(AppDataSource);
 const postRepository = new PostRepository(AppDataSource);
 const followRepository = new FollowRepository(AppDataSource);
+const followRequestRepository = new FollowRequestRepository(AppDataSource);
 const commentRepository = new CommentRepository(
   AppDataSource.getRepository<Comment>(Comment)
 );
@@ -151,6 +165,13 @@ export const profileService = new ProfileService({
   followRepo: followRepository,
 });
 
+export const profileManagerService = new ProfileManagerService({
+  profileRepo: profileRepository,
+  closeFriendRepo: closeFriendRepository,
+  BlockedFriendRepo: blockProfilesRepository,
+  followRepo: followRepository,
+});
+
 export const storageService = new StorageService({
   storageRepo: storageRepository,
 });
@@ -166,6 +187,7 @@ export const postService = new PostService({
 
 export const followService = new FollowService({
   followRepo: followRepository,
+  followRequestRepo: followRequestRepository,
   profileRepo: profileRepository,
   notificationRepo: notificationRepository,
   notificationEventEmitter,
