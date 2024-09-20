@@ -15,6 +15,7 @@ import DashboardLayout from "./app/dashboard/MainPage.tsx";
 import SinglePost from "./app/SinglePost/singlePost.tsx";
 import { UserProfileProvider } from "./context/UserProfileContext.tsx";
 import BookmarksPage from "./app/bookmarks/bookmarksPage.tsx";
+import ExplorePage from "./app/explore/explore.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <UserProfileProvider>
@@ -33,6 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               <Route path="profile" element={<UserProfile />} />
               <Route path="/bookmarks" element={<BookmarksPage />} />
               <Route path="singlePost" element={<SinglePost />} />
+              <Route path="/explore" element={<ExplorePage />} />
             </Route>
           </Route>
           <Route element={<NotFoundPage />} path="*" />
