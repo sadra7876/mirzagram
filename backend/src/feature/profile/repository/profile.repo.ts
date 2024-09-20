@@ -1,7 +1,7 @@
 import { DataSource, Repository } from "typeorm";
 import { Profile } from "./profile.entity";
 import { Email, Username, ProfileId } from "../../../types/profile.type";
-import { Follow } from "@feature/follow/repository/follow.entity";
+import { Follow } from "@feature/follow/repository/entities/follow.entity";
 
 export interface IProfileRepository {
   createOrUpdate(auth: Profile): Promise<Profile>;
