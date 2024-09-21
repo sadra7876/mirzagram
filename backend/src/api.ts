@@ -10,6 +10,7 @@ import { notificationRoutes } from "@feature/notification/routes/notification.ro
 import { exploreRoutes } from "@feature/explore/routes/explore.routes";
 import { profileManagerRoutes } from "@feature/profile-manager/routes/profile-manager.routes";
 import { searchRoutes } from "@feature/search/routes/search.routes";
+import { messageRoutes } from "@feature/chat/routes/chat.routes";
 
 export const api = Router();
 
@@ -24,6 +25,7 @@ api.use("/bookmark", bookmarkRoutes);
 api.use("/notification", notificationRoutes);
 api.use("/explore", exploreRoutes);
 api.use("/search", searchRoutes);
+api.use("/message", messageRoutes);
 api.get("/health", (req, res) => {
   res.status(200).send("OK");
 });

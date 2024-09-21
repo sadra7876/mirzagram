@@ -941,6 +941,22 @@ paths:
                     properties:
                       result:
                         $ref: "#components/schemas/NotificationDTO"
+  /message/conversations:
+    get:
+      summary: Get conversations for profile
+      tags: [Message]
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#components/schemas/ConversationDTO"
 
 components:
   securitySchemes:
@@ -1347,3 +1363,21 @@ components:
             type: boolean
           type:
             type: string
+    ConversationDTO:
+      type: object
+      properties:
+        id: 
+          type: string
+        targetUserId: 
+          type: string
+        createdAt: 
+          type: string
+        message: 
+          type: string
+        user:
+          type: object
+          properties:
+            displayName:
+              type: string
+            profilePictureURL:
+              type: string

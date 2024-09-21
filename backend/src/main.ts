@@ -4,16 +4,15 @@ import { AppDataSource } from "./dependencies";
 import cors from "cors";
 import express from "express";
 import setupSwagger from "./swagger";
-// import dotenv from "dotenv-flow";
-// dotenv.config();
-
 import { appConfig } from "config";
 import path from "path";
+import { socketServer } from "@feature/chat/socket/chat.socket";
 
 const MAX_RETRIES = 6; // Maximum number of retries
 const RETRY_DELAY = 10000; // Delay between retries in milliseconds
 
 const app = express();
+// export const socketServer = createServer(app);
 app.use(cors());
 app.use(express.json());
 app.use(appConfig.API_ROOT, api);
@@ -50,4 +49,8 @@ initializeDatabaseWithRetry();
 
 app.listen(appConfig.API_PORT, () => {
   console.log(`Listening on ${appConfig.API_PORT}`);
+});
+
+socketServer.listen(appConfig.SOCKET_PORT, () => {
+  console.log(`Socket listening on ${appConfig.SOCKET_PORT}`);
 });

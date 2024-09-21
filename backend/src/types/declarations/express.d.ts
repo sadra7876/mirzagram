@@ -7,3 +7,10 @@ declare global {
     }
   }
 }
+
+declare module "socket.io" {
+  interface Socket {
+    sessionID: string;
+    subject: string;
+  }
+}

@@ -17,6 +17,7 @@ export const appConfigSchema = z.object({
   API_PORT: z.number(),
   API_BASE_URL: z.string(),
   API_ROOT: z.string(),
+  SOCKET_PORT: z.string(),
 
   CDN_BASE_URL: z.string(),
   CDN_PORT: z.number(),
