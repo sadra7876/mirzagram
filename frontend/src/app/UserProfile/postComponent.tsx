@@ -115,8 +115,8 @@ export default function PostComponent(props: { onClose: () => void }) {
     };
 
     const responseCreatePost = await postCreatePost(dataToSend);
-    if (responseCreatePost.isSuccess) {
-      responseCreatePost.messages.map((item: string) => toast.success(item));
+    if (responseCreatePost) {
+      // responseCreatePost.messages.map((item: string) => toast.success(item));
       props.onClose();
     }
   };
