@@ -9,6 +9,7 @@ import { CloseFriend } from "../repository/entities/close-friends.entity";
 import { BlockedProfile } from "../repository/entities/blocked-profiles.entity";
 import { ProfileManagerResponsDTO } from "../dto/profile-manager.dto";
 import { convertFileNameToURL } from "@utils/utils";
+import { Profile } from "@feature/profile/repository/profile.entity";
 
 interface Dependencies {
   closeFriendRepo: ICloseFriendRepository;
@@ -148,6 +149,8 @@ export class ProfileManagerService {
       throw new ClientError(strings.USER_IS_BLOCKED);
     }
 
+    await this.removeRelations(user, toBeBlocked);
+
     const newBlockProfile = new BlockedProfile();
     newBlockProfile.profile = user;
     newBlockProfile.blocked = toBeBlocked;
@@ -162,5 +165,27 @@ export class ProfileManagerService {
       throw new ClientError(strings.USER_NOT_FOUND);
     }
     await this.deps.BlockedFriendRepo.unBlockProfile(user, toBeBlocked);
+  }
+
+  private async removeRelations(user: Profile, toBeBlocked: Profile) {
+    // Remove follow relation
+    const followingRelation = await this.deps.followRepo.getFollowByTwoProfile(
+      user,
+      toBeBlocked
+    );
+    if (followingRelation) {
+      await this.deps.followRepo.unFollowProfile(followingRelation);
+    }
+    const followerRelation = await this.deps.followRepo.getFollowByTwoProfile(
+      toBeBlocked,
+      user
+    );
+    if (followerRelation) {
+      await this.deps.followRepo.unFollowProfile(followerRelation);
+    }
+
+    // Remove close friend relations
+    await this.deps.closeFriendRepo.removeCloseFriend(user, toBeBlocked);
+    await this.deps.closeFriendRepo.removeCloseFriend(toBeBlocked, user);
   }
 }
