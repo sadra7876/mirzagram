@@ -11,12 +11,13 @@ import {
 import { useLocation } from "react-router-dom";
 import InputComment from "../../Shared/Components/InputComment";
 import CommentComponent from "../../Shared/Components/Comment";
-// import { FaRegComment } from "react-icons/fa";
+import React from "react";
+import useEmblaCarousel from "embla-carousel-react";
 
 export default function SinglePost() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-
+  const [emblaRef] = useEmblaCarousel();
   // Extract the query parameters you need
   const postId = queryParams.get("postId");
 
@@ -78,15 +79,27 @@ export default function SinglePost() {
   return (
     <div className="grid grid-cols-[396px_1fr] px-6">
       <div className="flex h-96 w-96 flex-col items-center">
-        {postDetails?.contents.map((item, index) => {
-          return (
-            <img
-              key={index}
-              className="h-full w-full rounded-3xl object-cover"
-              src={item.url}
-            />
-          );
-        })}
+        <div className="h-full w-full overflow-hidden" ref={emblaRef}>
+          <div className="flex h-full w-full flex-row-reverse gap-x-3">
+            {postDetails?.contents.map((item, index) => {
+              return (
+                <div key={index} className="flex h-full w-full min-w-full">
+                  <img
+                    className="h-full w-full rounded-3xl object-cover"
+                    src={item.url}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div className="relative bottom-6 right-1/2 flex flex-row gap-2">
+            {postDetails?.contents.map((item, index) => {
+              return (
+                <div key={index} className="size-3 rounded-full bg-white"></div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       <div className="w-full">
