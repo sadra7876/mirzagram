@@ -23,12 +23,14 @@ import { INotificationRepository } from "@feature/notification/repository/notifi
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 import { IBookmarkRepository } from "@feature/bookmark/repository/bookmark.repo";
 import { ICommentRepository } from "@feature/comment/repository/comment.repo";
+import { IFollowRepository } from "@feature/follow/repository/follow.repo";
 
 const HASHTAG_REGEX = /#(?!.*\s)[\u0600-\u06FF\sa-z0-9_]+/g;
 
 interface Dependencies {
   postRepo: IPostRepository;
   profileRepo: IProfileRepository;
+  followRepo: IFollowRepository;
   postLikeRepo: IPostLikeRepository;
   postLikeNotificationRepo: INotificationRepository;
   notificationEventEmitter: NotificationEventEmitter;
@@ -153,6 +155,25 @@ export class PostService {
     profileId: ProfileId,
     username: Username | null
   ): Promise<PostSummaryDTO[] | undefined> {
+    const profile = await this.deps.profileRepo.getById(profileId);
+
+    if (!profile) {
+      throw new ClientError(strings.PROFILE_NOT_FOUND_ERROR);
+    }
+
+    if (username) {
+      const targetProfile = await this.deps.profileRepo.getByUsername(username);
+      if (targetProfile?.isPrivate) {
+        const isFollowed = await this.deps.followRepo.getFollowByTwoProfile(
+          profile,
+          targetProfile
+        );
+        if (!isFollowed) {
+          throw new ClientError(strings.PRIVATE_PROFILE_NOT_FOLLOWED, 403);
+        }
+      }
+    }
+
     const posts = username
       ? await this.deps.postRepo.getPostsByUsername(username)
       : await this.deps.postRepo.getPostsByProfile(profileId);

@@ -13,12 +13,14 @@ import { INotificationRepository } from "@feature/notification/repository/notifi
 import { NotificationEventEmitter } from "@feature/notification/event-handler/notification-event";
 import { convertFileNameToURL } from "@utils/utils";
 import { IFollowRequestRepository } from "../repository/follow-request.repo";
+import { IBlockProfilesRepository } from "@feature/profile-manager/repository/blocked-profiles.repo";
 
 interface Dependencies {
   followRepo: IFollowRepository;
   followRequestRepo: IFollowRequestRepository;
   profileRepo: IProfileRepository;
   notificationRepo: INotificationRepository;
+  blockRepo: IBlockProfilesRepository;
   notificationEventEmitter: NotificationEventEmitter;
 }
 
@@ -30,7 +32,6 @@ export class FollowService {
     const following = await this.deps.profileRepo.getByUsername(
       followRequestDTO.followingUserName
     );
-    console.log(follower?.isPrivate, following?.username);
     if (!follower || !following) {
       throw new ClientError(strings.USER_NOT_FOUND);
     }
@@ -43,13 +44,27 @@ export class FollowService {
       throw new ClientError(strings.FOLLOWER_AND_FOLLOWING_IS_SAME);
     }
 
+    const isBlocked = await this.deps.blockRepo.isBlocked(
+      follower.id,
+      following.id
+    );
+    if (isBlocked) {
+      throw new ClientError(strings.USER_IS_BLOCKED, 403);
+    }
+    const isBlockedTheOtherWay = await this.deps.blockRepo.isBlocked(
+      following.id,
+      follower.id
+    );
+    if (isBlockedTheOtherWay) {
+      throw new ClientError(strings.USER_IS_BLOCKED, 403);
+    }
+
     if (following.isPrivate) {
       const followRequest =
         await this.deps.followRequestRepo.getFollowRequestByBoth(
           follower.id,
           following.id
         );
-      console.log(followRequest, " here ");
       if (followRequest) {
         throw new ClientError(strings.FOLLOW_REQUEST_IS_ALREADY_SENT);
       }
@@ -59,7 +74,6 @@ export class FollowService {
           follower,
           following
         );
-      console.log(newFollowRequest, " here 2");
       this.deps.notificationEventEmitter.emit("FOLLOW_REQUEST", {
         requestor: follower,
         target: following,
@@ -115,18 +129,45 @@ export class FollowService {
     page: number,
     pagelimit: number
   ) {
-    let user;
-    if (username) {
-      user = await this.deps.profileRepo.getByUsername(username);
-    } else {
-      user = await this.deps.profileRepo.getById(id);
-    }
-    if (!user) {
+    const authUser = await this.deps.profileRepo.getById(id);
+    let targetUser;
+
+    if (!authUser) {
       throw new ClientError(strings.USER_NOT_FOUND);
     }
 
+    if (username && authUser?.username !== username) {
+      targetUser = await this.deps.profileRepo.getByUsername(username);
+
+      if (!targetUser) {
+        throw new ClientError(strings.USER_NOT_FOUND);
+      }
+
+      const isBlocked = await this.deps.blockRepo.isBlocked(
+        targetUser.id,
+        authUser.id
+      );
+      const isBlockedTheOtherWay = await this.deps.blockRepo.isBlocked(
+        authUser.id,
+        targetUser.id
+      );
+      if (isBlocked || isBlockedTheOtherWay) {
+        throw new ClientError(strings.USER_IS_BLOCKED, 403);
+      }
+
+      if (targetUser.isPrivate) {
+        const isFollowed = await this.deps.followRepo.getFollowByTwoProfile(
+          authUser,
+          targetUser
+        );
+        if (!isFollowed) {
+          throw new ClientError(strings.USER_IS_NOT_FOLLOWED, 403);
+        }
+      }
+    }
+
     const follow = await this.deps.followRepo.getFollowingByProfileId(
-      user.id,
+      targetUser?.id || authUser.id,
       page,
       pagelimit
     );
@@ -217,18 +258,45 @@ export class FollowService {
     page: number,
     pagelimit: number
   ) {
-    let user;
-    if (username) {
-      user = await this.deps.profileRepo.getByUsername(username);
-    } else {
-      user = await this.deps.profileRepo.getById(id);
+    const authUser = await this.deps.profileRepo.getById(id);
+    let targetUser;
+
+    if (!authUser) {
+      throw new ClientError(strings.USER_NOT_FOUND);
     }
-    if (!user) {
-      throw new ClientError(strings.USER_NOT_FOUND, 404);
+
+    if (username && authUser?.username !== username) {
+      targetUser = await this.deps.profileRepo.getByUsername(username);
+
+      if (!targetUser) {
+        throw new ClientError(strings.USER_NOT_FOUND);
+      }
+
+      const isBlocked = await this.deps.blockRepo.isBlocked(
+        targetUser.id,
+        authUser.id
+      );
+      const isBlockedTheOtherWay = await this.deps.blockRepo.isBlocked(
+        authUser.id,
+        targetUser.id
+      );
+      if (isBlocked || isBlockedTheOtherWay) {
+        throw new ClientError(strings.USER_IS_BLOCKED, 403);
+      }
+
+      if (targetUser.isPrivate) {
+        const isFollowed = await this.deps.followRepo.getFollowByTwoProfile(
+          authUser,
+          targetUser
+        );
+        if (!isFollowed) {
+          throw new ClientError(strings.USER_IS_NOT_FOLLOWED, 403);
+        }
+      }
     }
 
     const follow = await this.deps.followRepo.getFollowerByProfileId(
-      user.id,
+      targetUser?.id || authUser.id,
       page,
       pagelimit
     );

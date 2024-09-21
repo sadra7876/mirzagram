@@ -63,6 +63,7 @@ export const strings = {
   CAPTION: "کپشن",
   NAME: "نام",
   COMMENT: "کامنت",
+  PRIVATE_PROFILE_NOT_FOLLOWED: "اکانت خصوصی فالو نشده است",
   FOLLOW_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
     `${firstName} ${lastName} دنبالت کرد`,
   LIKE_NOTIFICATION_TITLE: (firstName: string, lastName: string) =>
