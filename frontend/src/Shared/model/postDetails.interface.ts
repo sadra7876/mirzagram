@@ -12,7 +12,7 @@ export interface PostDetails {
   bookmarkCount: number;
   isLiked: boolean;
   isBookmarked: boolean;
-
+  commentCount: number;
   owner: {
     firstName?: string;
     lastName?: string;
