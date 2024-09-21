@@ -25,6 +25,7 @@ services:
       - ./backend/.env.prod
     ports:
       - 81:3000
+      - 82:5000
     networks:
       - mirza-net-prod
     depends_on:

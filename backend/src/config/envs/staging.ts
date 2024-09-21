@@ -6,6 +6,7 @@ export function createStagingConfig() {
     API_BASE_URL: process.env.API_BASE_URL!,
     API_PORT: Number(process.env.API_PORT),
     API_ROOT: process.env.API_ROOT!,
+    SOCKET_PORT: process.env.SOCKET_PORT!,
 
     CDN_BASE_URL: process.env.CDN_BASE_URL!,
     CDN_PORT: Number(process.env.CDN_PORT),

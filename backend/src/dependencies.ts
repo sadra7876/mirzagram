@@ -55,6 +55,9 @@ import { CloseFriend } from "@feature/profile-manager/repository/entities/close-
 import { BlockedProfile } from "@feature/profile-manager/repository/entities/blocked-profiles.entity";
 import { SearchService } from "@feature/search/service/search.service";
 
+import { MessageService } from "@feature/chat/service/message.service";
+import { MessageRepository } from "@feature/chat/repository/message.repo";
+import { Message } from "@feature/chat/repository/message.entity";
 
 // DataSource
 export const AppDataSource = new DataSource({
@@ -88,6 +91,7 @@ export const AppDataSource = new DataSource({
     FollowNotification,
     FollowRequestNotification,
     FollowRequestResultNotification,
+    Message,
   ],
   subscribers: [],
   migrations: [],
@@ -106,9 +110,9 @@ export const transporter = nodemailer.createTransport({
 const mailerService = new MailerService(transporter);
 
 // Repositories
-const profileRepository = new ProfileRepository(AppDataSource);
 const closeFriendRepository = new CloseFriendRepository(AppDataSource);
 const blockProfilesRepository = new BlockProfilesRepository(AppDataSource);
+export const profileRepository = new ProfileRepository(AppDataSource);
 const tokenRepository = new TokenRepository(AppDataSource);
 const storageRepository = new StorageRepository(AppDataSource);
 const postRepository = new PostRepository(AppDataSource);
@@ -143,6 +147,9 @@ const notificationRepository = new NotificationRepository({
       FollowRequestResultNotification
     ),
 });
+const messageRepository = new MessageRepository(
+  AppDataSource.getRepository<Message>(Message)
+);
 
 // Event emitters
 export const notificationEventEmitter = new NotificationEventEmitter();
@@ -219,3 +226,10 @@ export const searchService = new SearchService({
   followRepo: followRepository,
   postLikeRepo: postLikeRepository,
 });
+export const messageService = new MessageService({
+  messageRepo: messageRepository,
+  profileRepo: profileRepository,
+});
+
+//TODO:
+namespace Services {}
