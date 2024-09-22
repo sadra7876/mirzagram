@@ -20,7 +20,7 @@ searchRoutes.get("/profiles", (req, res) => {
   });
 });
 
-searchRoutes.get("/post", (req, res) => {
+searchRoutes.get("/posts", (req, res) => {
   handleRequest(res, async () => {
     const result = await searchService.searchPost(
       req.query.query as string,

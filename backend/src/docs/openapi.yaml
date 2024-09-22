@@ -957,6 +957,70 @@ paths:
                     properties:
                       result:
                         $ref: "#components/schemas/ConversationDTO"
+  /search/profiles:
+    get:
+      summary: Search in profiles
+      tags: [Search]
+      parameters:
+        - name: query
+          in: query
+          description: The array length
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: The number of page
+          schema:
+            type: string
+        - name: pageSize
+          in: query
+          description: The array length
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#components/schemas/SearchProfileDTO"
+  /search/posts:
+    get:
+      summary: Search in posts
+      tags: [Search]
+      parameters:
+        - name: query
+          in: query
+          description: The array length
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: The number of page
+          schema:
+            type: string
+        - name: pageSize
+          in: query
+          description: The array length
+          schema:
+            type: string
+      responses:
+        200:
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#components/schemas/ApiResponse"
+                  - type: object
+                    properties:
+                      result:
+                        $ref: "#components/schemas/SearchPostDTO"
 
 components:
   securitySchemes:
@@ -1380,4 +1444,29 @@ components:
             displayName:
               type: string
             profilePictureURL:
+              type: string
+    SearchProfileDTO:
+      type: object
+      properties:
+        id: 
+          type: string
+        username: 
+          type: string
+        firstName: 
+          type: string
+        lastName: 
+          type: string
+        profilePicture:
+          type: string
+        followerCount:
+          type: string
+    SearchPostDTO:
+      type: object
+      properties:
+        id: 
+          type: string
+        contents: 
+          type: array
+          properties:
+            url: 
               type: string
