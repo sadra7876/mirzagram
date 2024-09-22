@@ -50,6 +50,7 @@ export const strings = {
   USER_IS_BLOCKED: "کاربر مسدود شده است",
   PROFILE_BLOCKED: "پروفایل مسدود شد",
   PROFILE_UNBLOCKED: "پروفایل آزاد شد",
+  NO_BLOCK_PROFILE: "پروفایل بلاکی وجود ندارد",
   COMMENT_ADDED_SUCCESSFULLY: "کامنت با موفقیت اضافه شد",
   COMMENT_TEXT_CANNOT_BE_EMPTY_ERROR: "متن کامنت نمیتواند خالی باشد",
   POST_ID_CANNOT_BE_EMPTY_ERROR: "آیدی پست نمیتواند خالی باشد",

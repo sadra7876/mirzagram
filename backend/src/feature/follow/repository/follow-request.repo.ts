@@ -56,17 +56,15 @@ export class FollowRequestRepository implements IFollowRequestRepository {
     page: number,
     pageLimit: number
   ): Promise<FollowRequest[]> {
-    return (
-      this.repository
-        .createQueryBuilder("followRequest")
-        // .leftJoinAndSelect("followRequest.requester", "requester")
-        .leftJoinAndSelect("followRequest.requested", "requested")
-        .where("followRequest.requested = :requestedId", { requestedId })
-        .orderBy("follow.createdAt", "DESC")
-        .skip((page - 1) * pageLimit)
-        .take(pageLimit)
-        .getMany()
-    );
+    return this.repository
+      .createQueryBuilder("followRequest")
+      .leftJoinAndSelect("followRequest.requester", "requester")
+      .leftJoinAndSelect("followRequest.requested", "requested")
+      .where("followRequest.requested = :requestedId", { requestedId })
+      .orderBy("followRequest.createdAt", "DESC")
+      .skip((page - 1) * pageLimit)
+      .take(pageLimit)
+      .getMany();
   }
 
   async getSentRequests(
@@ -74,17 +72,15 @@ export class FollowRequestRepository implements IFollowRequestRepository {
     page: number,
     pageLimit: number
   ): Promise<FollowRequest[]> {
-    return (
-      this.repository
-        .createQueryBuilder("followRequest")
-        .leftJoinAndSelect("followRequest.requester", "requester")
-        // .leftJoinAndSelect("followRequest.requested", "requested")
-        .where("followRequest.requester = :requesterId", { requesterId })
-        .orderBy("follow.createdAt", "DESC")
-        .skip((page - 1) * pageLimit)
-        .take(pageLimit)
-        .getMany()
-    );
+    return this.repository
+      .createQueryBuilder("followRequest")
+      .leftJoinAndSelect("followRequest.requester", "requester")
+      .leftJoinAndSelect("followRequest.requested", "requested")
+      .where("followRequest.requester = :requesterId", { requesterId })
+      .orderBy("followRequest.createdAt", "DESC")
+      .skip((page - 1) * pageLimit)
+      .take(pageLimit)
+      .getMany();
   }
 
   async getFollowRequestByBoth(
