@@ -212,7 +212,7 @@ export class FollowService {
     if (followRequests.length === 0) {
       throw new ClientError(strings.HAVE_NOT_ANY_FOLLOW_REQUEST, 404);
     }
-
+    console.log("damn man");
     const result = await Promise.all(
       followRequests.map((i) => {
         const result: FollowRequestResponseDTO = {
@@ -439,16 +439,16 @@ export class FollowService {
     await this.deps.followRepo.followProfile(newFollow);
 
     this.deps.notificationEventEmitter.emit("FOLLOW_NOTIFICATION", {
-      followedBy: follower,
-      target: currentProfile,
+      followedBy: currentProfile,
+      target: follower,
       action: "follow",
     });
 
     await this.deps.followRequestRepo.deleteFollowRequest(followRequest.id);
 
     this.deps.notificationEventEmitter.emit("FOLLOW_REQUEST_RESULT", {
-      requestedProfile: follower,
-      target: currentProfile,
+      requestedProfile: currentProfile,
+      target: follower,
       action: "accepted",
     });
   }

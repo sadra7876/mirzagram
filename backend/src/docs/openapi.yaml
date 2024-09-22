@@ -177,7 +177,7 @@ paths:
                     items:
                       $ref: "#/components/schemas/FollowResponseDTO"
   /profile/is-close-friend:
-    get:
+    post:
       summary: get close friend list
       tags: [Profile]
       requestBody:
@@ -236,7 +236,7 @@ paths:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
 
-  /profile/blocked-profile:
+  /profile/blocked-profiles:
     get:
       summary: get close friend list
       tags: [Profile]
@@ -262,8 +262,8 @@ paths:
                   - type: array
                     items:
                       $ref: "#/components/schemas/FollowResponseDTO"
-  /profile/is-profile-blocked":
-    get:
+  /profile/is-profile-blocked:
+    post:
       summary: get close friend list
       tags: [Profile]
       requestBody:
@@ -448,7 +448,7 @@ paths:
                 allOf:
                   - $ref: "#components/schemas/ApiResponse"
                   - type: object
-  /follow/sent-request:
+  /follow/sent-requests:
     get:
       summary: get sent follow request from user
       tags: [Follow]
@@ -1366,13 +1366,13 @@ components:
     ConversationDTO:
       type: object
       properties:
-        id: 
+        id:
           type: string
-        targetUserId: 
+        targetUserId:
           type: string
-        createdAt: 
+        createdAt:
           type: string
-        message: 
+        message:
           type: string
         user:
           type: object

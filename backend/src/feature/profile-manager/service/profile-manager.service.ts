@@ -105,7 +105,7 @@ export class ProfileManagerService {
       pagelimit
     );
     if (blockeds.length === 0) {
-      throw new ClientError(strings.NO_CLOSE_FRIENDS);
+      throw new ClientError(strings.NO_BLOCK_PROFILE);
     }
     const res = await Promise.all(
       blockeds.map((i) => this.deps.profileRepo.getById(i.blocked.id))

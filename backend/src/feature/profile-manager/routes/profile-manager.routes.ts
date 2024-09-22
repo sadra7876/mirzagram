@@ -24,10 +24,10 @@ profileManagerRoutes.get("/close-friends", (req, res) => {
   });
 });
 
-profileManagerRoutes.get("/is-close-friend", (req, res) => {
+profileManagerRoutes.post("/is-close-friend", (req, res) => {
   handleRequest(res, async () => {
     const profileId: ProfileId = Number(req.subject) as ProfileId;
-    const dto = profileManagerRequestDTO.parse(req.query);
+    const dto = profileManagerRequestDTO.parse(req.body);
     const result = await profileManagerService.isCloseFriend(
       profileId,
       dto.username
@@ -68,10 +68,10 @@ profileManagerRoutes.get("/blocked-profiles", (req, res) => {
   });
 });
 
-profileManagerRoutes.get("/is-profile-blocked", (req, res) => {
+profileManagerRoutes.post("/is-profile-blocked", (req, res) => {
   handleRequest(res, async () => {
     const profileId: ProfileId = Number(req.subject) as ProfileId;
-    const dto = profileManagerRequestDTO.parse(req.query);
+    const dto = profileManagerRequestDTO.parse(req.body);
     const result = await profileManagerService.isBlocked(
       profileId,
       dto.username
